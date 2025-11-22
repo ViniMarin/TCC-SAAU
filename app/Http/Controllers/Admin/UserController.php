@@ -70,7 +70,7 @@ class UserController extends Controller
     public function destroy(User $user)
     {
         // Não permitir deletar o próprio usuário
-        if ($user->id === auth()->id()) {
+        if ($user->id === auth('admin')->id()) {
             return redirect()->route('admin.users.index')
                 ->with('error', 'Você não pode deletar sua própria conta!');
         }

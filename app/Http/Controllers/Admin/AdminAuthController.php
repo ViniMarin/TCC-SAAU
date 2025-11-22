@@ -20,17 +20,19 @@ class AdminAuthController extends Controller
             'password' => 'required'
         ]);
 
-        if (Auth::attempt($credentials, $request->filled('remember'))) {
-            $user = Auth::user();
-            
+        $guard = Auth::guard('admin');
+
+        if ($guard->attempt($credentials, $request->filled('remember'))) {
+            $user = $guard->user();
+
             // Verificar se é admin ou veterinário
             if ($user->role === 'admin' || $user->role === 'veterinario') {
                 $request->session()->regenerate();
                 return redirect()->intended('/admin/dashboard');
             }
-            
+
             // Se for usuário comum, faz logout e retorna erro
-            Auth::logout();
+            $guard->logout();
             return back()->with('error', 'Acesso negado. Apenas administradores e veterinários podem acessar esta área.');
         }
 
@@ -41,7 +43,7 @@ class AdminAuthController extends Controller
 
     public function logout(Request $request)
     {
-        Auth::logout();
+        Auth::guard('admin')->logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();
         

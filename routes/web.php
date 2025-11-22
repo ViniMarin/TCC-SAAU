@@ -35,7 +35,9 @@ Auth::routes();
 
 // Redirect /admin para /admin/dashboard ou /admin/login
 Route::get('/admin', function () {
-    if (auth()->check() && in_array(auth()->user()->role, ['admin', 'veterinario'])) {
+    $admin = auth('admin');
+
+    if ($admin->check() && in_array($admin->user()->role, ['admin', 'veterinario'])) {
         return redirect()->route('admin.dashboard');
     }
     return redirect()->route('admin.login');

@@ -51,7 +51,7 @@
                                 <a href="{{ route('admin.users.edit', $user->id) }}" class="btn btn-sm btn-primary">
                                     <i class="fas fa-edit"></i>
                                 </a>
-                                @if($user->id !== auth()->id())
+                                @if($user->id !== auth('admin')->id())
                                 <form action="{{ route('admin.users.destroy', $user) }}" method="POST" class="d-inline" onsubmit="return confirm('Tem certeza que deseja remover este usuário?')">
                                     @csrf
                                     @method('DELETE')

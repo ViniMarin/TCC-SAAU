@@ -317,7 +317,7 @@
     <aside class="admin-sidebar">
         <div class="sidebar-header">
             <img src="{{ asset('images/logo-saau.png') }}" alt="SAAU" class="sidebar-logo">
-            <div class="sidebar-user">{{ auth()->user()->name }}</div>
+            <div class="sidebar-user">{{ auth('admin')->user()->name ?? 'Administrador' }}</div>
         </div>
         
         <nav class="sidebar-menu">
@@ -353,7 +353,7 @@
                 <i class="fas fa-clipboard-list"></i>
                 <span>Pedidos de Adoção</span>
             </a>
-            @if(auth()->user()->role === 'admin')
+            @if(auth('admin')->user() && auth('admin')->user()->role === 'admin')
             <a href="{{ route('admin.users.index') }}" class="menu-item {{ request()->routeIs('admin.users.*') ? 'active' : '' }}">
                 <i class="fas fa-users"></i>
                 <span>Usuários</span>

@@ -32,7 +32,7 @@ class VaccineController extends Controller
             'notes' => 'nullable|string'
         ]);
 
-        $validated['created_by'] = auth()->id();
+        $validated['created_by'] = auth('admin')->id();
 
         Vaccine::create($validated);
 
