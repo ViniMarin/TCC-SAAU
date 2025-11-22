@@ -103,4 +103,30 @@ class PublicController extends Controller
         $stories = AdoptionStory::where('approved', true)->latest()->paginate(9);
         return view('public.stories', compact('stories'));
     }
+
+    public function createStory(Request $request)
+    {
+        $adopterName = $request->user()->name;
+
+        return view('public.story-create', compact('adopterName'));
+    }
+
+    public function storeStory(Request $request)
+    {
+        $validated = $request->validate([
+            'animal_name' => 'required|string|max:255',
+            'story' => 'required|string',
+            'photo_url' => 'nullable|url',
+        ]);
+
+        AdoptionStory::create([
+            'adopter_name' => $request->user()->name,
+            'animal_name' => $validated['animal_name'],
+            'story' => $validated['story'],
+            'photo_url' => $validated['photo_url'] ?? null,
+            'approved' => false,
+        ]);
+
+        return redirect()->route('stories.index')->with('success', 'História enviada com sucesso e aguarda aprovação.');
+    }
 }

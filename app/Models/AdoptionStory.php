@@ -11,25 +11,14 @@ class AdoptionStory extends Model
     use HasFactory, HasUuids;
 
     protected $fillable = [
-        'animal_id',
-        'user_id',
-        'title',
+        'adopter_name',
+        'animal_name',
         'story',
-        'adoption_date',
-        'photo_url'
+        'photo_url',
+        'approved',
     ];
 
     protected $casts = [
-        'adoption_date' => 'date',
+        'approved' => 'boolean',
     ];
-
-    public function animal()
-    {
-        return $this->belongsTo(Animal::class);
-    }
-
-    public function user()
-    {
-        return $this->belongsTo(User::class);
-    }
 }

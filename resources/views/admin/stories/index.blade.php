@@ -11,17 +11,17 @@
         {{ session('success') }}
         <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
     </div>
-    @endif>
+    @endif
 
     <div class="row">
         @forelse($stories as $story)
         <div class="col-md-6 mb-4">
             <div class="card h-100">
                 @if($story->photo_url)
-                <img src="{{ $story->photo_url }}" class="card-img-top" alt="{{ $story->pet_name }}" style="height: 250px; object-fit: cover;">
+                <img src="{{ $story->photo_url }}" class="card-img-top" alt="{{ $story->animal_name }}" style="height: 250px; object-fit: cover;">
                 @endif
                 <div class="card-body">
-                    <h5 class="card-title">{{ $story->pet_name }}</h5>
+                    <h5 class="card-title">{{ $story->animal_name }}</h5>
                     <p class="card-text"><strong>Adotante:</strong> {{ $story->adopter_name }}</p>
                     <p class="card-text">{{ Str::limit($story->story, 150) }}</p>
                     <p class="card-text">

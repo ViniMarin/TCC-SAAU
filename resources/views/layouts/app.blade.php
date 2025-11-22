@@ -104,35 +104,12 @@
                     @auth
                         @if(auth()->user()->role === 'admin' || auth()->user()->role === 'veterinario')
                         <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                <i class="fas fa-user-shield"></i> Painel Admin
-                            </a>
-                            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                <li><a class="dropdown-item" href="{{ route('admin.dashboard') }}"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
-                                <li><hr class="dropdown-divider"></li>
-                                <li><a class="dropdown-item" href="{{ route('admin.animals.index') }}"><i class="fas fa-paw"></i> Animais</a></li>
-                                <li><a class="dropdown-item" href="{{ route('admin.adoption-requests.index') }}"><i class="fas fa-heart"></i> Pedidos de Adoção</a></li>
-                                <li><a class="dropdown-item" href="{{ route('admin.events.index') }}"><i class="fas fa-calendar"></i> Eventos</a></li>
-                                <li><a class="dropdown-item" href="{{ route('admin.raffles.index') }}"><i class="fas fa-ticket-alt"></i> Rifas</a></li>
-                                <li><hr class="dropdown-divider"></li>
-                                <li><a class="dropdown-item" href="{{ route('admin.vaccines.index') }}"><i class="fas fa-syringe"></i> Vacinas</a></li>
-                                <li><a class="dropdown-item" href="{{ route('admin.donations.index') }}"><i class="fas fa-hand-holding-heart"></i> Doações</a></li>
-                                <li><a class="dropdown-item" href="{{ route('admin.users.index') }}"><i class="fas fa-users"></i> Usuários</a></li>
-                                <li><a class="dropdown-item" href="{{ route('admin.stories.index') }}"><i class="fas fa-book-heart"></i> Histórias</a></li>
-                                <li><hr class="dropdown-divider"></li>
-                                <li class="dropdown-header">Relatórios</li>
-                                <li><a class="dropdown-item" href="{{ route('admin.reports.animals') }}"><i class="fas fa-file-csv"></i> Animais (CSV)</a></li>
-                                <li><a class="dropdown-item" href="{{ route('admin.reports.donations') }}"><i class="fas fa-file-csv"></i> Doações (CSV)</a></li>
-                                <li><a class="dropdown-item" href="{{ route('admin.reports.vaccines') }}"><i class="fas fa-file-csv"></i> Vacinas (CSV)</a></li>
-                            </ul>
-                        </li>
-                        <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
                                 <i class="fas fa-user"></i> {{ auth()->user()->name }}
                             </a>
                             <ul class="dropdown-menu">
                                 <li>
-                                    <form action="{{ auth()->user()->role === 'admin' || auth()->user()->role === 'veterinario' ? route('admin.logout') : route('logout') }}" method="POST">
+                                    <form action="{{ route('admin.logout') }}" method="POST">
                                         @csrf
                                         <button type="submit" class="dropdown-item"><i class="fas fa-sign-out-alt"></i> Sair</button>
                                     </form>
@@ -146,6 +123,7 @@
                             </a>
                             <ul class="dropdown-menu">
                                 <li><a class="dropdown-item" href="{{ route('animals') }}"><i class="fas fa-paw"></i> Quero adotar</a></li>
+                                <li><a class="dropdown-item" href="{{ route('adoption-stories.create') }}"><i class="fas fa-book-heart"></i> Enviar minha história</a></li>
                                 <li><hr class="dropdown-divider"></li>
                                 <li>
                                     <form action="{{ route('logout') }}" method="POST">

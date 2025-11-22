@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 
 class LoginController extends Controller
@@ -36,5 +37,22 @@ class LoginController extends Controller
     {
         $this->middleware('guest')->except('logout');
         $this->middleware('auth')->only('logout');
+    }
+
+    /**
+     * Impede que usuários administrativos façam login pelo site principal.
+     */
+    protected function authenticated(Request $request, $user)
+    {
+        if (in_array($user->role, ['admin', 'veterinario'])) {
+            $this->guard()->logout();
+
+            $request->session()->invalidate();
+            $request->session()->regenerateToken();
+
+            return redirect()->route('login')->withErrors([
+                'email' => 'Acesso negado. Utilize o login administrativo para entrar.',
+            ]);
+        }
     }
 }

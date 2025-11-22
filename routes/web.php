@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PublicController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\AdminAnimalController;
+use App\Http\Controllers\AdoptionStoryController;
 
 // Rotas públicas
 Route::get('/', [PublicController::class, 'home'])->name('home');
@@ -15,9 +16,19 @@ Route::post('/animal/{id}/adotar', [PublicController::class, 'adoptionRequest'])
 Route::get('/eventos', [PublicController::class, 'events'])->name('events');
 Route::get('/rifas', [PublicController::class, 'raffles'])->name('raffles');
 Route::get('/stories', [PublicController::class, 'stories'])->name('stories.index');
+Route::middleware('auth')->group(function () {
+    Route::get('/stories/create', [PublicController::class, 'createStory'])->name('stories.create');
+    Route::post('/stories', [PublicController::class, 'storeStory'])->name('stories.store');
+});
 Route::get('/faq', function () { return view('faq'); })->name('faq');
 Route::get('/como-funciona', function () { return view('how-it-works'); })->name('how-it-works');
 Route::get('/como-ajudar', function () { return view('how-to-help'); })->name('how-to-help');
+
+// Histórias de adoção (adotantes autenticados)
+Route::middleware('auth')->group(function () {
+    Route::get('/minha-historia/criar', [AdoptionStoryController::class, 'create'])->name('adoption-stories.create');
+    Route::post('/minha-historia', [AdoptionStoryController::class, 'store'])->name('adoption-stories.store');
+});
 
 // Autenticação para adotantes
 Auth::routes();
