@@ -27,9 +27,28 @@ class PublicController extends Controller
         return view('public.home', compact('stats', 'animals', 'events'));
     }
 
-    public function animals()
+    public function animals(Request $request)
     {
-        $animals = Animal::where('status', 'disponivel')->paginate(12);
+        $query = Animal::where('status', 'disponivel');
+
+        if ($request->filled('species')) {
+            $query->where('species', $request->input('species'));
+        }
+
+        if ($request->filled('gender')) {
+            $query->where('gender', $request->input('gender'));
+        }
+
+        if ($request->filled('age')) {
+            $query->where('age', $request->input('age'));
+        }
+
+        if ($request->filled('size')) {
+            $query->where('size', $request->input('size'));
+        }
+
+        $animals = $query->latest()->paginate(12)->withQueryString();
+
         return view('public.animals', compact('animals'));
     }
 
