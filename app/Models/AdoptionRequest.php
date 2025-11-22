@@ -12,10 +12,14 @@ class AdoptionRequest extends Model
 
     protected $fillable = [
         'animal_id',
-        'user_id',
-        'status',
-        'request_date',
-        'notes'
+        'full_name',
+        'email',
+        'phone',
+        'city_state',
+        'housing_type',
+        'had_pets',
+        'message',
+        'status'
     ];
 
     protected $casts = [

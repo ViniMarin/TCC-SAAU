@@ -23,8 +23,8 @@ class AdminAuthController extends Controller
         if (Auth::attempt($credentials, $request->filled('remember'))) {
             $user = Auth::user();
             
-            // Verificar se é admin ou vet
-            if ($user->role === 'admin' || $user->role === 'vet') {
+            // Verificar se é admin ou veterinário
+            if ($user->role === 'admin' || $user->role === 'veterinario') {
                 $request->session()->regenerate();
                 return redirect()->intended('/admin/dashboard');
             }

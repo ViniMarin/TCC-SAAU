@@ -12,7 +12,9 @@ class UserController extends Controller
 
     public function index()
     {
-        $users = User::latest()->paginate(15);
+        $users = User::whereIn('role', ['admin', 'veterinario'])
+            ->latest()
+            ->paginate(15);
         return view('admin.users.index', compact('users'));
     }
 
@@ -27,7 +29,7 @@ class UserController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email',
             'password' => 'required|string|min:6',
-            'role' => 'required|in:admin,veterinario,usuario'
+            'role' => 'required|in:admin,veterinario'
         ]);
 
         $validated['password'] = Hash::make($validated['password']);
@@ -49,7 +51,7 @@ class UserController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email,' . $user->id,
             'password' => 'nullable|string|min:6',
-            'role' => 'required|in:admin,veterinario,usuario'
+            'role' => 'required|in:admin,veterinario'
         ]);
 
         // Atualizar senha apenas se fornecida

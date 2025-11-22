@@ -9,7 +9,9 @@ use App\Http\Controllers\Admin\AdminAnimalController;
 Route::get('/', [PublicController::class, 'home'])->name('home');
 Route::get('/animais', [PublicController::class, 'animals'])->name('animals');
 Route::get('/animal/{id}', [PublicController::class, 'animalShow'])->name('animal.show');
-Route::post('/animal/{id}/adotar', [PublicController::class, 'adoptionRequest'])->name('adoption.request');
+Route::post('/animal/{id}/adotar', [PublicController::class, 'adoptionRequest'])
+    ->middleware('auth')
+    ->name('adoption.request');
 Route::get('/eventos', [PublicController::class, 'events'])->name('events');
 Route::get('/rifas', [PublicController::class, 'raffles'])->name('raffles');
 Route::get('/stories', [PublicController::class, 'stories'])->name('stories.index');
@@ -22,7 +24,7 @@ Auth::routes();
 
 // Redirect /admin para /admin/dashboard ou /admin/login
 Route::get('/admin', function () {
-    if (auth()->check() && in_array(auth()->user()->role, ['admin', 'vet'])) {
+    if (auth()->check() && in_array(auth()->user()->role, ['admin', 'veterinario'])) {
         return redirect()->route('admin.dashboard');
     }
     return redirect()->route('admin.login');
@@ -33,7 +35,7 @@ Route::get('/admin/login', [\App\Http\Controllers\Admin\AdminAuthController::cla
 Route::post('/admin/login', [\App\Http\Controllers\Admin\AdminAuthController::class, 'login'])->name('admin.login.post');
 Route::post('/admin/logout', [\App\Http\Controllers\Admin\AdminAuthController::class, 'logout'])->name('admin.logout');
 
-// Rotas admin (protegidas - apenas admin e vet)
+// Rotas admin (protegidas - apenas admin e veterinário)
 Route::middleware(['admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::resource('animals', AdminAnimalController::class);

@@ -16,7 +16,7 @@ class CheckAdmin
 
         $user = Auth::user();
         
-        if ($user->role !== 'admin' && $user->role !== 'vet') {
+        if ($user->role !== 'admin' && $user->role !== 'veterinario') {
             Auth::logout();
             return redirect()->route('admin.login')
                 ->with('error', 'Acesso negado. Apenas administradores e veterinários podem acessar esta área.');

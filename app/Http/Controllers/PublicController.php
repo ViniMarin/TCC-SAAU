@@ -41,9 +41,7 @@ class PublicController extends Controller
 
     public function adoptionRequest(Request $request, $id)
     {
-        $request->validate([
-            'full_name' => 'required|string|max:255',
-            'email' => 'required|email',
+        $validated = $request->validate([
             'phone' => 'required|string',
             'city_state' => 'required|string',
             'housing_type' => 'required|string',
@@ -51,16 +49,18 @@ class PublicController extends Controller
             'message' => 'nullable|string',
         ]);
 
+        $user = $request->user();
+
         AdoptionRequest::create([
             'id' => Str::uuid(),
             'animal_id' => $id,
-            'full_name' => $request->full_name,
-            'email' => $request->email,
-            'phone' => $request->phone,
-            'city_state' => $request->city_state,
-            'housing_type' => $request->housing_type,
-            'had_pets' => $request->had_pets,
-            'message' => $request->message,
+            'full_name' => $user->name,
+            'email' => $user->email,
+            'phone' => $validated['phone'],
+            'city_state' => $validated['city_state'],
+            'housing_type' => $validated['housing_type'],
+            'had_pets' => $validated['had_pets'] ?? null,
+            'message' => $validated['message'] ?? null,
             'status' => 'pendente',
         ]);
 

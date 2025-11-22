@@ -49,7 +49,6 @@
                         <option value="">Selecione...</option>
                         <option value="admin" {{ old('role') == 'admin' ? 'selected' : '' }}>Administrador</option>
                         <option value="veterinario" {{ old('role') == 'veterinario' ? 'selected' : '' }}>Veterinário</option>
-                        <option value="usuario" {{ old('role') == 'usuario' ? 'selected' : '' }}>Usuário</option>
                     </select>
                     @error('role')
                     <div class="invalid-feedback">{{ $message }}</div>

@@ -74,10 +74,10 @@
             <form method="POST" action="{{ route('adoption.request', $animal->id) }}">
                 @csrf
                 <div class="mb-3">
-                    <input type="text" name="full_name" class="form-control" placeholder="Nome Completo" required>
+                    <input type="text" name="full_name" class="form-control" placeholder="Nome Completo" value="{{ auth()->user()->name }}" readonly>
                 </div>
                 <div class="mb-3">
-                    <input type="email" name="email" class="form-control" placeholder="Email" required>
+                    <input type="email" name="email" class="form-control" placeholder="Email" value="{{ auth()->user()->email }}" readonly>
                 </div>
                 <div class="mb-3">
                     <input type="text" name="phone" class="form-control" placeholder="Telefone" required>
@@ -99,7 +99,7 @@
             </form>
             @else
             <h3>Solicitar Adoção</h3>
-            <p class="alert alert-info">Faça <a href="{{ route('login') }}" class="alert-link">login</a> para solicitar adoção de {{ $animal->name }}.</p>
+            <p class="alert alert-info">Faça <a href="{{ route('login') }}" class="alert-link">login</a> ou <a href="{{ route('register') }}" class="alert-link">crie sua conta</a> para solicitar adoção de {{ $animal->name }}.</p>
             @endauth
                 </div>
             </div>

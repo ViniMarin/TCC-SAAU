@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@yield('title', 'SAAU - Sociedade de Amparo aos Animais de Umuarama')</title>
+    <title><?php echo $__env->yieldContent('title', 'SAAU - Sociedade de Amparo aos Animais de Umuarama'); ?></title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- VERSAO ATUALIZADA 2025-11-17 13:15 -->
@@ -80,92 +80,94 @@
             margin-top: auto;
         }
     </style>
-    @yield('styles')
+    <?php echo $__env->yieldContent('styles'); ?>
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark">
         <div class="container">
-            <a class="navbar-brand" href="{{ route('home') }}">
-                <img src="{{ asset('images/logo-saau.png') }}" alt="SAAU">
+            <a class="navbar-brand" href="<?php echo e(route('home')); ?>">
+                <img src="<?php echo e(asset('images/logo-saau.png')); ?>" alt="SAAU">
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
-                    <li class="nav-item"><a class="nav-link" href="{{ route('home') }}">Início</a></li>
-                    <li class="nav-item"><a class="nav-link" href="{{ route('animals') }}">Adotar</a></li>
-                    <li class="nav-item"><a class="nav-link" href="{{ route('events') }}">Eventos</a></li>
-                    <li class="nav-item"><a class="nav-link" href="{{ route('raffles') }}">Rifas</a></li>
-                    <li class="nav-item"><a class="nav-link" href="{{ route('stories.index') }}">Histórias</a></li>
-                    <li class="nav-item"><a class="nav-link" href="{{ route('how-it-works') }}">Como Funciona</a></li>
-                    <li class="nav-item"><a class="nav-link" href="{{ route('how-to-help') }}">Como Ajudar</a></li>
-                    <li class="nav-item"><a class="nav-link" href="{{ route('faq') }}">FAQ</a></li>
-                    @auth
-                        @if(auth()->user()->role === 'admin' || auth()->user()->role === 'veterinario')
+                    <li class="nav-item"><a class="nav-link" href="<?php echo e(route('home')); ?>">Início</a></li>
+                    <li class="nav-item"><a class="nav-link" href="<?php echo e(route('animals')); ?>">Adotar</a></li>
+                    <li class="nav-item"><a class="nav-link" href="<?php echo e(route('events')); ?>">Eventos</a></li>
+                    <li class="nav-item"><a class="nav-link" href="<?php echo e(route('raffles')); ?>">Rifas</a></li>
+                    <li class="nav-item"><a class="nav-link" href="<?php echo e(route('stories.index')); ?>">Histórias</a></li>
+                    <li class="nav-item"><a class="nav-link" href="<?php echo e(route('how-it-works')); ?>">Como Funciona</a></li>
+                    <li class="nav-item"><a class="nav-link" href="<?php echo e(route('how-to-help')); ?>">Como Ajudar</a></li>
+                    <li class="nav-item"><a class="nav-link" href="<?php echo e(route('faq')); ?>">FAQ</a></li>
+                    <?php if(auth()->guard()->check()): ?>
+                        <?php if(auth()->user()->role === 'admin' || auth()->user()->role === 'veterinario'): ?>
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                 <i class="fas fa-user-shield"></i> Painel Admin
                             </a>
                             <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                <li><a class="dropdown-item" href="{{ route('admin.dashboard') }}"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+                                <li><a class="dropdown-item" href="<?php echo e(route('admin.dashboard')); ?>"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
                                 <li><hr class="dropdown-divider"></li>
-                                <li><a class="dropdown-item" href="{{ route('admin.animals.index') }}"><i class="fas fa-paw"></i> Animais</a></li>
-                                <li><a class="dropdown-item" href="{{ route('admin.adoption-requests.index') }}"><i class="fas fa-heart"></i> Pedidos de Adoção</a></li>
-                                <li><a class="dropdown-item" href="{{ route('admin.events.index') }}"><i class="fas fa-calendar"></i> Eventos</a></li>
-                                <li><a class="dropdown-item" href="{{ route('admin.raffles.index') }}"><i class="fas fa-ticket-alt"></i> Rifas</a></li>
+                                <li><a class="dropdown-item" href="<?php echo e(route('admin.animals.index')); ?>"><i class="fas fa-paw"></i> Animais</a></li>
+                                <li><a class="dropdown-item" href="<?php echo e(route('admin.adoption-requests.index')); ?>"><i class="fas fa-heart"></i> Pedidos de Adoção</a></li>
+                                <li><a class="dropdown-item" href="<?php echo e(route('admin.events.index')); ?>"><i class="fas fa-calendar"></i> Eventos</a></li>
+                                <li><a class="dropdown-item" href="<?php echo e(route('admin.raffles.index')); ?>"><i class="fas fa-ticket-alt"></i> Rifas</a></li>
                                 <li><hr class="dropdown-divider"></li>
-                                <li><a class="dropdown-item" href="{{ route('admin.vaccines.index') }}"><i class="fas fa-syringe"></i> Vacinas</a></li>
-                                <li><a class="dropdown-item" href="{{ route('admin.donations.index') }}"><i class="fas fa-hand-holding-heart"></i> Doações</a></li>
-                                <li><a class="dropdown-item" href="{{ route('admin.users.index') }}"><i class="fas fa-users"></i> Usuários</a></li>
-                                <li><a class="dropdown-item" href="{{ route('admin.stories.index') }}"><i class="fas fa-book-heart"></i> Histórias</a></li>
+                                <li><a class="dropdown-item" href="<?php echo e(route('admin.vaccines.index')); ?>"><i class="fas fa-syringe"></i> Vacinas</a></li>
+                                <li><a class="dropdown-item" href="<?php echo e(route('admin.donations.index')); ?>"><i class="fas fa-hand-holding-heart"></i> Doações</a></li>
+                                <li><a class="dropdown-item" href="<?php echo e(route('admin.users.index')); ?>"><i class="fas fa-users"></i> Usuários</a></li>
+                                <li><a class="dropdown-item" href="<?php echo e(route('admin.stories.index')); ?>"><i class="fas fa-book-heart"></i> Histórias</a></li>
                                 <li><hr class="dropdown-divider"></li>
                                 <li class="dropdown-header">Relatórios</li>
-                                <li><a class="dropdown-item" href="{{ route('admin.reports.animals') }}"><i class="fas fa-file-csv"></i> Animais (CSV)</a></li>
-                                <li><a class="dropdown-item" href="{{ route('admin.reports.donations') }}"><i class="fas fa-file-csv"></i> Doações (CSV)</a></li>
-                                <li><a class="dropdown-item" href="{{ route('admin.reports.vaccines') }}"><i class="fas fa-file-csv"></i> Vacinas (CSV)</a></li>
+                                <li><a class="dropdown-item" href="<?php echo e(route('admin.reports.animals')); ?>"><i class="fas fa-file-csv"></i> Animais (CSV)</a></li>
+                                <li><a class="dropdown-item" href="<?php echo e(route('admin.reports.donations')); ?>"><i class="fas fa-file-csv"></i> Doações (CSV)</a></li>
+                                <li><a class="dropdown-item" href="<?php echo e(route('admin.reports.vaccines')); ?>"><i class="fas fa-file-csv"></i> Vacinas (CSV)</a></li>
                             </ul>
                         </li>
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
-                                <i class="fas fa-user"></i> {{ auth()->user()->name }}
+                                <i class="fas fa-user"></i> <?php echo e(auth()->user()->name); ?>
+
                             </a>
                             <ul class="dropdown-menu">
                                 <li>
-                                    <form action="{{ auth()->user()->role === 'admin' || auth()->user()->role === 'veterinario' ? route('admin.logout') : route('logout') }}" method="POST">
-                                        @csrf
+                                    <form action="<?php echo e(auth()->user()->role === 'admin' || auth()->user()->role === 'veterinario' ? route('admin.logout') : route('logout')); ?>" method="POST">
+                                        <?php echo csrf_field(); ?>
                                         <button type="submit" class="dropdown-item"><i class="fas fa-sign-out-alt"></i> Sair</button>
                                     </form>
                                 </li>
                             </ul>
                         </li>
-                        @else
+                        <?php else: ?>
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
-                                <i class="fas fa-user"></i> {{ auth()->user()->name }}
+                                <i class="fas fa-user"></i> <?php echo e(auth()->user()->name); ?>
+
                             </a>
                             <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" href="{{ route('animals') }}"><i class="fas fa-paw"></i> Quero adotar</a></li>
+                                <li><a class="dropdown-item" href="<?php echo e(route('animals')); ?>"><i class="fas fa-paw"></i> Quero adotar</a></li>
                                 <li><hr class="dropdown-divider"></li>
                                 <li>
-                                    <form action="{{ route('logout') }}" method="POST">
-                                        @csrf
+                                    <form action="<?php echo e(route('logout')); ?>" method="POST">
+                                        <?php echo csrf_field(); ?>
                                         <button type="submit" class="dropdown-item"><i class="fas fa-sign-out-alt"></i> Sair</button>
                                     </form>
                                 </li>
                             </ul>
                         </li>
-                        @endif
-                    @else
-                        <li class="nav-item"><a class="nav-link" href="{{ route('login') }}"><i class="fas fa-user"></i> Entrar</a></li>
-                    @endauth
+                        <?php endif; ?>
+                    <?php else: ?>
+                        <li class="nav-item"><a class="nav-link" href="<?php echo e(route('login')); ?>"><i class="fas fa-user"></i> Entrar</a></li>
+                    <?php endif; ?>
                 </ul>
             </div>
         </div>
     </nav>
 
     <div id="main-content">
-        @yield('content')
+        <?php echo $__env->yieldContent('content'); ?>
     </div>
 
     <footer class="bg-dark text-white pt-5 pb-3 mt-5">
@@ -183,13 +185,13 @@
                 <div class="col-lg-3 col-md-6 mb-4">
                     <h5 class="text-warning mb-3">Links Rápidos</h5>
                     <ul class="list-unstyled">
-                        <li class="mb-2"><a href="{{ route('home') }}" class="text-light text-decoration-none small"><i class="fas fa-chevron-right text-warning"></i> Início</a></li>
-                        <li class="mb-2"><a href="{{ route('animals') }}" class="text-light text-decoration-none small"><i class="fas fa-chevron-right text-warning"></i> Quero adotar</a></li>
-                        <li class="mb-2"><a href="{{ route('raffles') }}" class="text-light text-decoration-none small"><i class="fas fa-chevron-right text-warning"></i> Rifas solidárias</a></li>
-                        <li class="mb-2"><a href="{{ route('events') }}" class="text-light text-decoration-none small"><i class="fas fa-chevron-right text-warning"></i> Eventos</a></li>
-                        <li class="mb-2"><a href="{{ route('how-to-help') }}" class="text-light text-decoration-none small"><i class="fas fa-chevron-right text-warning"></i> Como ajudar</a></li>
-                        <li class="mb-2"><a href="{{ route('stories.index') }}" class="text-light text-decoration-none small"><i class="fas fa-chevron-right text-warning"></i> Histórias de adoção</a></li>
-                        <li class="mb-2"><a href="{{ route('faq') }}" class="text-light text-decoration-none small"><i class="fas fa-chevron-right text-warning"></i> FAQ</a></li>
+                        <li class="mb-2"><a href="<?php echo e(route('home')); ?>" class="text-light text-decoration-none small"><i class="fas fa-chevron-right text-warning"></i> Início</a></li>
+                        <li class="mb-2"><a href="<?php echo e(route('animals')); ?>" class="text-light text-decoration-none small"><i class="fas fa-chevron-right text-warning"></i> Quero adotar</a></li>
+                        <li class="mb-2"><a href="<?php echo e(route('raffles')); ?>" class="text-light text-decoration-none small"><i class="fas fa-chevron-right text-warning"></i> Rifas solidárias</a></li>
+                        <li class="mb-2"><a href="<?php echo e(route('events')); ?>" class="text-light text-decoration-none small"><i class="fas fa-chevron-right text-warning"></i> Eventos</a></li>
+                        <li class="mb-2"><a href="<?php echo e(route('how-to-help')); ?>" class="text-light text-decoration-none small"><i class="fas fa-chevron-right text-warning"></i> Como ajudar</a></li>
+                        <li class="mb-2"><a href="<?php echo e(route('stories.index')); ?>" class="text-light text-decoration-none small"><i class="fas fa-chevron-right text-warning"></i> Histórias de adoção</a></li>
+                        <li class="mb-2"><a href="<?php echo e(route('faq')); ?>" class="text-light text-decoration-none small"><i class="fas fa-chevron-right text-warning"></i> FAQ</a></li>
                     </ul>
                 </div>
 
@@ -246,7 +248,7 @@
             <div class="row">
                 <div class="col-md-6 text-center text-md-start mb-3 mb-md-0">
                     <p class="text-light small mb-0">
-                        <i class="far fa-copyright"></i> {{ date('Y') }} SAAU - Sociedade de Amparo aos Animais de Umuarama. Todos os direitos reservados.
+                        <i class="far fa-copyright"></i> <?php echo e(date('Y')); ?> SAAU - Sociedade de Amparo aos Animais de Umuarama. Todos os direitos reservados.
                     </p>
                 </div>
                 <div class="col-md-6 text-center text-md-end">
@@ -259,6 +261,7 @@
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    @yield('scripts')
+    <?php echo $__env->yieldContent('scripts'); ?>
 </body>
 </html>
+<?php /**PATH C:\Users\eutei\OneDrive\Área de Trabalho\TCC-SAAU\resources\views/layouts/app.blade.php ENDPATH**/ ?>
