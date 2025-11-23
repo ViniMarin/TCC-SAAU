@@ -39,7 +39,7 @@
                             <h5>{{ $adoptionRequest->animal->name }}</h5>
                             <p class="mb-1"><strong>Espécie:</strong> {{ ucfirst($adoptionRequest->animal->species) }}</p>
                             <p class="mb-1"><strong>Raça:</strong> {{ $adoptionRequest->animal->breed ?? 'N/A' }}</p>
-                            <p class="mb-1"><strong>Idade:</strong> {{ $adoptionRequest->animal->age ?? 'N/A' }} anos</p>
+                            <p class="mb-1"><strong>Idade:</strong> {{ $adoptionRequest->animal->age ?? 'N/A' }}</p>
                             <p class="mb-1"><strong>Status:</strong> 
                                 <span class="badge bg-{{ $adoptionRequest->animal->status == 'disponivel' ? 'success' : 'secondary' }}">
                                     {{ ucfirst($adoptionRequest->animal->status) }}

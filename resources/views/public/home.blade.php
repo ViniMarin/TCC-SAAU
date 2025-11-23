@@ -59,7 +59,7 @@
                         <i class="fas fa-paw"></i> {{ ucfirst($animal->species) }} |
                         <i class="fas fa-{{ $genderIcon }}"></i> {{ $genderLabel }}<br>
                         @if($animal->age)
-                        <i class="fas fa-calendar"></i> {{ $animal->age }} {{ $animal->age == 1 ? 'ano' : 'anos' }}<br>
+                        <i class="fas fa-calendar"></i> {{ $animal->age }}<br>
                         @endif
                         @if($animal->size)
                         <i class="fas fa-ruler"></i> Porte {{ ucfirst($animal->size) }}

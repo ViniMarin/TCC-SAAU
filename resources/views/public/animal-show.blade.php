@@ -22,7 +22,7 @@
                     <p class="mb-2"><strong><i class="fas fa-dog"></i> Raça:</strong> {{ $animal->breed }}</p>
                     @endif
                     @if($animal->age)
-                    <p class="mb-2"><strong><i class="fas fa-calendar"></i> Idade:</strong> {{ $animal->age }} {{ $animal->age == 1 ? 'ano' : 'anos' }}</p>
+                    <p class="mb-2"><strong><i class="fas fa-calendar"></i> Idade:</strong> {{ $animal->age }}</p>
                     @endif
                     @php
                         $genderIcon = $animal->gender === 'macho' ? 'mars' : 'venus';

@@ -24,7 +24,15 @@
         <div class="stat-label">Animais Disponíveis</div>
         <div class="stat-value">{{ $stats['available'] }}</div>
     </div>
-    
+
+    <div class="stat-card teal">
+        <div class="stat-icon">
+            <i class="fas fa-stethoscope"></i>
+        </div>
+        <div class="stat-label">Animais em Tratamento</div>
+        <div class="stat-value">{{ $stats['in_treatment'] }}</div>
+    </div>
+
     <div class="stat-card purple">
         <div class="stat-icon">
             <i class="fas fa-check-circle"></i>

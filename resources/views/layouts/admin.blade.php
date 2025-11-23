@@ -161,6 +161,7 @@
         
         .stat-card.blue { border-left-color: #3498db; }
         .stat-card.green { border-left-color: #2ecc71; }
+        .stat-card.teal { border-left-color: #1abc9c; }
         .stat-card.purple { border-left-color: #9b59b6; }
         .stat-card.orange { border-left-color: #e67e22; }
         .stat-card.red { border-left-color: #e74c3c; }
@@ -180,6 +181,7 @@
         
         .stat-card.blue .stat-icon { background: #3498db; }
         .stat-card.green .stat-icon { background: #2ecc71; }
+        .stat-card.teal .stat-icon { background: #1abc9c; }
         .stat-card.purple .stat-icon { background: #9b59b6; }
         .stat-card.orange .stat-icon { background: #e67e22; }
         .stat-card.red .stat-icon { background: #e74c3c; }

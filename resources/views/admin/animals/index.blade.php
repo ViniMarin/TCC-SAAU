@@ -39,7 +39,7 @@
                             <td>{{ $animal->name }}</td>
                             <td>{{ ucfirst($animal->species) }}</td>
                             <td>{{ $animal->breed ?? '-' }}</td>
-                            <td>{{ $animal->age ? $animal->age . ' anos' : '-' }}</td>
+                            <td>{{ $animal->age ?: '-' }}</td>
                             <td>
                                 <span class="badge bg-{{ $animal->status == 'disponivel' ? 'success' : ($animal->status == 'adotado' ? 'info' : 'warning') }}">
                                     {{ ucfirst(str_replace('_', ' ', $animal->status)) }}
