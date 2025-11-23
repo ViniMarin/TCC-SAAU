@@ -26,11 +26,11 @@ class AdminAnimalController extends Controller
     {
         $validated = $request->validate([
             'name' => 'required|string|max:255',
-            'species' => 'required|in:cachorro,gato,outro',
+            'species' => 'required|in:cao,gato',
             'breed' => 'nullable|string|max:255',
-            'age' => 'nullable|integer|min:0',
+            'age' => 'required|in:filhote,adulto,idoso',
             'gender' => 'required|in:macho,femea',
-            'size' => 'nullable|in:pequeno,medio,grande',
+            'size' => 'required|in:pequeno,medio,grande',
             'color' => 'nullable|string|max:255',
             'description' => 'nullable|string',
             'health_status' => 'nullable|string',
@@ -71,11 +71,11 @@ class AdminAnimalController extends Controller
     {
         $validated = $request->validate([
             'name' => 'required|string|max:255',
-            'species' => 'required|in:cachorro,gato,outro',
+            'species' => 'required|in:cao,gato',
             'breed' => 'nullable|string|max:255',
-            'age' => 'nullable|integer|min:0',
+            'age' => 'required|in:filhote,adulto,idoso',
             'gender' => 'required|in:macho,femea',
-            'size' => 'nullable|in:pequeno,medio,grande',
+            'size' => 'required|in:pequeno,medio,grande',
             'color' => 'nullable|string|max:255',
             'description' => 'nullable|string',
             'health_status' => 'nullable|string',

@@ -79,8 +79,8 @@
 
                     <div class="col-md-4 mb-3">
                         <label for="size" class="form-label">Porte</label>
-                        <select class="form-select @error('size') is-invalid @enderror" 
-                                id="size" name="size">
+                        <select class="form-select @error('size') is-invalid @enderror"
+                                id="size" name="size" required>
                             <option value="">Selecione...</option>
                             <option value="pequeno" {{ old('size') == 'pequeno' ? 'selected' : '' }}>Pequeno</option>
                             <option value="medio" {{ old('size') == 'medio' ? 'selected' : '' }}>Médio</option>

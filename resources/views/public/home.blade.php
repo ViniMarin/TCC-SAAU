@@ -50,10 +50,14 @@
                 </div>
                 @endif
                 <div class="card-body">
+                    @php
+                        $genderIcon = $animal->gender === 'macho' ? 'mars' : 'venus';
+                        $genderLabel = $animal->gender === 'macho' ? 'Macho' : 'Fêmea';
+                    @endphp
                     <h5 class="card-title">{{ $animal->name }}</h5>
                     <p class="card-text">
-                        <i class="fas fa-paw"></i> {{ ucfirst($animal->species) }} | 
-                        <i class="fas fa-{{ $animal->gender == 'macho' ? 'mars' : 'venus' }}"></i> {{ ucfirst($animal->gender) }}<br>
+                        <i class="fas fa-paw"></i> {{ ucfirst($animal->species) }} |
+                        <i class="fas fa-{{ $genderIcon }}"></i> {{ $genderLabel }}<br>
                         @if($animal->age)
                         <i class="fas fa-calendar"></i> {{ $animal->age }} {{ $animal->age == 1 ? 'ano' : 'anos' }}<br>
                         @endif
@@ -61,7 +65,6 @@
                         <i class="fas fa-ruler"></i> Porte {{ ucfirst($animal->size) }}
                         @endif
                     </p>
-                    <p>{{ Str::limit($animal->description, 80) }}</p>
                     <a href="{{ route('animal.show', $animal->id) }}" class="btn btn-primary w-100">
                         <i class="fas fa-heart"></i> Quero Adotar
                     </a>

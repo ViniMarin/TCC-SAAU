@@ -24,7 +24,11 @@
                     @if($animal->age)
                     <p class="mb-2"><strong><i class="fas fa-calendar"></i> Idade:</strong> {{ $animal->age }} {{ $animal->age == 1 ? 'ano' : 'anos' }}</p>
                     @endif
-                    <p class="mb-2"><strong><i class="fas fa-{{ $animal->gender == 'macho' ? 'mars' : 'venus' }}"></i> Sexo:</strong> {{ ucfirst($animal->gender) }}</p>
+                    @php
+                        $genderIcon = $animal->gender === 'macho' ? 'mars' : 'venus';
+                        $genderLabel = $animal->gender === 'macho' ? 'Macho' : 'Fêmea';
+                    @endphp
+                    <p class="mb-2"><strong><i class="fas fa-{{ $genderIcon }}"></i> Sexo:</strong> {{ $genderLabel }}</p>
                     @if($animal->size)
                     <p class="mb-2"><strong><i class="fas fa-ruler"></i> Porte:</strong> {{ ucfirst($animal->size) }}</p>
                     @endif
