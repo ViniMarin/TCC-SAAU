@@ -1,10 +1,10 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container my-5">
+<div class="container-fluid my-5 px-4 px-lg-5">
     <h1 class="text-center mb-4">Animais Disponíveis</h1>
 
-    <div class="row">
+    <div class="row g-4">
         {{-- =========================
              FILTRO DE ADOÇÃO
            ========================== --}}
