@@ -4,7 +4,8 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration {
+return new class extends Migration
+{
     public function up(): void
     {
         Schema::table('vaccines', function (Blueprint $table) {
@@ -21,19 +22,11 @@ return new class extends Migration {
             }
 
             if (!Schema::hasColumn('vaccines', 'created_by')) {
-                $table->uuid('created_by')->nullable()->after('notes');
-            }
-
-            if (Schema::hasColumn('vaccines', 'name')) {
-                $table->dropColumn('name');
-            }
-
-            if (Schema::hasColumn('vaccines', 'date')) {
-                $table->dropColumn('date');
-            }
-
-            if (Schema::hasColumn('vaccines', 'veterinarian')) {
-                $table->dropColumn('veterinarian');
+                $table->foreignId('created_by')
+                    ->nullable()
+                    ->after('notes')
+                    ->constrained('users')
+                    ->nullOnDelete();
             }
         });
     }
@@ -41,20 +34,8 @@ return new class extends Migration {
     public function down(): void
     {
         Schema::table('vaccines', function (Blueprint $table) {
-            if (!Schema::hasColumn('vaccines', 'name')) {
-                $table->string('name')->nullable();
-            }
-
-            if (!Schema::hasColumn('vaccines', 'date')) {
-                $table->date('date')->nullable();
-            }
-
-            if (!Schema::hasColumn('vaccines', 'veterinarian')) {
-                $table->string('veterinarian')->nullable();
-            }
-
             if (Schema::hasColumn('vaccines', 'created_by')) {
-                $table->dropColumn('created_by');
+                $table->dropConstrainedForeignId('created_by');
             }
 
             if (Schema::hasColumn('vaccines', 'next_dose_date')) {

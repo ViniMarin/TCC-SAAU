@@ -48,19 +48,22 @@
                 </div>
                 <?php endif; ?>
                 <div class="card-body">
+                    <?php
+                        $genderIcon = $animal->gender === 'macho' ? 'mars' : 'venus';
+                        $genderLabel = $animal->gender === 'macho' ? 'Macho' : 'Fêmea';
+                    ?>
                     <h5 class="card-title"><?php echo e($animal->name); ?></h5>
                     <p class="card-text">
-                        <i class="fas fa-paw"></i> <?php echo e(ucfirst($animal->species)); ?> | 
-                        <i class="fas fa-<?php echo e($animal->gender == 'macho' ? 'mars' : 'venus'); ?>"></i> <?php echo e(ucfirst($animal->gender)); ?><br>
+                        <i class="fas fa-paw"></i> <?php echo e(ucfirst($animal->species)); ?> |
+                        <i class="fas fa-<?php echo e($genderIcon); ?>"></i> <?php echo e($genderLabel); ?><br>
                         <?php if($animal->age): ?>
-                        <i class="fas fa-calendar"></i> <?php echo e($animal->age); ?> <?php echo e($animal->age == 1 ? 'ano' : 'anos'); ?><br>
+                        <i class="fas fa-calendar"></i> <?php echo e($animal->age); ?><br>
                         <?php endif; ?>
                         <?php if($animal->size): ?>
                         <i class="fas fa-ruler"></i> Porte <?php echo e(ucfirst($animal->size)); ?>
 
                         <?php endif; ?>
                     </p>
-                    <p><?php echo e(Str::limit($animal->description, 80)); ?></p>
                     <a href="<?php echo e(route('animal.show', $animal->id)); ?>" class="btn btn-primary w-100">
                         <i class="fas fa-heart"></i> Quero Adotar
                     </a>

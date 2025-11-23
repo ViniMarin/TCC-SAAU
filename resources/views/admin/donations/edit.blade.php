@@ -20,8 +20,8 @@
         <div class="row">
             <div class="col-md-6 mb-3">
                 <label for="date" class="form-label">Data *</label>
-                <input type="date" class="form-control @error('date') is-invalid @enderror" 
-                       id="date" name="date" value="{{ old('date', $donation->date) }}" required>
+                <input type="date" class="form-control @error('date') is-invalid @enderror"
+                       id="date" name="date" value="{{ old('date', $donation->date?->format('Y-m-d')) }}" required>
                 @error('date')
                 <div class="invalid-feedback">{{ $message }}</div>
                 @enderror

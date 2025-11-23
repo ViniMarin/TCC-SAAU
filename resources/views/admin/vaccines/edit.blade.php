@@ -80,6 +80,7 @@
         </div>
     </form>
 </div>
+@endsection
 @section('scripts')
 <script>
     document.addEventListener('DOMContentLoaded', function () {
@@ -92,40 +93,9 @@
 
             field.addEventListener('input', function (event) {
                 const sanitizedValue = event.target.value.replace(/[^0-9/\-]/g, '');
-                const trimmedValue = sanitizedValue.slice(0, 10);
-
-                if (event.target.value !== trimmedValue) {
-                    event.target.value = trimmedValue;
-                }
+                event.target.value = sanitizedValue.slice(0, 10);
             });
         });
-    });
-</script>
-@endsection
-@endsection
-
-@section('scripts')
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const limitDateInput = (inputId) => {
-            const input = document.getElementById(inputId);
-            if (!input) return;
-
-            let lastValidValue = input.value;
-
-            input.addEventListener('input', () => {
-                const numericLength = input.value.replace(/\D/g, '').length;
-
-                if (input.validity.valid && numericLength <= 8) {
-                    lastValidValue = input.value;
-                    return;
-                }
-
-                input.value = lastValidValue;
-            });
-        };
-
-        ['application_date', 'next_dose_date'].forEach(limitDateInput);
     });
 </script>
 @endsection

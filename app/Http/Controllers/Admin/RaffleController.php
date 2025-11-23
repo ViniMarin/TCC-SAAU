@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Raffle;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -23,13 +24,17 @@ class RaffleController extends Controller
 
     public function store(Request $request)
     {
+        $request->merge([
+            'draw_date' => $this->normalizeDrawDate($request->input('draw_date')),
+        ]);
+
         $validated = $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
             'prize' => 'nullable|string|max:255',
             'ticket_price' => ['required', 'regex:/^\d+(?:[\.,]\d{2})?$/'],
             'total_tickets' => 'required|integer|min:1',
-            'draw_date' => 'required|date',
+            'draw_date' => 'required|date|after_or_equal:today',
             'status' => 'required|in:ativa,pausada,encerrada',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
         ]);
@@ -56,13 +61,17 @@ class RaffleController extends Controller
 
     public function update(Request $request, Raffle $raffle)
     {
+        $request->merge([
+            'draw_date' => $this->normalizeDrawDate($request->input('draw_date')),
+        ]);
+
         $validated = $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
             'prize' => 'nullable|string|max:255',
             'ticket_price' => ['required', 'regex:/^\d+(?:[\.,]\d{2})?$/'],
             'total_tickets' => 'required|integer|min:1',
-            'draw_date' => 'required|date',
+            'draw_date' => 'required|date|after_or_equal:today',
             'status' => 'required|in:ativa,pausada,encerrada',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
         ]);
@@ -95,6 +104,29 @@ class RaffleController extends Controller
         $clean = str_replace(',', '.', $clean);
 
         return (float) number_format((float) $clean, 2, '.', '');
+    }
+
+    private function normalizeDrawDate(?string $value): ?string
+    {
+        if (!$value) {
+            return $value;
+        }
+
+        $value = trim($value);
+
+        if (preg_match('/^(\d{2})\/(\d{2})\/(\d{4})$/', $value, $matches)) {
+            try {
+                return Carbon::createFromFormat('d/m/Y', $value)->format('Y-m-d');
+            } catch (\Exception) {
+                return $value;
+            }
+        }
+
+        try {
+            return Carbon::parse($value)->format('Y-m-d');
+        } catch (\Exception) {
+            return $value;
+        }
     }
 
     public function destroy(Raffle $raffle)

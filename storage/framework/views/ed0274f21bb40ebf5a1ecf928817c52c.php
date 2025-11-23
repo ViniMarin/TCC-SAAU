@@ -21,9 +21,13 @@
                     <p class="mb-2"><strong><i class="fas fa-dog"></i> Raça:</strong> <?php echo e($animal->breed); ?></p>
                     <?php endif; ?>
                     <?php if($animal->age): ?>
-                    <p class="mb-2"><strong><i class="fas fa-calendar"></i> Idade:</strong> <?php echo e($animal->age); ?> <?php echo e($animal->age == 1 ? 'ano' : 'anos'); ?></p>
+                    <p class="mb-2"><strong><i class="fas fa-calendar"></i> Idade:</strong> <?php echo e($animal->age); ?></p>
                     <?php endif; ?>
-                    <p class="mb-2"><strong><i class="fas fa-<?php echo e($animal->gender == 'macho' ? 'mars' : 'venus'); ?>"></i> Sexo:</strong> <?php echo e(ucfirst($animal->gender)); ?></p>
+                    <?php
+                        $genderIcon = $animal->gender === 'macho' ? 'mars' : 'venus';
+                        $genderLabel = $animal->gender === 'macho' ? 'Macho' : 'Fêmea';
+                    ?>
+                    <p class="mb-2"><strong><i class="fas fa-<?php echo e($genderIcon); ?>"></i> Sexo:</strong> <?php echo e($genderLabel); ?></p>
                     <?php if($animal->size): ?>
                     <p class="mb-2"><strong><i class="fas fa-ruler"></i> Porte:</strong> <?php echo e(ucfirst($animal->size)); ?></p>
                     <?php endif; ?>

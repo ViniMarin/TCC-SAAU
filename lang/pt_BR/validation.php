@@ -20,5 +20,6 @@ return [
         'application_date' => 'data de aplicação',
         'next_dose_date' => 'próxima dose',
         'notes' => 'observações',
+        'draw_date' => 'data do sorteio',
     ],
 ];

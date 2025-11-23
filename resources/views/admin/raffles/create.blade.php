@@ -64,6 +64,17 @@
                     </div>
                 </div>
 
+                @php
+                    $drawDateValue = old('draw_date');
+                    if ($drawDateValue) {
+                        try {
+                            $drawDateValue = \Carbon\Carbon::parse($drawDateValue)->format('d/m/Y');
+                        } catch (Exception) {
+                            $drawDateValue = $drawDateValue;
+                        }
+                    }
+                @endphp
+
                 <div class="row">
                     <div class="col-md-6 mb-3">
                         <label for="draw_date" class="form-label">Data do Sorteio *</label>
@@ -143,10 +154,77 @@
         });
     };
 
-    document.querySelectorAll('.currency-input').forEach((input) => {
-        formatCurrencyInput(input);
-        input.addEventListener('input', () => formatCurrencyInput(input));
-        input.addEventListener('blur', () => formatCurrencyInput(input));
+    const setupCurrencyInputs = () => {
+        document.querySelectorAll('.currency-input').forEach((input) => {
+            formatCurrencyInput(input);
+            input.addEventListener('input', () => formatCurrencyInput(input));
+            input.addEventListener('blur', () => formatCurrencyInput(input));
+        });
+    };
+
+    const maskDrawDate = (input) => {
+        const digits = input.value.replace(/\D/g, '').slice(0, 8);
+        const parts = [];
+
+        if (digits.length > 0) parts.push(digits.substring(0, Math.min(2, digits.length)));
+        if (digits.length >= 3) parts.push(digits.substring(2, Math.min(4, digits.length)));
+        if (digits.length >= 5) parts.push(digits.substring(4, digits.length));
+
+        input.value = parts.join('/');
+    };
+
+    const toISODate = (value) => {
+        const match = value.match(/^(\d{2})\/(\d{2})\/(\d{4})$/);
+        if (!match) return null;
+        const [, day, month, year] = match;
+        const isoDate = `${year}-${month}-${day}`;
+        const parsed = new Date(isoDate);
+        return Number.isNaN(parsed.getTime()) ? null : isoDate;
+    };
+
+    const setupDrawDate = () => {
+        const drawDateInput = document.getElementById('draw_date');
+        if (!drawDateInput) return;
+
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+
+        const validateDate = () => {
+            const isoDate = toISODate(drawDateInput.value);
+            if (!isoDate) {
+                drawDateInput.setCustomValidity('Use o formato DD/MM/AAAA.');
+                return false;
+            }
+
+            const chosenDate = new Date(isoDate);
+            if (chosenDate < today) {
+                drawDateInput.setCustomValidity('A data deve ser igual ou posterior à data atual.');
+                return false;
+            }
+
+            drawDateInput.setCustomValidity('');
+            return isoDate;
+        };
+
+        drawDateInput.addEventListener('input', () => maskDrawDate(drawDateInput));
+        drawDateInput.addEventListener('blur', validateDate);
+
+        const form = drawDateInput.closest('form');
+        form?.addEventListener('submit', (event) => {
+            const isoDate = validateDate();
+            if (!isoDate) {
+                event.preventDefault();
+                drawDateInput.reportValidity();
+                return;
+            }
+
+            drawDateInput.value = isoDate;
+        });
+    };
+
+    document.addEventListener('DOMContentLoaded', () => {
+        setupCurrencyInputs();
+        setupDrawDate();
     });
 </script>
 @endsection
