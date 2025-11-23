@@ -8,11 +8,13 @@ return new class extends Migration {
         Schema::create('vaccines', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->uuid('animal_id');
-            $table->string('name');
-            $table->date('date');
-            $table->string('veterinarian')->nullable();
+            $table->string('vaccine_type');
+            $table->date('application_date');
+            $table->date('next_dose_date')->nullable();
             $table->text('notes')->nullable();
+            $table->foreignId('created_by')->nullable()->constrained('users')->nullOnDelete();
             $table->timestamps();
+
             $table->foreign('animal_id')->references('id')->on('animals')->onDelete('cascade');
         });
     }

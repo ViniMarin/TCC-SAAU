@@ -15,7 +15,8 @@ class Vaccine extends Model
         'vaccine_type',
         'application_date',
         'next_dose_date',
-        'notes'
+        'notes',
+        'created_by'
     ];
 
     protected $casts = [
