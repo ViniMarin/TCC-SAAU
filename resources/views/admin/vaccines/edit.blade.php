@@ -46,8 +46,8 @@
         <div class="row">
             <div class="col-md-6 mb-3">
                 <label for="application_date" class="form-label">Data de Aplicação *</label>
-                <input type="date" class="form-control @error('application_date') is-invalid @enderror" 
-                       id="application_date" name="application_date" value="{{ old('application_date', $vaccine->application_date) }}" required>
+                <input type="date" class="form-control @error('application_date') is-invalid @enderror"
+                       id="application_date" name="application_date" value="{{ old('application_date', optional($vaccine->application_date)->format('Y-m-d')) }}" required>
                 @error('application_date')
                 <div class="invalid-feedback">{{ $message }}</div>
                 @enderror
@@ -55,8 +55,8 @@
 
             <div class="col-md-6 mb-3">
                 <label for="next_dose_date" class="form-label">Próxima Dose</label>
-                <input type="date" class="form-control @error('next_dose_date') is-invalid @enderror" 
-                       id="next_dose_date" name="next_dose_date" value="{{ old('next_dose_date', $vaccine->next_dose_date) }}">
+                <input type="date" class="form-control @error('next_dose_date') is-invalid @enderror"
+                       id="next_dose_date" name="next_dose_date" value="{{ old('next_dose_date', optional($vaccine->next_dose_date)->format('Y-m-d')) }}">
                 @error('next_dose_date')
                 <div class="invalid-feedback">{{ $message }}</div>
                 @enderror
@@ -80,4 +80,52 @@
         </div>
     </form>
 </div>
+@section('scripts')
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const dateFields = ['application_date', 'next_dose_date'];
+
+        dateFields.forEach(function (id) {
+            const field = document.getElementById(id);
+
+            if (!field) return;
+
+            field.addEventListener('input', function (event) {
+                const sanitizedValue = event.target.value.replace(/[^0-9/\-]/g, '');
+                const trimmedValue = sanitizedValue.slice(0, 10);
+
+                if (event.target.value !== trimmedValue) {
+                    event.target.value = trimmedValue;
+                }
+            });
+        });
+    });
+</script>
+@endsection
+@endsection
+
+@section('scripts')
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const limitDateInput = (inputId) => {
+            const input = document.getElementById(inputId);
+            if (!input) return;
+
+            let lastValidValue = input.value;
+
+            input.addEventListener('input', () => {
+                const numericLength = input.value.replace(/\D/g, '').length;
+
+                if (input.validity.valid && numericLength <= 8) {
+                    lastValidValue = input.value;
+                    return;
+                }
+
+                input.value = lastValidValue;
+            });
+        };
+
+        ['application_date', 'next_dose_date'].forEach(limitDateInput);
+    });
+</script>
 @endsection

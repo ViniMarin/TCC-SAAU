@@ -9,13 +9,6 @@
         </a>
     </div>
 
-    @if(session('success'))
-    <div class="alert alert-success alert-dismissible fade show" role="alert">
-        {{ session('success') }}
-        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-    </div>
-    @endif
-
     <div class="card">
         <div class="card-body">
             <div class="table-responsive">
@@ -45,7 +38,7 @@
                             </td>
                             <td>{{ $vaccine->notes ?? '-' }}</td>
                             <td>
-                                <a href="{{ route('admin.vaccines.edit', $vaccine->id) }}" class="btn btn-sm btn-primary">
+                                <a href="{{ route('admin.vaccines.edit', $vaccine->id) }}" class="btn btn-sm btn-warning">
                                     <i class="fas fa-edit"></i>
                                 </a>
                                 <form action="{{ route('admin.vaccines.destroy', $vaccine) }}" method="POST" class="d-inline" onsubmit="return confirm('Tem certeza que deseja remover este registro?')">

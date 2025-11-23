@@ -27,8 +27,8 @@ class VaccineController extends Controller
         $validated = $request->validate([
             'animal_id' => 'required|exists:animals,id',
             'vaccine_type' => 'required|string|max:255',
-            'application_date' => 'required|date',
-            'next_dose_date' => 'nullable|date',
+            'application_date' => 'required|date_format:Y-m-d',
+            'next_dose_date' => 'nullable|date_format:Y-m-d|after:application_date',
             'notes' => 'nullable|string'
         ]);
 
@@ -51,8 +51,8 @@ class VaccineController extends Controller
         $validated = $request->validate([
             'animal_id' => 'required|exists:animals,id',
             'vaccine_type' => 'required|string|max:255',
-            'application_date' => 'required|date',
-            'next_dose_date' => 'nullable|date',
+            'application_date' => 'required|date_format:Y-m-d',
+            'next_dose_date' => 'nullable|date_format:Y-m-d|after:application_date',
             'notes' => 'nullable|string'
         ]);
 
