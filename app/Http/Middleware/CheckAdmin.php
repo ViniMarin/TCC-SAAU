@@ -10,16 +10,20 @@ class CheckAdmin
 {
     public function handle(Request $request, Closure $next)
     {
-        $guard = Auth::guard('admin');
 
-        if (!$guard->check()) {
+        $adminGuard = Auth::guard('admin');
+        Auth::shouldUse('admin');
+
+        $request->setUserResolver(fn () => $adminGuard->user());
+
+        if (!$adminGuard->check()) {
             return redirect()->route('admin.login');
         }
 
-        $user = $guard->user();
+        $user = $adminGuard->user();
 
         if ($user->role !== 'admin' && $user->role !== 'veterinario') {
-            $guard->logout();
+            $adminGuard->logout();
             return redirect()->route('admin.login')
                 ->with('error', 'Acesso negado. Apenas administradores e veterinários podem acessar esta área.');
         }

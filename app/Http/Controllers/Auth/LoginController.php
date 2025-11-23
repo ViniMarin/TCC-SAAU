@@ -40,6 +40,23 @@ class LoginController extends Controller
     }
 
     /**
+     * Efetua o logout apenas do guard padrão (adotantes), mantendo outras sessões ativas.
+     */
+    public function logout(Request $request)
+    {
+        $this->guard()->logout();
+
+        $request->session()->regenerate();
+        $request->session()->regenerateToken();
+
+        if ($response = $this->loggedOut($request)) {
+            return $response;
+        }
+
+        return redirect('/');
+    }
+
+    /**
      * Impede que usuários administrativos façam login pelo site principal.
      */
     protected function authenticated(Request $request, $user)
@@ -47,7 +64,7 @@ class LoginController extends Controller
         if (in_array($user->role, ['admin', 'veterinario'])) {
             $this->guard()->logout();
 
-            $request->session()->invalidate();
+            $request->session()->regenerate();
             $request->session()->regenerateToken();
 
             return redirect()->route('login')->withErrors([
