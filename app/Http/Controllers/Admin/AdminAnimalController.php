@@ -50,9 +50,14 @@ class AdminAnimalController extends Controller
         $validated['special_needs'] = $request->has('special_needs') ? 1 : 0;
 
         if ($request->hasFile('photo')) {
+            $uploadPath = public_path('storage/animals');
+            if (!file_exists($uploadPath)) {
+                mkdir($uploadPath, 0775, true);
+            }
+
             $file = $request->file('photo');
             $filename = Str::uuid() . '.' . $file->getClientOriginalExtension();
-            $file->move(public_path('storage/animals'), $filename);
+            $file->move($uploadPath, $filename);
             $validated['photo_url'] = '/storage/animals/' . $filename;
         }
 
@@ -103,9 +108,14 @@ class AdminAnimalController extends Controller
                 }
             }
 
+            $uploadPath = public_path('storage/animals');
+            if (!file_exists($uploadPath)) {
+                mkdir($uploadPath, 0775, true);
+            }
+
             $file = $request->file('photo');
             $filename = Str::uuid() . '.' . $file->getClientOriginalExtension();
-            $file->move(public_path('storage/animals'), $filename);
+            $file->move($uploadPath, $filename);
             $validated['photo_url'] = '/storage/animals/' . $filename;
         }
 
