@@ -6,6 +6,9 @@
         @forelse($raffles as $raffle)
         <div class="col-md-4 mb-4">
             <div class="card">
+                @if($raffle->image_url)
+                <img src="{{ $raffle->image_url }}" class="card-img-top" alt="{{ $raffle->title }}" style="height: 200px; object-fit: cover;">
+                @endif
                 <div class="card-body">
                     <h5>{{ $raffle->title }}</h5>
                     <p>{{ $raffle->description }}</p>

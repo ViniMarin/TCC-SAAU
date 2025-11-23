@@ -9,33 +9,26 @@
         </a>
     </div>
 
-    @if(session('success'))
-    <div class="alert alert-success alert-dismissible fade show" role="alert">
-        {{ session('success') }}
-        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-    </div>
-    @endif
-
     <div class="card">
         <div class="card-body">
             <div class="table-responsive">
                 <table class="table table-hover">
                     <thead>
                         <tr>
-                            <th>Imagem</th>
-                            <th>Título</th>
-                            <th>Prêmio</th>
-                            <th>Valor do Bilhete</th>
-                            <th>Total de Bilhetes</th>
-                            <th>Data do Sorteio</th>
-                            <th>Status</th>
-                            <th>Ações</th>
+                            <th class="align-middle text-center">Imagem</th>
+                            <th class="align-middle">Título</th>
+                            <th class="align-middle">Prêmio</th>
+                            <th class="align-middle text-center">Valor do Bilhete</th>
+                            <th class="align-middle text-center">Total de Bilhetes</th>
+                            <th class="align-middle text-center">Data do Sorteio</th>
+                            <th class="align-middle text-center">Status</th>
+                            <th class="align-middle text-center">Ações</th>
                         </tr>
                     </thead>
                     <tbody>
                         @forelse($raffles as $raffle)
                         <tr>
-                            <td>
+                            <td class="align-middle text-center">
                                 @if($raffle->image_url)
                                 <img src="{{ $raffle->image_url }}" alt="{{ $raffle->title }}" style="width: 50px; height: 50px; object-fit: cover; border-radius: 5px;">
                                 @else
@@ -54,17 +47,19 @@
                                     {{ ucfirst($raffle->status) }}
                                 </span>
                             </td>
-                            <td>
-                                <a href="{{ route('admin.raffles.edit', $raffle) }}" class="btn btn-sm btn-warning">
-                                    <i class="fas fa-edit"></i>
-                                </a>
-                                <form action="{{ route('admin.raffles.destroy', $raffle) }}" method="POST" class="d-inline" onsubmit="return confirm('Tem certeza que deseja remover esta rifa?')">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="btn btn-sm btn-danger">
-                                        <i class="fas fa-trash"></i>
-                                    </button>
-                                </form>
+                            <td class="align-middle text-center">
+                                <div class="d-inline-flex gap-2">
+                                    <a href="{{ route('admin.raffles.edit', $raffle) }}" class="btn btn-sm btn-warning d-inline-flex align-items-center justify-content-center">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                    <form action="{{ route('admin.raffles.destroy', $raffle) }}" method="POST" class="d-inline" onsubmit="return confirm('Tem certeza que deseja remover esta rifa?')">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-sm btn-danger d-inline-flex align-items-center justify-content-center">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </form>
+                                </div>
                             </td>
                         </tr>
                         @empty

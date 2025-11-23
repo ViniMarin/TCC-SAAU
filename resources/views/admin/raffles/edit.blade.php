@@ -45,13 +45,27 @@
                 <div class="row">
                     <div class="col-md-6 mb-3">
                         <label for="ticket_price" class="form-label">Valor do Bilhete *</label>
-                        <input type="number" step="0.01" class="form-control @error('ticket_price') is-invalid @enderror" 
-                               id="ticket_price" name="ticket_price" value="{{ old('ticket_price', $raffle->ticket_price) }}" required>
+                        <div class="input-group">
+                            <span class="input-group-text">R$</span>
+                            <input type="text" inputmode="decimal" class="form-control currency-input @error('ticket_price') is-invalid @enderror"
+                                   id="ticket_price" name="ticket_price" value="{{ old('ticket_price', number_format($raffle->ticket_price, 2, ',', '.')) }}" required>
+                        </div>
                         @error('ticket_price')
                         <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
                     </div>
 
+                    <div class="col-md-6 mb-3">
+                        <label for="total_tickets" class="form-label">Total de Bilhetes *</label>
+                        <input type="number" min="1" class="form-control @error('total_tickets') is-invalid @enderror"
+                               id="total_tickets" name="total_tickets" value="{{ old('total_tickets', $raffle->total_tickets) }}" required>
+                        @error('total_tickets')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+                </div>
+
+                <div class="row">
                     <div class="col-md-6 mb-3">
                         <label for="draw_date" class="form-label">Data do Sorteio *</label>
                         <input type="date" class="form-control @error('draw_date') is-invalid @enderror" 
@@ -60,19 +74,19 @@
                         <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
                     </div>
-                </div>
 
-                <div class="mb-3">
-                    <label for="status" class="form-label">Status *</label>
-                    <select class="form-select @error('status') is-invalid @enderror" 
-                            id="status" name="status" required>
-                        <option value="ativa" {{ old('status', $raffle->status) == 'ativa' ? 'selected' : '' }}>Ativa</option>
-                        <option value="encerrada" {{ old('status', $raffle->status) == 'encerrada' ? 'selected' : '' }}>Encerrada</option>
-                        <option value="pausada" {{ old('status', $raffle->status) == 'pausada' ? 'selected' : '' }}>Pausada</option>
-                    </select>
-                    @error('status')
-                    <div class="invalid-feedback">{{ $message }}</div>
-                    @enderror
+                    <div class="col-md-6 mb-3">
+                        <label for="status" class="form-label">Status *</label>
+                        <select class="form-select @error('status') is-invalid @enderror"
+                                id="status" name="status" required>
+                            <option value="ativa" {{ old('status', $raffle->status) == 'ativa' ? 'selected' : '' }}>Ativa</option>
+                            <option value="pausada" {{ old('status', $raffle->status) == 'pausada' ? 'selected' : '' }}>Pausada</option>
+                            <option value="encerrada" {{ old('status', $raffle->status) == 'encerrada' ? 'selected' : '' }}>Encerrada</option>
+                        </select>
+                        @error('status')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
                 </div>
 
                 @if($raffle->image_url)

@@ -44,39 +44,53 @@
                 <div class="row">
                     <div class="col-md-6 mb-3">
                         <label for="ticket_price" class="form-label">Valor do Bilhete *</label>
-                        <input type="number" step="0.01" class="form-control @error('ticket_price') is-invalid @enderror" 
-                               id="ticket_price" name="ticket_price" value="{{ old('ticket_price') }}" required>
+                        <div class="input-group">
+                            <span class="input-group-text">R$</span>
+                            <input type="text" inputmode="decimal" class="form-control currency-input @error('ticket_price') is-invalid @enderror"
+                                   id="ticket_price" name="ticket_price" value="{{ old('ticket_price', '0,00') }}" required>
+                        </div>
                         @error('ticket_price')
                         <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
                     </div>
 
                     <div class="col-md-6 mb-3">
+                        <label for="total_tickets" class="form-label">Total de Bilhetes *</label>
+                        <input type="number" min="1" class="form-control @error('total_tickets') is-invalid @enderror"
+                               id="total_tickets" name="total_tickets" value="{{ old('total_tickets') }}" required>
+                        @error('total_tickets')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
                         <label for="draw_date" class="form-label">Data do Sorteio *</label>
-                        <input type="date" class="form-control @error('draw_date') is-invalid @enderror" 
+                        <input type="date" class="form-control @error('draw_date') is-invalid @enderror"
                                id="draw_date" name="draw_date" value="{{ old('draw_date') }}" required>
                         @error('draw_date')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <label for="status" class="form-label">Status *</label>
+                        <select class="form-select @error('status') is-invalid @enderror"
+                                id="status" name="status" required>
+                            <option value="ativa" {{ old('status') == 'ativa' ? 'selected' : '' }}>Ativa</option>
+                            <option value="pausada" {{ old('status') == 'pausada' ? 'selected' : '' }}>Pausada</option>
+                            <option value="encerrada" {{ old('status') == 'encerrada' ? 'selected' : '' }}>Encerrada</option>
+                        </select>
+                        @error('status')
                         <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
                     </div>
                 </div>
 
                 <div class="mb-3">
-                    <label for="status" class="form-label">Status *</label>
-                    <select class="form-select @error('status') is-invalid @enderror" 
-                            id="status" name="status" required>
-                        <option value="ativa" {{ old('status') == 'ativa' ? 'selected' : '' }}>Ativa</option>
-                        <option value="encerrada" {{ old('status') == 'encerrada' ? 'selected' : '' }}>Encerrada</option>
-                        <option value="pausada" {{ old('status') == 'pausada' ? 'selected' : '' }}>Pausada</option>
-                    </select>
-                    @error('status')
-                    <div class="invalid-feedback">{{ $message }}</div>
-                    @enderror
-                </div>
-
-                <div class="mb-3">
                     <label for="image" class="form-label">Imagem</label>
-                    <input type="file" class="form-control @error('image') is-invalid @enderror" 
+                    <input type="file" class="form-control @error('image') is-invalid @enderror"
                            id="image" name="image" accept="image/*">
                     @error('image')
                     <div class="invalid-feedback">{{ $message }}</div>
@@ -93,5 +107,46 @@
             </form>
         </div>
     </div>
-</div>
+ </div>
+@endsection
+
+@section('scripts')
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const drawDateInput = document.getElementById('draw_date');
+        if (!drawDateInput) return;
+
+        let lastValidValue = drawDateInput.value;
+
+        drawDateInput.addEventListener('input', () => {
+            const numericLength = drawDateInput.value.replace(/\D/g, '').length;
+
+            if (drawDateInput.validity.valid && numericLength <= 8) {
+                lastValidValue = drawDateInput.value;
+                return;
+            }
+
+            drawDateInput.value = lastValidValue;
+        });
+    });
+</script>
+@endsection
+
+@section('scripts')
+<script>
+    const formatCurrencyInput = (input) => {
+        let value = input.value.replace(/\D/g, '');
+        value = (parseInt(value, 10) || 0) / 100;
+        input.value = value.toLocaleString('pt-BR', {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2
+        });
+    };
+
+    document.querySelectorAll('.currency-input').forEach((input) => {
+        formatCurrencyInput(input);
+        input.addEventListener('input', () => formatCurrencyInput(input));
+        input.addEventListener('blur', () => formatCurrencyInput(input));
+    });
+</script>
 @endsection

@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Raffle;
 use Illuminate\Http\Request;
-use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Storage;
 
 class RaffleController extends Controller
 {
@@ -27,18 +27,20 @@ class RaffleController extends Controller
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
             'prize' => 'nullable|string|max:255',
-            'ticket_price' => 'required|numeric|min:0',
+            'ticket_price' => ['required', 'regex:/^\d+(?:[\.,]\d{2})?$/'],
             'total_tickets' => 'required|integer|min:1',
             'draw_date' => 'required|date',
-            'status' => 'required|in:ativa,encerrada,sorteada',
+            'status' => 'required|in:ativa,pausada,encerrada',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
         ]);
 
+        $validated['description'] = $validated['description'] ?? '';
+        $validated['prize'] = $validated['prize'] ?? '';
+        $validated['ticket_price'] = $this->normalizeCurrency($validated['ticket_price']);
+
         if ($request->hasFile('image')) {
-            $file = $request->file('image');
-            $filename = Str::uuid() . '.' . $file->getClientOriginalExtension();
-            $file->move(public_path('storage/raffles'), $filename);
-            $validated['image_url'] = '/storage/raffles/' . $filename;
+            $path = $request->file('image')->store('raffles', 'public');
+            $validated['image_url'] = Storage::url($path);
         }
 
         Raffle::create($validated);
@@ -58,32 +60,41 @@ class RaffleController extends Controller
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
             'prize' => 'nullable|string|max:255',
-            'ticket_price' => 'required|numeric|min:0',
+            'ticket_price' => ['required', 'regex:/^\d+(?:[\.,]\d{2})?$/'],
             'total_tickets' => 'required|integer|min:1',
             'draw_date' => 'required|date',
-            'status' => 'required|in:ativa,encerrada,sorteada',
+            'status' => 'required|in:ativa,pausada,encerrada',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
         ]);
+
+        $validated['description'] = $validated['description'] ?? '';
+        $validated['prize'] = $validated['prize'] ?? '';
+        $validated['ticket_price'] = $this->normalizeCurrency($validated['ticket_price']);
 
         if ($request->hasFile('image')) {
             // Delete old image
             if ($raffle->image_url) {
-                $oldPath = public_path($raffle->image_url);
-                if (file_exists($oldPath)) {
-                    unlink($oldPath);
-                }
+                $oldPath = str_replace('/storage/', '', $raffle->image_url);
+                Storage::disk('public')->delete($oldPath);
             }
 
-            $file = $request->file('image');
-            $filename = Str::uuid() . '.' . $file->getClientOriginalExtension();
-            $file->move(public_path('storage/raffles'), $filename);
-            $validated['image_url'] = '/storage/raffles/' . $filename;
+            $path = $request->file('image')->store('raffles', 'public');
+            $validated['image_url'] = Storage::url($path);
         }
 
         $raffle->update($validated);
 
         return redirect()->route('admin.raffles.index')
             ->with('success', 'Rifa atualizada com sucesso!');
+    }
+
+    private function normalizeCurrency(string $value): float
+    {
+        $clean = preg_replace('/[^0-9,\.]/', '', $value);
+        $clean = str_replace('.', '', $clean);
+        $clean = str_replace(',', '.', $clean);
+
+        return (float) number_format((float) $clean, 2, '.', '');
     }
 
     public function destroy(Raffle $raffle)

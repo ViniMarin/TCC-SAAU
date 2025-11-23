@@ -15,6 +15,7 @@ class Raffle extends Model
         'description',
         'prize',
         'ticket_price',
+        'total_tickets',
         'draw_date',
         'status',
         'image_url'
@@ -23,5 +24,6 @@ class Raffle extends Model
     protected $casts = [
         'draw_date' => 'date',
         'ticket_price' => 'decimal:2',
+        'total_tickets' => 'integer',
     ];
 }
