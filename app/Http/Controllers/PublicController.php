@@ -95,7 +95,12 @@ class PublicController extends Controller
     public function raffles()
     {
         $raffles = Raffle::where('status', 'ativa')->latest()->paginate(9);
-        return view('public.raffles', compact('raffles'));
+        $eventsWithImages = Event::where('active', true)
+            ->whereNotNull('image_url')
+            ->latest()
+            ->get();
+
+        return view('public.raffles', compact('raffles', 'eventsWithImages'));
     }
 
     public function stories()

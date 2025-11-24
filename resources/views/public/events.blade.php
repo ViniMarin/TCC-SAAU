@@ -6,6 +6,13 @@
         @forelse($events as $event)
         <div class="col-md-4 mb-4">
             <div class="card">
+                @if($event->image_url)
+                <img src="{{ $event->image_url }}" class="card-img-top" alt="Imagem do evento {{ $event->title }}" style="height: 200px; object-fit: cover;">
+                @else
+                <div class="card-img-top bg-light d-flex align-items-center justify-content-center" style="height: 200px;">
+                    <i class="fas fa-calendar fa-3x text-muted"></i>
+                </div>
+                @endif
                 <div class="card-body">
                     <h5>{{ $event->title }}</h5>
                     <p>{{ $event->description }}</p>

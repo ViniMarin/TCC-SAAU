@@ -26,23 +26,30 @@
 
                 <div class="mb-3">
                     <label for="description" class="form-label">Descrição</label>
-                    <textarea class="form-control @error('description') is-invalid @enderror" 
+                    <textarea class="form-control @error('description') is-invalid @enderror"
                               id="description" name="description" rows="4">{{ old('description', $event->description) }}</textarea>
                     @error('description')
                     <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
                 </div>
 
+                @php
+                    $eventDateValue = old('date', $event->date?->format('Y-m-d'));
+                    if ($eventDateValue) {
+                        try {
+                            $eventDateValue = \Carbon\Carbon::parse($eventDateValue)->format('d/m/Y');
+                        } catch (Exception) {
+                            $eventDateValue = $eventDateValue;
+                        }
+                    }
+                @endphp
+
                 <div class="row">
                     <div class="col-md-6 mb-3">
                         <label for="date" class="form-label">Data *</label>
-                        <input type="date" class="form-control @error('date') is-invalid @enderror"
-<<<<<<< ours
-                               id="date" name="date" value="{{ old('date', $event->date?->format('Y-m-d')) }}" required>
-=======
-                               id="date" name="date" value="{{ old('date', $event->date?->format('Y-m-d')) }}"
-                               min="{{ now()->toDateString() }}" required>
->>>>>>> theirs
+                        <input type="text" inputmode="numeric" maxlength="10" placeholder="DD/MM/AAAA"
+                               class="form-control @error('date') is-invalid @enderror"
+                               id="date" name="date" value="{{ $eventDateValue }}" required>
                         @error('date')
                         <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
@@ -94,4 +101,72 @@
         </div>
     </div>
 </div>
+@endsection
+
+@section('scripts')
+<script>
+    const maskEventDate = (input) => {
+        const digits = input.value.replace(/\D/g, '').slice(0, 8);
+        const parts = [];
+
+        if (digits.length > 0) parts.push(digits.substring(0, Math.min(2, digits.length)));
+        if (digits.length >= 3) parts.push(digits.substring(2, Math.min(4, digits.length)));
+        if (digits.length >= 5) parts.push(digits.substring(4, digits.length));
+
+        input.value = parts.join('/');
+    };
+
+    const toISODate = (value) => {
+        const match = value.match(/^(\d{2})\/(\d{2})\/(\d{4})$/);
+        if (!match) return null;
+        const [, day, month, year] = match;
+        const isoDate = `${year}-${month}-${day}`;
+        const parsed = new Date(isoDate);
+        return Number.isNaN(parsed.getTime()) ? null : isoDate;
+    };
+
+    const setupEventDate = () => {
+        const dateInput = document.getElementById('date');
+        if (!dateInput) return;
+
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+
+        const validateDate = () => {
+            const isoDate = toISODate(dateInput.value);
+            if (!isoDate) {
+                dateInput.setCustomValidity('Use o formato DD/MM/AAAA.');
+                return false;
+            }
+
+            const chosenDate = new Date(isoDate);
+            if (chosenDate < today) {
+                dateInput.setCustomValidity('A data deve ser igual ou posterior à data atual.');
+                return false;
+            }
+
+            dateInput.setCustomValidity('');
+            return isoDate;
+        };
+
+        dateInput.addEventListener('input', () => maskEventDate(dateInput));
+        dateInput.addEventListener('blur', validateDate);
+
+        const form = dateInput.closest('form');
+        form?.addEventListener('submit', (event) => {
+            const isoDate = validateDate();
+            if (!isoDate) {
+                event.preventDefault();
+                dateInput.reportValidity();
+                return;
+            }
+
+            dateInput.value = isoDate;
+        });
+    };
+
+    document.addEventListener('DOMContentLoaded', () => {
+        setupEventDate();
+    });
+</script>
 @endsection
