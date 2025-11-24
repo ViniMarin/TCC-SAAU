@@ -22,25 +22,25 @@ class ReportController extends Controller
     public function export(Request $request)
     {
         $request->merge([
-            'type' => $request->input('type', 'all'),
+            'type'       => $request->input('type', 'all'),
             'start_date' => $this->normalizeDate($request->input('start_date')),
-            'end_date' => $this->normalizeDate($request->input('end_date')),
+            'end_date'   => $this->normalizeDate($request->input('end_date')),
         ]);
 
         $validated = $request->validate([
-            'type' => 'required|in:all,animals,vaccines,raffles,events,donations',
+            'type'       => 'required|in:all,animals,vaccines,raffles,events,donations',
             'start_date' => 'nullable|date',
-            'end_date' => 'nullable|date|after_or_equal:start_date',
+            'end_date'   => 'nullable|date|after_or_equal:start_date',
         ]);
 
         $startDate = $this->parseDate($validated['start_date'] ?? null);
-        $endDate = $this->parseDate($validated['end_date'] ?? null)?->endOfDay();
+        $endDate   = $this->parseDate($validated['end_date'] ?? null)?->endOfDay();
 
         $data = [
             'filters' => [
-                'type' => $validated['type'],
+                'type'       => $validated['type'],
                 'start_date' => $startDate?->format('d/m/Y'),
-                'end_date' => $endDate?->format('d/m/Y'),
+                'end_date'   => $endDate?->format('d/m/Y'),
             ],
             'animals' => $this->shouldInclude('animals', $validated['type'])
                 ? $this->getAnimals($startDate, $endDate)
@@ -59,7 +59,8 @@ class ReportController extends Controller
                 : collect(),
         ];
 
-        $pdf = Pdf::loadView('admin.reports.pdf', $data)->setPaper('a4', 'portrait');
+        $pdf = Pdf::loadView('admin.reports.pdf', $data)
+            ->setPaper('a4', 'portrait');
 
         return $pdf->download(
             'relatorio_' . $validated['type'] . '_' . Carbon::now()->format('Y-m-d_H-i-s') . '.pdf'
@@ -74,7 +75,7 @@ class ReportController extends Controller
 
         $value = trim($value);
 
-        if (preg_match('/^(\d{2})\/(\d{2})\/(\d{4})$/', $value, $matches)) {
+        if (preg_match('/^(\d{2})\/(\d{2})\/(\d{4})$/', $value)) {
             try {
                 return Carbon::createFromFormat('d/m/Y', $value)->format('Y-m-d');
             } catch (\Exception) {
