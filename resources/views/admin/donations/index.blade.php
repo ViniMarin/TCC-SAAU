@@ -9,13 +9,6 @@
         </a>
     </div>
 
-    @if(session('success'))
-    <div class="alert alert-success alert-dismissible fade show" role="alert">
-        {{ session('success') }}
-        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-    </div>
-    @endif
-
     <div class="card mb-4">
         <div class="card-body text-center">
             <h3 class="text-success">Total Arrecadado</h3>
@@ -29,25 +22,34 @@
                 <table class="table table-hover">
                     <thead>
                         <tr>
-                            <th>Data</th>
-                            <th>Valor</th>
-                            <th>Tipo</th>
-                            <th>Doador</th>
-                            <th>Observações</th>
-                            <th>Ações</th>
+                            <th class="align-middle text-center">Data</th>
+                            <th class="align-middle text-center">Valor</th>
+                            <th class="align-middle text-center">Tipo</th>
+                            <th class="align-middle">Doador</th>
+                            <th class="align-middle">Observações</th>
+                            <th class="align-middle text-center">Ações</th>
                         </tr>
                     </thead>
                     <tbody>
                         @forelse($donations as $donation)
                         <tr>
-                            <td>{{ \Carbon\Carbon::parse($donation->date)->format('d/m/Y') }}</td>
-                            <td class="text-success fw-bold">R$ {{ number_format($donation->amount, 2, ',', '.') }}</td>
-                            <td>
-                                <span class="badge bg-info">{{ ucfirst($donation->donation_type) }}</span>
+                            <td class="align-middle text-center">{{ \Carbon\Carbon::parse($donation->date)->format('d/m/Y') }}</td>
+                            <td class="align-middle text-center text-success fw-bold">R$ {{ number_format($donation->amount, 2, ',', '.') }}</td>
+                            <td class="align-middle text-center">
+                                @php
+                                    $typeLabels = [
+                                        'dinheiro' => 'Dinheiro',
+                                        'racao' => 'Ração',
+                                        'medicamento' => 'Medicamento',
+                                        'outro' => 'Outro',
+                                    ];
+                                @endphp
+                                <span class="badge bg-info">{{ $typeLabels[$donation->type] ?? ucfirst($donation->type) }}</span>
                             </td>
-                            <td>{{ $donation->donor_name ?? 'Anônimo' }}</td>
-                            <td>{{ $donation->notes ?? '-' }}</td>
-                            <td>
+
+                            <td class="align-middle">{{ $donation->donor_name ?? 'Anônimo' }}</td>
+                            <td class="align-middle">{{ $donation->description ?? '-' }}</td>
+                            <td class="align-middle text-center">
                                 <a href="{{ route('admin.donations.edit', $donation->id) }}" class="btn btn-sm btn-primary">
                                     <i class="fas fa-edit"></i>
                                 </a>

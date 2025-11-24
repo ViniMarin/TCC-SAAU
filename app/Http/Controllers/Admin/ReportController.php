@@ -90,9 +90,9 @@ class ReportController extends Controller
                     $donation->id,
                     \Carbon\Carbon::parse($donation->date)->format('d/m/Y'),
                     'R$ ' . number_format($donation->amount, 2, ',', '.'),
-                    $donation->donation_type,
+                    $donation->type,
                     $donation->donor_name ?? 'Anônimo',
-                    $donation->notes ?? '-'
+                    $donation->description ?? '-'
                 ], ';');
             }
 

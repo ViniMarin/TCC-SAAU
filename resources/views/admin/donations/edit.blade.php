@@ -45,9 +45,12 @@
             </div>
 
             <div class="col-md-6 mb-3">
-                <label for="amount" class="form-label">Valor (R$) *</label>
-                <input type="number" step="0.01" class="form-control @error('amount') is-invalid @enderror" 
-                       id="amount" name="amount" value="{{ old('amount', $donation->amount) }}" required>
+                <label for="amount" class="form-label">Valor *</label>
+                <div class="input-group">
+                    <span class="input-group-text">R$</span>
+                    <input type="text" inputmode="decimal" class="form-control currency-input @error('amount') is-invalid @enderror"
+                           id="amount" name="amount" value="{{ old('amount', number_format($donation->amount, 2, ',', '.')) }}" required>
+                </div>
                 @error('amount')
                 <div class="invalid-feedback">{{ $message }}</div>
                 @enderror
@@ -169,8 +172,39 @@
         });
     };
 
+    const formatCurrencyInput = (input) => {
+        let value = input.value.replace(/\D/g, '');
+        value = (parseInt(value, 10) || 0) / 100;
+        input.value = value.toLocaleString('pt-BR', {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2
+        });
+    };
+
+    const normalizeCurrency = (value) => {
+        const clean = value.replace(/[^0-9.,]/g, '')
+            .replace(/\./g, '')
+            .replace(',', '.');
+        return Number.isNaN(parseFloat(clean)) ? '' : parseFloat(clean).toFixed(2);
+    };
+
+    const setupCurrencyInput = () => {
+        const amountInput = document.getElementById('amount');
+        if (!amountInput) return;
+
+        formatCurrencyInput(amountInput);
+        amountInput.addEventListener('input', () => formatCurrencyInput(amountInput));
+        amountInput.addEventListener('blur', () => formatCurrencyInput(amountInput));
+
+        const form = amountInput.closest('form');
+        form?.addEventListener('submit', () => {
+            amountInput.value = normalizeCurrency(amountInput.value);
+        });
+    };
+
     document.addEventListener('DOMContentLoaded', () => {
         setupDateInput();
+        setupCurrencyInput();
     });
 </script>
 @endsection

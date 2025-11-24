@@ -26,10 +26,13 @@ class DonationController extends Controller
         $validated = $request->validate([
             'date' => 'required|date',
             'amount' => 'required|numeric|min:0',
-            'donation_type' => 'required|string|max:255',
+            'type' => 'required|in:dinheiro,racao,medicamento,outro',
             'donor_name' => 'nullable|string|max:255',
-            'notes' => 'nullable|string'
+            'donor_email' => 'nullable|email|max:255',
+            'description' => 'nullable|string'
         ]);
+
+        $validated['donor_name'] = $validated['donor_name'] ?? 'Anônimo';
 
         Donation::create($validated);
 
@@ -47,10 +50,13 @@ class DonationController extends Controller
         $validated = $request->validate([
             'date' => 'required|date',
             'amount' => 'required|numeric|min:0',
-            'donation_type' => 'required|string|max:255',
+            'type' => 'required|in:dinheiro,racao,medicamento,outro',
             'donor_name' => 'nullable|string|max:255',
-            'notes' => 'nullable|string'
+            'donor_email' => 'nullable|email|max:255',
+            'description' => 'nullable|string'
         ]);
+
+        $validated['donor_name'] = $validated['donor_name'] ?? 'Anônimo';
 
         $donation->update($validated);
 
