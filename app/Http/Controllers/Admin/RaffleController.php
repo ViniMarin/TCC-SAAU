@@ -37,6 +37,8 @@ class RaffleController extends Controller
             'draw_date' => 'required|date|after_or_equal:today',
             'status' => 'required|in:ativa,pausada,encerrada',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
+        ], [
+            'draw_date.after_or_equal' => 'A data do sorteio deve ser igual ou posterior à data atual.'
         ]);
 
         $validated['description'] = $validated['description'] ?? '';
@@ -74,6 +76,8 @@ class RaffleController extends Controller
             'draw_date' => 'required|date|after_or_equal:today',
             'status' => 'required|in:ativa,pausada,encerrada',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
+        ], [
+            'draw_date.after_or_equal' => 'A data do sorteio deve ser igual ou posterior à data atual.'
         ]);
 
         $validated['description'] = $validated['description'] ?? '';

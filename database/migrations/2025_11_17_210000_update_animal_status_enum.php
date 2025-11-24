@@ -13,7 +13,9 @@ return new class extends Migration
             ->where('status', 'em_processo')
             ->update(['status' => 'em_tratamento']);
 
-        DB::statement("ALTER TABLE animals MODIFY status ENUM('disponivel', 'adotado', 'em_tratamento') NOT NULL DEFAULT 'disponivel'");
+        if (DB::getDriverName() !== 'sqlite') {
+            DB::statement("ALTER TABLE animals MODIFY status ENUM('disponivel', 'adotado', 'em_tratamento') NOT NULL DEFAULT 'disponivel'");
+        }
     }
 
     public function down(): void
@@ -22,6 +24,8 @@ return new class extends Migration
             ->where('status', 'em_tratamento')
             ->update(['status' => 'em_processo']);
 
-        DB::statement("ALTER TABLE animals MODIFY status ENUM('disponivel', 'em_processo', 'adotado') NOT NULL DEFAULT 'disponivel'");
+        if (DB::getDriverName() !== 'sqlite') {
+            DB::statement("ALTER TABLE animals MODIFY status ENUM('disponivel', 'em_processo', 'adotado') NOT NULL DEFAULT 'disponivel'");
+        }
     }
 };

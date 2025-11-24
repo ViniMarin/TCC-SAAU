@@ -46,8 +46,15 @@
                         <label for="ticket_price" class="form-label">Valor do Bilhete *</label>
                         <div class="input-group">
                             <span class="input-group-text">R$</span>
+                            @php
+                                $rawTicketPrice = old('ticket_price', '0,00');
+                                $sanitizedTicketPrice = preg_replace('/[^0-9,\.]/', '', $rawTicketPrice);
+                                $sanitizedTicketPrice = str_replace('.', '', $sanitizedTicketPrice);
+                                $sanitizedTicketPrice = str_replace(',', '.', $sanitizedTicketPrice);
+                                $formattedTicketPrice = number_format((float) $sanitizedTicketPrice, 2, ',', '.');
+                            @endphp
                             <input type="text" inputmode="decimal" class="form-control currency-input @error('ticket_price') is-invalid @enderror"
-                                   id="ticket_price" name="ticket_price" value="{{ old('ticket_price', '0,00') }}" required>
+                                   id="ticket_price" name="ticket_price" value="{{ $formattedTicketPrice }}" required>
                         </div>
                         @error('ticket_price')
                         <div class="invalid-feedback">{{ $message }}</div>
@@ -125,106 +132,33 @@
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         const drawDateInput = document.getElementById('draw_date');
-        if (!drawDateInput) return;
 
-        let lastValidValue = drawDateInput.value;
+        if (drawDateInput) {
+            const today = new Date().toISOString().split('T')[0];
+            drawDateInput.min = today;
 
-        drawDateInput.addEventListener('input', () => {
-            const numericLength = drawDateInput.value.replace(/\D/g, '').length;
+            drawDateInput.addEventListener('input', () => {
+                if (drawDateInput.value && drawDateInput.value < today) {
+                    drawDateInput.setCustomValidity('A data deve ser igual ou posterior à data atual.');
+                } else {
+                    drawDateInput.setCustomValidity('');
+                }
+            });
+        }
 
-            if (drawDateInput.validity.valid && numericLength <= 8) {
-                lastValidValue = drawDateInput.value;
-                return;
-            }
-
-            drawDateInput.value = lastValidValue;
-        });
-    });
-</script>
-@endsection
-
-@section('scripts')
-<script>
-    const formatCurrencyInput = (input) => {
-        let value = input.value.replace(/\D/g, '');
-        value = (parseInt(value, 10) || 0) / 100;
-        input.value = value.toLocaleString('pt-BR', {
-            minimumFractionDigits: 2,
-            maximumFractionDigits: 2
-        });
-    };
-
-    const setupCurrencyInputs = () => {
-        document.querySelectorAll('.currency-input').forEach((input) => {
-            formatCurrencyInput(input);
-            input.addEventListener('input', () => formatCurrencyInput(input));
-            input.addEventListener('blur', () => formatCurrencyInput(input));
-        });
-    };
-
-    const maskDrawDate = (input) => {
-        const digits = input.value.replace(/\D/g, '').slice(0, 8);
-        const parts = [];
-
-        if (digits.length > 0) parts.push(digits.substring(0, Math.min(2, digits.length)));
-        if (digits.length >= 3) parts.push(digits.substring(2, Math.min(4, digits.length)));
-        if (digits.length >= 5) parts.push(digits.substring(4, digits.length));
-
-        input.value = parts.join('/');
-    };
-
-    const toISODate = (value) => {
-        const match = value.match(/^(\d{2})\/(\d{2})\/(\d{4})$/);
-        if (!match) return null;
-        const [, day, month, year] = match;
-        const isoDate = `${year}-${month}-${day}`;
-        const parsed = new Date(isoDate);
-        return Number.isNaN(parsed.getTime()) ? null : isoDate;
-    };
-
-    const setupDrawDate = () => {
-        const drawDateInput = document.getElementById('draw_date');
-        if (!drawDateInput) return;
-
-        const today = new Date();
-        today.setHours(0, 0, 0, 0);
-
-        const validateDate = () => {
-            const isoDate = toISODate(drawDateInput.value);
-            if (!isoDate) {
-                drawDateInput.setCustomValidity('Use o formato DD/MM/AAAA.');
-                return false;
-            }
-
-            const chosenDate = new Date(isoDate);
-            if (chosenDate < today) {
-                drawDateInput.setCustomValidity('A data deve ser igual ou posterior à data atual.');
-                return false;
-            }
-
-            drawDateInput.setCustomValidity('');
-            return isoDate;
+        const formatCurrencyInput = (input) => {
+            let value = input.value.replace(/\D/g, '');
+            value = (parseInt(value, 10) || 0) / 100;
+            input.value = value.toLocaleString('pt-BR', {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+            });
         };
 
-        drawDateInput.addEventListener('input', () => maskDrawDate(drawDateInput));
-        drawDateInput.addEventListener('blur', validateDate);
-
-        const form = drawDateInput.closest('form');
-        form?.addEventListener('submit', (event) => {
-            const isoDate = validateDate();
-            if (!isoDate) {
-                event.preventDefault();
-                drawDateInput.reportValidity();
-                return;
-            }
-
-            drawDateInput.value = isoDate;
-        });
-    };
-
-    document.addEventListener('DOMContentLoaded', () => {
-        setupCurrencyInputs();
-        setupDrawDate();
+    document.querySelectorAll('.currency-input').forEach((input) => {
+        formatCurrencyInput(input);
+        input.addEventListener('input', () => formatCurrencyInput(input));
+        input.addEventListener('blur', () => formatCurrencyInput(input));
     });
 </script>
 @endsection
