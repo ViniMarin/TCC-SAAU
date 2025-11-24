@@ -28,10 +28,30 @@
             padding: 0;
             border-radius: 8px;
             box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+            transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
         }
 
         .action-buttons .action-btn i {
             font-size: 14px;
+        }
+
+        .action-buttons .action-btn:hover,
+        .action-buttons .action-btn:focus {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+            opacity: 0.95;
+        }
+
+        .action-buttons .btn-view {
+            background: #3498db;
+            color: #fff;
+            border: none;
+        }
+
+        .action-buttons .btn-view:hover,
+        .action-buttons .btn-view:focus {
+            background: #2c82c9;
+            color: #fff;
         }
         
         /* Sidebar */

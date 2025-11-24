@@ -7,7 +7,7 @@
 
 <div class="d-inline-flex align-items-center gap-2 action-buttons">
     @if($view)
-    <a href="{{ $view }}" class="btn btn-sm btn-outline-primary action-btn" title="Visualizar">
+    <a href="{{ $view }}" class="btn btn-sm action-btn btn-view" title="Visualizar">
         <i class="fas fa-eye"></i>
     </a>
     @endif
