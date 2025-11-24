@@ -108,14 +108,24 @@ class ReportController extends Controller
         return $type === 'all' || $type === $section;
     }
 
-    private function applyDateFilter($query, string $column, ?Carbon $startDate, ?Carbon $endDate)
+    private function applyDateFilter($query, string|array $columns, ?Carbon $startDate, ?Carbon $endDate)
     {
+        $columns = (array) $columns;
+
         if ($startDate) {
-            $query->whereDate($column, '>=', $startDate);
+            $query->where(function ($query) use ($columns, $startDate) {
+                foreach ($columns as $column) {
+                    $query->orWhereDate($column, '>=', $startDate);
+                }
+            });
         }
 
         if ($endDate) {
-            $query->whereDate($column, '<=', $endDate);
+            $query->where(function ($query) use ($columns, $endDate) {
+                foreach ($columns as $column) {
+                    $query->orWhereDate($column, '<=', $endDate);
+                }
+            });
         }
 
         return $query;
@@ -140,7 +150,7 @@ class ReportController extends Controller
     private function getRaffles(?Carbon $startDate, ?Carbon $endDate)
     {
         $query = Raffle::query()->orderByDesc('draw_date');
-        $this->applyDateFilter($query, 'draw_date', $startDate, $endDate);
+        $this->applyDateFilter($query, ['draw_date', 'created_at'], $startDate, $endDate);
 
         return $query->get();
     }
@@ -148,7 +158,7 @@ class ReportController extends Controller
     private function getEvents(?Carbon $startDate, ?Carbon $endDate)
     {
         $query = Event::query()->orderByDesc('date');
-        $this->applyDateFilter($query, 'date', $startDate, $endDate);
+        $this->applyDateFilter($query, ['date', 'created_at'], $startDate, $endDate);
 
         return $query->get();
     }
