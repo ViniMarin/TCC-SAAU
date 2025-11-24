@@ -347,6 +347,10 @@
                 <i class="fas fa-heart"></i>
                 <span>Histórias</span>
             </a>
+            <a href="{{ route('admin.reports.index') }}" class="menu-item {{ request()->routeIs('admin.reports.*') ? 'active' : '' }}">
+                <i class="fas fa-file-export"></i>
+                <span>Relatórios</span>
+            </a>
             <a href="{{ route('admin.donations.index') }}" class="menu-item {{ request()->routeIs('admin.donations.*') ? 'active' : '' }}">
                 <i class="fas fa-dollar-sign"></i>
                 <span>Doações</span>

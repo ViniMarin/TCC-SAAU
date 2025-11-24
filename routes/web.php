@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PublicController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\AdminAnimalController;
+use App\Http\Controllers\Admin\ReportController;
 use App\Http\Controllers\AdoptionStoryController;
 
 // Rotas públicas
@@ -63,7 +64,6 @@ Route::middleware(['admin'])->prefix('admin')->name('admin.')->group(function ()
     Route::delete('/stories/{story}', [\App\Http\Controllers\Admin\StoryController::class, 'destroy'])->name('stories.destroy');
     
     // Relatórios
-    Route::get('/reports/animals', [\App\Http\Controllers\Admin\ReportController::class, 'animals'])->name('reports.animals');
-    Route::get('/reports/donations', [\App\Http\Controllers\Admin\ReportController::class, 'donations'])->name('reports.donations');
-    Route::get('/reports/vaccines', [\App\Http\Controllers\Admin\ReportController::class, 'vaccines'])->name('reports.vaccines');
+    Route::get('/reports', [ReportController::class, 'index'])->name('reports.index');
+    Route::get('/reports/export', [ReportController::class, 'export'])->name('reports.export');
 });

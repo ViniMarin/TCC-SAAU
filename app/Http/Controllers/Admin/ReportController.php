@@ -5,143 +5,95 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Animal;
 use App\Models\Donation;
+use App\Models\Event;
+use App\Models\Raffle;
 use App\Models\Vaccine;
+use Barryvdh\DomPDF\Facade\Pdf;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class ReportController extends Controller
 {
-
-    public function animals(Request $request)
+    public function index()
     {
-        $query = Animal::query();
-
-        if ($request->start_date && $request->end_date) {
-            $query->whereBetween('created_at', [$request->start_date, $request->end_date]);
-        }
-
-        $animals = $query->get();
-
-        $filename = 'relatorio_animais_' . date('Y-m-d') . '.csv';
-        $headers = [
-            'Content-Type' => 'text/csv',
-            'Content-Disposition' => 'attachment; filename="' . $filename . '"',
-        ];
-
-        $callback = function() use ($animals) {
-            $file = fopen('php://output', 'w');
-            
-            // BOM para UTF-8
-            fprintf($file, chr(0xEF).chr(0xBB).chr(0xBF));
-            
-            // Cabeçalho
-            fputcsv($file, ['ID', 'Nome', 'Espécie', 'Raça', 'Idade', 'Sexo', 'Porte', 'Status', 'Castrado', 'Vacinado', 'Data Cadastro'], ';');
-
-            // Dados
-            foreach ($animals as $animal) {
-                fputcsv($file, [
-                    $animal->id,
-                    $animal->name,
-                    $animal->species,
-                    $animal->breed ?? '-',
-                    $animal->age,
-                    $animal->gender,
-                    $animal->size ?? '-',
-                    $animal->status,
-                    $animal->castrated ? 'Sim' : 'Não',
-                    $animal->vaccinated ? 'Sim' : 'Não',
-                    $animal->created_at->format('d/m/Y')
-                ], ';');
-            }
-
-            fclose($file);
-        };
-
-        return response()->stream($callback, 200, $headers);
+        return view('admin.reports.index');
     }
 
-    public function donations(Request $request)
+    public function export(Request $request)
     {
-        $query = Donation::query();
+        $request->merge(['type' => $request->input('type', 'all')]);
 
-        if ($request->start_date && $request->end_date) {
-            $query->whereBetween('date', [$request->start_date, $request->end_date]);
-        }
+        $validated = $request->validate([
+            'type' => 'required|in:all,animals,vaccines,raffles,events,donations',
+            'start_date' => 'nullable|date',
+            'end_date' => 'nullable|date|after_or_equal:start_date',
+        ]);
 
-        $donations = $query->orderBy('date', 'desc')->get();
+        $startDate = $validated['start_date'] ? Carbon::parse($validated['start_date'])->startOfDay() : null;
+        $endDate = $validated['end_date'] ? Carbon::parse($validated['end_date'])->endOfDay() : null;
+        $type = $validated['type'];
 
-        $filename = 'relatorio_doacoes_' . date('Y-m-d') . '.csv';
-        $headers = [
-            'Content-Type' => 'text/csv',
-            'Content-Disposition' => 'attachment; filename="' . $filename . '"',
-        ];
+        $reports = $this->getReportData($startDate, $endDate, $type);
 
-        $callback = function() use ($donations) {
-            $file = fopen('php://output', 'w');
-            
-            // BOM para UTF-8
-            fprintf($file, chr(0xEF).chr(0xBB).chr(0xBF));
-            
-            // Cabeçalho
-            fputcsv($file, ['ID', 'Data', 'Valor', 'Tipo', 'Doador', 'Observações'], ';');
+        $pdf = Pdf::loadView('admin.reports.pdf', [
+            'type' => $type,
+            'startDate' => $startDate,
+            'endDate' => $endDate,
+            'reports' => $reports,
+            'generatedAt' => now(),
+        ])->setPaper('a4', 'portrait');
 
-            // Dados
-            foreach ($donations as $donation) {
-                fputcsv($file, [
-                    $donation->id,
-                    \Carbon\Carbon::parse($donation->date)->format('d/m/Y'),
-                    'R$ ' . number_format($donation->amount, 2, ',', '.'),
-                    $donation->type,
-                    $donation->donor_name ?? 'Anônimo',
-                    $donation->description ?? '-'
-                ], ';');
-            }
+        $filename = 'relatorio_' . ($type === 'all' ? 'completo' : $type) . '_' . now()->format('Y-m-d_H-i') . '.pdf';
 
-            fclose($file);
-        };
-
-        return response()->stream($callback, 200, $headers);
+        return $pdf->download($filename);
     }
 
-    public function vaccines(Request $request)
+    protected function getReportData(?Carbon $startDate, ?Carbon $endDate, string $type): array
     {
-        $query = Vaccine::with('animal');
+        $reports = [];
 
-        if ($request->start_date && $request->end_date) {
-            $query->whereBetween('application_date', [$request->start_date, $request->end_date]);
+        if ($type === 'all' || $type === 'animals') {
+            $animalQuery = Animal::orderBy('created_at', 'desc');
+            $reports['animals'] = $this->filterByDate($animalQuery, 'created_at', $startDate, $endDate)->get();
         }
 
-        $vaccines = $query->orderBy('application_date', 'desc')->get();
+        if ($type === 'all' || $type === 'vaccines') {
+            $vaccineQuery = Vaccine::with('animal')->orderBy('application_date', 'desc');
+            $reports['vaccines'] = $this->filterByDate($vaccineQuery, 'application_date', $startDate, $endDate)->get();
+        }
 
-        $filename = 'relatorio_vacinas_' . date('Y-m-d') . '.csv';
-        $headers = [
-            'Content-Type' => 'text/csv',
-            'Content-Disposition' => 'attachment; filename="' . $filename . '"',
-        ];
+        if ($type === 'all' || $type === 'raffles') {
+            $raffleQuery = Raffle::orderBy('draw_date', 'desc');
+            $reports['raffles'] = $this->filterByDate($raffleQuery, 'draw_date', $startDate, $endDate)->get();
+        }
 
-        $callback = function() use ($vaccines) {
-            $file = fopen('php://output', 'w');
-            
-            // BOM para UTF-8
-            fprintf($file, chr(0xEF).chr(0xBB).chr(0xBF));
-            
-            // Cabeçalho
-            fputcsv($file, ['ID', 'Animal', 'Tipo de Vacina', 'Data Aplicação', 'Próxima Dose', 'Observações'], ';');
+        if ($type === 'all' || $type === 'events') {
+            $eventQuery = Event::orderBy('date', 'desc');
+            $reports['events'] = $this->filterByDate($eventQuery, 'date', $startDate, $endDate)->get();
+        }
 
-            // Dados
-            foreach ($vaccines as $vaccine) {
-                fputcsv($file, [
-                    $vaccine->id,
-                    $vaccine->animal->name ?? 'N/A',
-                    $vaccine->vaccine_type,
-                    \Carbon\Carbon::parse($vaccine->application_date)->format('d/m/Y'),
-                    $vaccine->next_dose_date ? \Carbon\Carbon::parse($vaccine->next_dose_date)->format('d/m/Y') : '-',
-                    $vaccine->notes ?? '-'
-                ], ';');
-            }
+        if ($type === 'all' || $type === 'donations') {
+            $donationQuery = Donation::orderBy('date', 'desc');
+            $reports['donations'] = $this->filterByDate($donationQuery, 'date', $startDate, $endDate)->get();
+        }
 
-            fclose($file);
-        };
+        return $reports;
+    }
 
-        return response()->stream($callback, 200, $headers);
+    protected function filterByDate($query, string $column, ?Carbon $startDate, ?Carbon $endDate)
+    {
+        if ($startDate && $endDate) {
+            return $query->whereBetween($column, [$startDate, $endDate]);
+        }
+
+        if ($startDate) {
+            return $query->whereDate($column, '>=', $startDate);
+        }
+
+        if ($endDate) {
+            return $query->whereDate($column, '<=', $endDate);
+        }
+
+        return $query;
     }
 }
