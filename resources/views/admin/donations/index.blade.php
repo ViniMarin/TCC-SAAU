@@ -46,11 +46,10 @@
                                 @endphp
                                 <span class="badge bg-info">{{ $typeLabels[$donation->type] ?? ucfirst($donation->type) }}</span>
                             </td>
-
-                            <td class="align-middle">{{ $donation->donor_name ?? 'Anônimo' }}</td>
-                            <td class="align-middle">{{ $donation->description ?? '-' }}</td>
-                            <td class="align-middle text-center">
-                                <a href="{{ route('admin.donations.edit', $donation->id) }}" class="btn btn-sm btn-primary">
+                            <td>{{ $donation->donor_name ?? 'Anônimo' }}</td>
+                            <td>{{ $donation->notes ?? '-' }}</td>
+                            <td>
+                                <a href="{{ route('admin.donations.edit', $donation->id) }}" class="btn btn-sm btn-warning">
                                     <i class="fas fa-edit"></i>
                                 </a>
                                 <form action="{{ route('admin.donations.destroy', $donation) }}" method="POST" class="d-inline" onsubmit="return confirm('Tem certeza que deseja remover esta doação?')">
