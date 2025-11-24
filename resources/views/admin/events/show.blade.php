@@ -17,7 +17,7 @@
         ])
     </div>
 
-    <div class="card">
+    <div class="card shadow-sm">
         <div class="card-body">
             <div class="row g-4">
                 <div class="col-md-4 text-center">
@@ -28,24 +28,77 @@
                         <i class="fas fa-calendar fa-3x text-muted"></i>
                     </div>
                     @endif
+                    <div class="mt-3 text-start">
+                        <div class="border rounded-3 p-3 bg-white shadow-sm d-flex align-items-center gap-2">
+                            <span class="bg-{{ $event->active ? 'success-subtle text-success' : 'secondary-subtle text-secondary' }} rounded-3 d-inline-flex align-items-center justify-content-center" style="width: 32px; height: 32px;"><i class="fas fa-flag"></i></span>
+                            <div>
+                                <small class="text-uppercase text-muted">Status</small>
+                                <div class="fw-semibold mb-0">{{ $event->active ? 'Ativo' : 'Inativo' }}</div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <div class="col-md-8">
                     <div class="row g-3">
                         <div class="col-sm-6">
-                            <h6 class="text-muted mb-1">Data</h6>
-                            <p class="mb-0">{{ \Carbon\Carbon::parse($event->date)->format('d/m/Y') }}</p>
+                            <div class="border rounded-3 p-3 h-100 bg-white shadow-sm">
+                                <div class="d-flex align-items-start gap-2 mb-1">
+                                    <span class="bg-primary-subtle text-primary rounded-3 d-inline-flex align-items-center justify-content-center" style="width: 32px; height: 32px;"><i class="fas fa-calendar-check"></i></span>
+                                    <div>
+                                        <small class="text-uppercase text-muted fw-semibold">Data</small>
+                                        <h5 class="mb-0">{{ \Carbon\Carbon::parse($event->date)->format('d/m/Y') }}</h5>
+                                    </div>
+                                </div>
+                                <small class="text-muted">Inclua na agenda e comunique a equipe.</small>
+                            </div>
                         </div>
                         <div class="col-sm-6">
-                            <h6 class="text-muted mb-1">Local</h6>
-                            <p class="mb-0">{{ $event->location ?? '-' }}</p>
-                        </div>
-                        <div class="col-sm-6">
-                            <h6 class="text-muted mb-1">Status</h6>
-                            <span class="badge bg-{{ $event->active ? 'success' : 'secondary' }}">{{ $event->active ? 'Ativo' : 'Inativo' }}</span>
+                            <div class="border rounded-3 p-3 h-100 bg-white shadow-sm">
+                                <div class="d-flex align-items-start gap-2 mb-1">
+                                    <span class="bg-primary-subtle text-primary rounded-3 d-inline-flex align-items-center justify-content-center" style="width: 32px; height: 32px;"><i class="fas fa-map-marker-alt"></i></span>
+                                    <div>
+                                        <small class="text-uppercase text-muted fw-semibold">Local</small>
+                                        <h5 class="mb-0">{{ $event->location ?? '-' }}</h5>
+                                    </div>
+                                </div>
+                                <small class="text-muted">Endereço ou formato do encontro.</small>
+                            </div>
                         </div>
                         <div class="col-12">
-                            <h6 class="text-muted mb-1">Descrição</h6>
-                            <p class="mb-0">{!! nl2br(e($event->description ?? 'Nenhuma descrição informada.')) !!}</p>
+                            <div class="border rounded-3 p-3 bg-white shadow-sm">
+                                <div class="d-flex align-items-start gap-2 mb-2">
+                                    <span class="bg-secondary-subtle text-secondary rounded-3 d-inline-flex align-items-center justify-content-center" style="width: 32px; height: 32px;"><i class="fas fa-align-left"></i></span>
+                                    <div>
+                                        <h6 class="mb-0">Descrição</h6>
+                                        <small class="text-muted">Contexto e informações gerais.</small>
+                                    </div>
+                                </div>
+                                <p class="mb-0">{!! nl2br(e($event->description ?? 'Nenhuma descrição informada.')) !!}</p>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="d-flex flex-wrap gap-3">
+                                <div class="border rounded-3 p-3 bg-white shadow-sm">
+                                    <div class="d-flex align-items-center gap-2 mb-1">
+                                        <span class="bg-success-subtle text-success rounded-3 d-inline-flex align-items-center justify-content-center" style="width: 32px; height: 32px;"><i class="fas fa-calendar-plus"></i></span>
+                                        <div>
+                                            <small class="text-uppercase text-muted fw-semibold">Criado em</small>
+                                            <div class="fw-semibold mb-0">{{ $event->created_at?->format('d/m/Y H:i') }}</div>
+                                        </div>
+                                    </div>
+                                    <p class="text-muted mb-0 small">Registro inicial do evento.</p>
+                                </div>
+                                <div class="border rounded-3 p-3 bg-white shadow-sm">
+                                    <div class="d-flex align-items-center gap-2 mb-1">
+                                        <span class="bg-success-subtle text-success rounded-3 d-inline-flex align-items-center justify-content-center" style="width: 32px; height: 32px;"><i class="fas fa-history"></i></span>
+                                        <div>
+                                            <small class="text-uppercase text-muted fw-semibold">Última atualização</small>
+                                            <div class="fw-semibold mb-0">{{ $event->updated_at?->format('d/m/Y H:i') }}</div>
+                                        </div>
+                                    </div>
+                                    <p class="text-muted mb-0 small">Alteração mais recente registrada.</p>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
