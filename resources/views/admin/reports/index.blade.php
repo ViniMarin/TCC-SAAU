@@ -15,6 +15,23 @@
         <h2 class="card-title mb-0"><i class="fas fa-file-export me-2"></i>Gerar Relatório</h2>
     </div>
 
+    @php
+        $formatDateValue = function (?string $value) {
+            if (!$value) {
+                return '';
+            }
+
+            try {
+                return \Carbon\Carbon::parse($value)->format('d/m/Y');
+            } catch (Exception) {
+                return $value;
+            }
+        };
+
+        $startDateValue = $formatDateValue(old('start_date'));
+        $endDateValue = $formatDateValue(old('end_date'));
+    @endphp
+
     <form action="{{ route('admin.reports.export') }}" method="GET" class="row g-3" target="_blank">
         <div class="col-md-6">
             <label for="type" class="form-label">Tipo de relatório</label>
@@ -31,11 +48,13 @@
 
         <div class="col-md-3">
             <label for="start_date" class="form-label">Data inicial</label>
-            <input type="date" name="start_date" id="start_date" class="form-control" />
+            <input type="text" name="start_date" id="start_date" class="form-control" inputmode="numeric" maxlength="10"
+                   placeholder="DD/MM/AAAA" value="{{ $startDateValue }}" />
         </div>
         <div class="col-md-3">
             <label for="end_date" class="form-label">Data final</label>
-            <input type="date" name="end_date" id="end_date" class="form-control" />
+            <input type="text" name="end_date" id="end_date" class="form-control" inputmode="numeric" maxlength="10"
+                   placeholder="DD/MM/AAAA" value="{{ $endDateValue }}" />
         </div>
 
         <div class="col-12 d-flex align-items-center justify-content-end gap-2">
@@ -77,4 +96,95 @@
         </div>
     </div>
 </div>
+@endsection
+
+@section('scripts')
+<script>
+    const maskDate = (input) => {
+        const digits = input.value.replace(/\D/g, '').slice(0, 8);
+        const parts = [];
+
+        if (digits.length > 0) parts.push(digits.substring(0, Math.min(2, digits.length)));
+        if (digits.length >= 3) parts.push(digits.substring(2, Math.min(4, digits.length)));
+        if (digits.length >= 5) parts.push(digits.substring(4));
+
+        input.value = parts.join('/');
+    };
+
+    const toISODate = (value) => {
+        const match = value.match(/^(\d{2})\/(\d{2})\/(\d{4})$/);
+        if (!match) return null;
+
+        const [, day, month, year] = match;
+        const isoDate = `${year}-${month}-${day}`;
+        const parsed = new Date(isoDate);
+
+        return Number.isNaN(parsed.getTime()) ? null : isoDate;
+    };
+
+    const validateDateInput = (input) => {
+        if (!input.value.trim()) {
+            input.setCustomValidity('');
+            return '';
+        }
+
+        const isoDate = toISODate(input.value);
+        if (!isoDate) {
+            input.setCustomValidity('Use o formato DD/MM/AAAA.');
+            return null;
+        }
+
+        input.setCustomValidity('');
+        return isoDate;
+    };
+
+    const setupReportDates = () => {
+        const startInput = document.getElementById('start_date');
+        const endInput = document.getElementById('end_date');
+        const form = startInput?.closest('form');
+
+        if (!startInput || !endInput || !form) return;
+
+        const ensureRangeValidity = (startIso, endIso) => {
+            if (startIso && endIso && new Date(startIso) > new Date(endIso)) {
+                endInput.setCustomValidity('A data final deve ser igual ou posterior à data inicial.');
+                return false;
+            }
+
+            endInput.setCustomValidity('');
+            return true;
+        };
+
+        const handleInput = (input) => maskDate(input);
+        const handleBlur = (input) => {
+            const isoDate = validateDateInput(input);
+            if (isoDate === null) return;
+
+            const startIso = validateDateInput(startInput);
+            const endIso = validateDateInput(endInput);
+            ensureRangeValidity(startIso, endIso);
+        };
+
+        [startInput, endInput].forEach((input) => {
+            input.addEventListener('input', () => handleInput(input));
+            input.addEventListener('blur', () => handleBlur(input));
+        });
+
+        form.addEventListener('submit', (event) => {
+            const startIso = validateDateInput(startInput);
+            const endIso = validateDateInput(endInput);
+
+            if (startIso === null || endIso === null || !ensureRangeValidity(startIso, endIso)) {
+                event.preventDefault();
+                (endIso === null ? endInput : startInput).reportValidity();
+                return;
+            }
+
+            startInput.value = startIso || '';
+            endInput.value = endIso || '';
+        });
+    };
+
+    document.addEventListener('DOMContentLoaded', setupReportDates);
+</script>
 @endsection
