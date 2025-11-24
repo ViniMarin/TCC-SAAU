@@ -54,9 +54,9 @@ Route::middleware(['admin'])->prefix('admin')->name('admin.')->group(function ()
     Route::resource('adoption-requests', \App\Http\Controllers\Admin\AdoptionRequestController::class);
     Route::resource('events', \App\Http\Controllers\Admin\EventController::class);
     Route::resource('raffles', \App\Http\Controllers\Admin\RaffleController::class);
-    Route::resource('vaccines', \App\Http\Controllers\Admin\VaccineController::class)->except(['show']);
-    Route::resource('donations', \App\Http\Controllers\Admin\DonationController::class)->except(['show']);
-    Route::resource('users', \App\Http\Controllers\Admin\UserController::class)->except(['show']);
+    Route::resource('vaccines', \App\Http\Controllers\Admin\VaccineController::class);
+    Route::resource('donations', \App\Http\Controllers\Admin\DonationController::class);
+    Route::resource('users', \App\Http\Controllers\Admin\UserController::class);
     
     // Histórias de Adoção
     Route::get('/stories', [\App\Http\Controllers\Admin\StoryController::class, 'index'])->name('stories.index');

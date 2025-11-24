@@ -38,16 +38,12 @@
                             </td>
                             <td>{{ $vaccine->notes ?? '-' }}</td>
                             <td>
-                                <a href="{{ route('admin.vaccines.edit', $vaccine->id) }}" class="btn btn-sm btn-warning">
-                                    <i class="fas fa-edit"></i>
-                                </a>
-                                <form action="{{ route('admin.vaccines.destroy', $vaccine) }}" method="POST" class="d-inline" onsubmit="return confirm('Tem certeza que deseja remover este registro?')">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="btn btn-sm btn-danger">
-                                        <i class="fas fa-trash"></i>
-                                    </button>
-                                </form>
+                                @include('admin.partials.action-buttons', [
+                                    'view' => route('admin.vaccines.show', $vaccine),
+                                    'edit' => route('admin.vaccines.edit', $vaccine->id),
+                                    'delete' => route('admin.vaccines.destroy', $vaccine),
+                                    'deleteMessage' => 'Tem certeza que deseja remover este registro?'
+                                ])
                             </td>
                         </tr>
                         @empty

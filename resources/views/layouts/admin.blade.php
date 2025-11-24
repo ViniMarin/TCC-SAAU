@@ -18,6 +18,21 @@
             background-color: #f5f5f5;
             overflow-x: hidden;
         }
+
+        .action-buttons .action-btn {
+            width: 36px;
+            height: 36px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0;
+            border-radius: 8px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+        }
+
+        .action-buttons .action-btn i {
+            font-size: 14px;
+        }
         
         /* Sidebar */
         .admin-sidebar {

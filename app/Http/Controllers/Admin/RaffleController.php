@@ -17,6 +17,11 @@ class RaffleController extends Controller
         return view('admin.raffles.index', compact('raffles'));
     }
 
+    public function show(Raffle $raffle)
+    {
+        return view('admin.raffles.show', compact('raffle'));
+    }
+
     public function create()
     {
         return view('admin.raffles.create');

@@ -48,18 +48,12 @@
                                 </span>
                             </td>
                             <td class="align-middle text-center">
-                                <div class="d-inline-flex align-items-center gap-2">
-                                    <a href="{{ route('admin.raffles.edit', $raffle) }}" class="btn btn-sm btn-warning">
-                                        <i class="fas fa-edit"></i>
-                                    </a>
-                                    <form action="{{ route('admin.raffles.destroy', $raffle) }}" method="POST" class="m-0" onsubmit="return confirm('Tem certeza que deseja remover esta rifa?')">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="btn btn-sm btn-danger">
-                                            <i class="fas fa-trash"></i>
-                                        </button>
-                                    </form>
-                                </div>
+                                @include('admin.partials.action-buttons', [
+                                    'view' => route('admin.raffles.show', $raffle),
+                                    'edit' => route('admin.raffles.edit', $raffle),
+                                    'delete' => route('admin.raffles.destroy', $raffle),
+                                    'deleteMessage' => 'Tem certeza que deseja remover esta rifa?'
+                                ])
                             </td>
                         </tr>
                         @empty

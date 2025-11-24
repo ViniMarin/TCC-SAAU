@@ -48,19 +48,19 @@
                             </td>
                             <td>{{ $user->created_at->format('d/m/Y') }}</td>
                             <td>
-                                <a href="{{ route('admin.users.edit', $user->id) }}" class="btn btn-sm btn-primary">
-                                    <i class="fas fa-edit"></i>
-                                </a>
                                 @if($user->id !== auth('admin')->id())
-                                <form action="{{ route('admin.users.destroy', $user) }}" method="POST" class="d-inline" onsubmit="return confirm('Tem certeza que deseja remover este usuário?')">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="btn btn-sm btn-danger">
-                                        <i class="fas fa-trash"></i>
-                                    </button>
-                                </form>
+                                @include('admin.partials.action-buttons', [
+                                    'view' => route('admin.users.show', $user),
+                                    'edit' => route('admin.users.edit', $user->id),
+                                    'delete' => route('admin.users.destroy', $user),
+                                    'deleteMessage' => 'Tem certeza que deseja remover este usuário?'
+                                ])
                                 @else
-                                <span class="badge bg-success ms-1">Você</span>
+                                @include('admin.partials.action-buttons', [
+                                    'view' => route('admin.users.show', $user),
+                                    'edit' => route('admin.users.edit', $user->id),
+                                ])
+                                <span class="badge bg-success ms-2">Você</span>
                                 @endif
                             </td>
                         </tr>

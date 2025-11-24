@@ -44,16 +44,12 @@
                                 </span>
                             </td>
                             <td>
-                                <a href="{{ route('admin.events.edit', $event) }}" class="btn btn-sm btn-warning">
-                                    <i class="fas fa-edit"></i>
-                                </a>
-                                <form action="{{ route('admin.events.destroy', $event) }}" method="POST" class="d-inline" onsubmit="return confirm('Tem certeza que deseja remover este evento?')">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="btn btn-sm btn-danger">
-                                        <i class="fas fa-trash"></i>
-                                    </button>
-                                </form>
+                                @include('admin.partials.action-buttons', [
+                                    'view' => route('admin.events.show', $event),
+                                    'edit' => route('admin.events.edit', $event),
+                                    'delete' => route('admin.events.destroy', $event),
+                                    'deleteMessage' => 'Tem certeza que deseja remover este evento?'
+                                ])
                             </td>
                         </tr>
                         @empty

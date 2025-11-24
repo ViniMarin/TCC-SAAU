@@ -67,6 +67,11 @@ class AdminAnimalController extends Controller
             ->with('success', 'Animal cadastrado com sucesso!');
     }
 
+    public function show(Animal $animal)
+    {
+        return view('admin.animals.show', compact('animal'));
+    }
+
     public function edit(Animal $animal)
     {
         return view('admin.animals.edit', compact('animal'));

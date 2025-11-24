@@ -21,6 +21,11 @@ class DonationController extends Controller
         return view('admin.donations.create');
     }
 
+    public function show(Donation $donation)
+    {
+        return view('admin.donations.show', compact('donation'));
+    }
+
     public function store(Request $request)
     {
         $validated = $request->validate([

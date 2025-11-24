@@ -40,6 +40,12 @@ class VaccineController extends Controller
             ->with('success', 'Vacina registrada com sucesso!');
     }
 
+    public function show(Vaccine $vaccine)
+    {
+        $vaccine->load('animal');
+        return view('admin.vaccines.show', compact('vaccine'));
+    }
+
     public function edit(Vaccine $vaccine)
     {
         $animals = Animal::where('status', '!=', 'adotado')->orderBy('name')->get();

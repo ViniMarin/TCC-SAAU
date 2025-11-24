@@ -49,16 +49,27 @@
                             <td>{{ $donation->donor_name ?? 'Anônimo' }}</td>
                             <td>{{ $donation->notes ?? '-' }}</td>
                             <td>
-                                <a href="{{ route('admin.donations.edit', $donation->id) }}" class="btn btn-sm btn-warning">
-                                    <i class="fas fa-edit"></i>
-                                </a>
-                                <form action="{{ route('admin.donations.destroy', $donation) }}" method="POST" class="d-inline" onsubmit="return confirm('Tem certeza que deseja remover esta doação?')">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="btn btn-sm btn-danger">
-                                        <i class="fas fa-trash"></i>
-                                    </button>
-                                </form>
+<<<<<<< ours
+                                <div class="d-flex align-items-center gap-2">
+                                    <a href="{{ route('admin.donations.edit', $donation->id) }}" class="btn btn-sm btn-warning d-flex align-items-center justify-content-center text-white" style="width: 36px; height: 36px;">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                    <form action="{{ route('admin.donations.destroy', $donation) }}" method="POST" class="d-inline" onsubmit="return confirm('Tem certeza que deseja remover esta doação?')">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-sm btn-danger d-flex align-items-center justify-content-center text-white" style="width: 36px; height: 36px;">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </form>
+                                </div>
+=======
+                                @include('admin.partials.action-buttons', [
+                                    'view' => route('admin.donations.show', $donation),
+                                    'edit' => route('admin.donations.edit', $donation->id),
+                                    'delete' => route('admin.donations.destroy', $donation),
+                                    'deleteMessage' => 'Tem certeza que deseja remover esta doação?'
+                                ])
+>>>>>>> theirs
                             </td>
                         </tr>
                         @empty
