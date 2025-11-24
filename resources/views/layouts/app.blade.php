@@ -31,7 +31,7 @@
             flex: 1 0 auto;
         }
         .navbar {
-            background: linear-gradient(135deg, #FF8C42 0%, #FDB913 50%, #FF8C42 100%);
+            background: rgb(23, 71, 158);
             position: sticky !important;
             top: 0;
             z-index: 1030;
@@ -41,7 +41,7 @@
             height: 70px !important;
             max-height: 70px !important;
             width: auto !important;
-            filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.2));
+            filter: drop-shadow(2px 2px 4px #00000033);
         }
         .btn-primary { 
             background-color: #FF8C42; 
@@ -60,7 +60,7 @@
             background: linear-gradient(135deg, rgba(255,140,66,0.95) 0%, rgba(253,185,19,0.95) 50%, rgba(255,140,66,0.95) 100%);
             min-height: calc(100vh - 110px);
             padding: 80px 0;
-            color: white;
+            color: #ffffff;
             text-align: center;
             box-shadow: inset 0 0 50px rgba(0,0,0,0.1);
             display: flex;
