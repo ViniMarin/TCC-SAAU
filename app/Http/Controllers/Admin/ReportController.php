@@ -21,7 +21,11 @@ class ReportController extends Controller
 
     public function export(Request $request)
     {
-        $request->merge(['type' => $request->input('type', 'all')]);
+        $request->merge([
+            'type' => $request->input('type', 'all'),
+            'start_date' => $this->normalizeDate($request->input('start_date')),
+            'end_date' => $this->normalizeDate($request->input('end_date')),
+        ]);
 
         $validated = $request->validate([
             'type' => 'required|in:all,animals,vaccines,raffles,events,donations',
@@ -29,71 +33,130 @@ class ReportController extends Controller
             'end_date' => 'nullable|date|after_or_equal:start_date',
         ]);
 
-        $startDate = $validated['start_date'] ? Carbon::parse($validated['start_date'])->startOfDay() : null;
-        $endDate = $validated['end_date'] ? Carbon::parse($validated['end_date'])->endOfDay() : null;
-        $type = $validated['type'];
+        $startDate = $this->parseDate($validated['start_date'] ?? null);
+        $endDate = $this->parseDate($validated['end_date'] ?? null)?->endOfDay();
 
-        $reports = $this->getReportData($startDate, $endDate, $type);
+        $data = [
+            'filters' => [
+                'type' => $validated['type'],
+                'start_date' => $startDate?->format('d/m/Y'),
+                'end_date' => $endDate?->format('d/m/Y'),
+            ],
+            'animals' => $this->shouldInclude('animals', $validated['type'])
+                ? $this->getAnimals($startDate, $endDate)
+                : collect(),
+            'vaccines' => $this->shouldInclude('vaccines', $validated['type'])
+                ? $this->getVaccines($startDate, $endDate)
+                : collect(),
+            'raffles' => $this->shouldInclude('raffles', $validated['type'])
+                ? $this->getRaffles($startDate, $endDate)
+                : collect(),
+            'events' => $this->shouldInclude('events', $validated['type'])
+                ? $this->getEvents($startDate, $endDate)
+                : collect(),
+            'donations' => $this->shouldInclude('donations', $validated['type'])
+                ? $this->getDonations($startDate, $endDate)
+                : collect(),
+        ];
 
-        $pdf = Pdf::loadView('admin.reports.pdf', [
-            'type' => $type,
-            'startDate' => $startDate,
-            'endDate' => $endDate,
-            'reports' => $reports,
-            'generatedAt' => now(),
-        ])->setPaper('a4', 'portrait');
+        $pdf = Pdf::loadView('admin.reports.pdf', $data)->setPaper('a4', 'portrait');
 
-        $filename = 'relatorio_' . ($type === 'all' ? 'completo' : $type) . '_' . now()->format('Y-m-d_H-i') . '.pdf';
-
-        return $pdf->download($filename);
+        return $pdf->download(
+            'relatorio_' . $validated['type'] . '_' . Carbon::now()->format('Y-m-d_H-i-s') . '.pdf'
+        );
     }
 
-    protected function getReportData(?Carbon $startDate, ?Carbon $endDate, string $type): array
+    private function normalizeDate(?string $value): ?string
     {
-        $reports = [];
-
-        if ($type === 'all' || $type === 'animals') {
-            $animalQuery = Animal::orderBy('created_at', 'desc');
-            $reports['animals'] = $this->filterByDate($animalQuery, 'created_at', $startDate, $endDate)->get();
+        if (!$value) {
+            return $value;
         }
 
-        if ($type === 'all' || $type === 'vaccines') {
-            $vaccineQuery = Vaccine::with('animal')->orderBy('application_date', 'desc');
-            $reports['vaccines'] = $this->filterByDate($vaccineQuery, 'application_date', $startDate, $endDate)->get();
+        $value = trim($value);
+
+        if (preg_match('/^(\d{2})\/(\d{2})\/(\d{4})$/', $value, $matches)) {
+            try {
+                return Carbon::createFromFormat('d/m/Y', $value)->format('Y-m-d');
+            } catch (\Exception) {
+                return $value;
+            }
         }
 
-        if ($type === 'all' || $type === 'raffles') {
-            $raffleQuery = Raffle::orderBy('draw_date', 'desc');
-            $reports['raffles'] = $this->filterByDate($raffleQuery, 'draw_date', $startDate, $endDate)->get();
+        try {
+            return Carbon::parse($value)->format('Y-m-d');
+        } catch (\Exception) {
+            return $value;
         }
-
-        if ($type === 'all' || $type === 'events') {
-            $eventQuery = Event::orderBy('date', 'desc');
-            $reports['events'] = $this->filterByDate($eventQuery, 'date', $startDate, $endDate)->get();
-        }
-
-        if ($type === 'all' || $type === 'donations') {
-            $donationQuery = Donation::orderBy('date', 'desc');
-            $reports['donations'] = $this->filterByDate($donationQuery, 'date', $startDate, $endDate)->get();
-        }
-
-        return $reports;
     }
 
-    protected function filterByDate($query, string $column, ?Carbon $startDate, ?Carbon $endDate)
+    private function parseDate(?string $value): ?Carbon
     {
-        if ($startDate && $endDate) {
-            return $query->whereBetween($column, [$startDate, $endDate]);
+        if (!$value) {
+            return null;
         }
 
+        try {
+            return Carbon::parse($value);
+        } catch (\Exception) {
+            return null;
+        }
+    }
+
+    private function shouldInclude(string $section, string $type): bool
+    {
+        return $type === 'all' || $type === $section;
+    }
+
+    private function applyDateFilter($query, string $column, ?Carbon $startDate, ?Carbon $endDate)
+    {
         if ($startDate) {
-            return $query->whereDate($column, '>=', $startDate);
+            $query->whereDate($column, '>=', $startDate);
         }
 
         if ($endDate) {
-            return $query->whereDate($column, '<=', $endDate);
+            $query->whereDate($column, '<=', $endDate);
         }
 
         return $query;
+    }
+
+    private function getAnimals(?Carbon $startDate, ?Carbon $endDate)
+    {
+        $query = Animal::query()->orderByDesc('created_at');
+        $this->applyDateFilter($query, 'created_at', $startDate, $endDate);
+
+        return $query->get();
+    }
+
+    private function getVaccines(?Carbon $startDate, ?Carbon $endDate)
+    {
+        $query = Vaccine::with('animal')->orderByDesc('application_date');
+        $this->applyDateFilter($query, 'application_date', $startDate, $endDate);
+
+        return $query->get();
+    }
+
+    private function getRaffles(?Carbon $startDate, ?Carbon $endDate)
+    {
+        $query = Raffle::query()->orderByDesc('draw_date');
+        $this->applyDateFilter($query, 'draw_date', $startDate, $endDate);
+
+        return $query->get();
+    }
+
+    private function getEvents(?Carbon $startDate, ?Carbon $endDate)
+    {
+        $query = Event::query()->orderByDesc('date');
+        $this->applyDateFilter($query, 'date', $startDate, $endDate);
+
+        return $query->get();
+    }
+
+    private function getDonations(?Carbon $startDate, ?Carbon $endDate)
+    {
+        $query = Donation::query()->orderByDesc('date');
+        $this->applyDateFilter($query, 'date', $startDate, $endDate);
+
+        return $query->get();
     }
 }

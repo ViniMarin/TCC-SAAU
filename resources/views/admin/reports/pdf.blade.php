@@ -1,200 +1,198 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
+    <title>Relatório</title>
     <style>
-        body { font-family: DejaVu Sans, sans-serif; margin: 20px; color: #2c3e50; }
-        h1 { margin-bottom: 4px; }
-        h2 { margin-top: 24px; margin-bottom: 8px; color: #34495e; }
-        .meta { font-size: 12px; color: #7f8c8d; margin-bottom: 12px; }
-        table { width: 100%; border-collapse: collapse; margin-top: 8px; }
-        th, td { border: 1px solid #dfe6e9; padding: 8px; font-size: 12px; }
-        th { background: #f5f7fa; text-align: left; }
-        .badge { display: inline-block; padding: 4px 8px; border-radius: 4px; font-size: 11px; color: white; }
-        .badge-success { background: #27ae60; }
-        .badge-warning { background: #f39c12; }
-        .badge-danger { background: #e74c3c; }
-        .section { page-break-inside: avoid; }
+        * { font-family: DejaVu Sans, Arial, Helvetica, sans-serif; }
+        body { font-size: 12px; color: #1f2937; margin: 24px; }
+        h1 { font-size: 22px; margin-bottom: 6px; color: #111827; }
+        h2 { font-size: 16px; margin: 20px 0 8px; color: #111827; }
+        p.meta { margin: 2px 0; color: #4b5563; }
+        table { width: 100%; border-collapse: collapse; margin-top: 6px; }
+        th, td { border: 1px solid #e5e7eb; padding: 6px 8px; text-align: left; }
+        th { background: #f3f4f6; font-weight: bold; color: #111827; }
+        .muted { color: #6b7280; }
+        .section { page-break-inside: avoid; margin-bottom: 12px; }
     </style>
 </head>
 <body>
     @php
-        use Carbon\Carbon;
+        $periodo = 'Todos os registros';
+
+        if (!empty($filters['start_date']) && !empty($filters['end_date'])) {
+            $periodo = $filters['start_date'] . ' a ' . $filters['end_date'];
+        } elseif (!empty($filters['start_date'])) {
+            $periodo = 'A partir de ' . $filters['start_date'];
+        } elseif (!empty($filters['end_date'])) {
+            $periodo = 'Até ' . $filters['end_date'];
+        }
     @endphp
 
-    <h1>Relatório do Painel Admin</h1>
-    <div class="meta">
-        <div>Tipo: {{ $type === 'all' ? 'Completo (todos os módulos)' : ucfirst($type) }}</div>
-        <div>Gerado em: {{ $generatedAt->format('d/m/Y H:i') }}</div>
-        @if($startDate || $endDate)
-            <div>Período: {{ $startDate?->format('d/m/Y') ?? 'início' }} até {{ $endDate?->format('d/m/Y') ?? 'hoje' }}</div>
-        @endif
-    </div>
+    <h1>Relatório {{ $filters['type'] === 'all' ? 'Completo' : ucfirst($filters['type']) }}</h1>
+    <p class="meta">Período: {{ $periodo }}</p>
+    <p class="meta">Gerado em: {{ \Carbon\Carbon::now()->format('d/m/Y H:i') }}</p>
 
-    @if(isset($reports['animals']))
-    <div class="section">
-        <h2>Animais ({{ $reports['animals']->count() }})</h2>
-        <table>
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Nome</th>
-                    <th>Espécie</th>
-                    <th>Raça</th>
-                    <th>Porte</th>
-                    <th>Status</th>
-                    <th>Castrado</th>
-                    <th>Vacinado</th>
-                    <th>Cadastro</th>
-                </tr>
-            </thead>
-            <tbody>
-                @forelse($reports['animals'] as $animal)
-                <tr>
-                    <td>{{ $animal->id }}</td>
-                    <td>{{ $animal->name }}</td>
-                    <td>{{ ucfirst($animal->species) }}</td>
-                    <td>{{ $animal->breed ?? '-' }}</td>
-                    <td>{{ $animal->size ?? '-' }}</td>
-                    <td>{{ $animal->status }}</td>
-                    <td>{{ $animal->castrated ? 'Sim' : 'Não' }}</td>
-                    <td>{{ $animal->vaccinated ? 'Sim' : 'Não' }}</td>
-                    <td>{{ $animal->created_at?->format('d/m/Y') }}</td>
-                </tr>
-                @empty
-                <tr><td colspan="9">Nenhum animal encontrado.</td></tr>
-                @endforelse
-            </tbody>
-        </table>
-    </div>
+    @if($animals->count())
+        <div class="section">
+            <h2>Animais ({{ $animals->count() }})</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nome</th>
+                        <th>Espécie</th>
+                        <th>Raça</th>
+                        <th>Status</th>
+                        <th>Castrado</th>
+                        <th>Vacinado</th>
+                        <th>Cadastro</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach($animals as $animal)
+                        <tr>
+                            <td>{{ $animal->id }}</td>
+                            <td>{{ $animal->name }}</td>
+                            <td>{{ $animal->species }}</td>
+                            <td>{{ $animal->breed ?? '-' }}</td>
+                            <td>{{ $animal->status }}</td>
+                            <td>{{ $animal->castrated ? 'Sim' : 'Não' }}</td>
+                            <td>{{ $animal->vaccinated ? 'Sim' : 'Não' }}</td>
+                            <td>{{ optional($animal->created_at)->format('d/m/Y') }}</td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
+    @elseif($filters['type'] === 'all' || $filters['type'] === 'animals')
+        <p class="muted">Nenhum animal encontrado no período selecionado.</p>
     @endif
 
-    @if(isset($reports['vaccines']))
-    <div class="section">
-        <h2>Vacinas ({{ $reports['vaccines']->count() }})</h2>
-        <table>
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Animal</th>
-                    <th>Tipo</th>
-                    <th>Aplicação</th>
-                    <th>Próxima Dose</th>
-                    <th>Observações</th>
-                </tr>
-            </thead>
-            <tbody>
-                @forelse($reports['vaccines'] as $vaccine)
-                <tr>
-                    <td>{{ $vaccine->id }}</td>
-                    <td>{{ $vaccine->animal->name ?? 'N/A' }}</td>
-                    <td>{{ $vaccine->vaccine_type }}</td>
-                    <td>{{ $vaccine->application_date?->format('d/m/Y') }}</td>
-                    <td>{{ $vaccine->next_dose_date?->format('d/m/Y') ?? '-' }}</td>
-                    <td>{{ $vaccine->notes ?? '-' }}</td>
-                </tr>
-                @empty
-                <tr><td colspan="6">Nenhuma vacina encontrada.</td></tr>
-                @endforelse
-            </tbody>
-        </table>
-    </div>
+    @if($vaccines->count())
+        <div class="section">
+            <h2>Vacinas ({{ $vaccines->count() }})</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Animal</th>
+                        <th>Tipo</th>
+                        <th>Aplicação</th>
+                        <th>Próxima dose</th>
+                        <th>Observações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach($vaccines as $vaccine)
+                        <tr>
+                            <td>{{ $vaccine->id }}</td>
+                            <td>{{ $vaccine->animal->name ?? 'N/A' }}</td>
+                            <td>{{ $vaccine->vaccine_type }}</td>
+                            <td>{{ optional($vaccine->application_date)->format('d/m/Y') }}</td>
+                            <td>{{ $vaccine->next_dose_date ? optional($vaccine->next_dose_date)->format('d/m/Y') : '-' }}</td>
+                            <td>{{ $vaccine->notes ?? '-' }}</td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
+    @elseif($filters['type'] === 'all' || $filters['type'] === 'vaccines')
+        <p class="muted">Nenhuma vacina encontrada no período selecionado.</p>
     @endif
 
-    @if(isset($reports['raffles']))
-    <div class="section">
-        <h2>Rifas ({{ $reports['raffles']->count() }})</h2>
-        <table>
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Título</th>
-                    <th>Prêmio</th>
-                    <th>Preço Bilhete</th>
-                    <th>Total de Bilhetes</th>
-                    <th>Data do Sorteio</th>
-                    <th>Status</th>
-                </tr>
-            </thead>
-            <tbody>
-                @forelse($reports['raffles'] as $raffle)
-                <tr>
-                    <td>{{ $raffle->id }}</td>
-                    <td>{{ $raffle->title }}</td>
-                    <td>{{ $raffle->prize }}</td>
-                    <td>R$ {{ number_format($raffle->ticket_price, 2, ',', '.') }}</td>
-                    <td>{{ $raffle->total_tickets }}</td>
-                    <td>{{ $raffle->draw_date?->format('d/m/Y') ?? '-' }}</td>
-                    <td>{{ $raffle->status }}</td>
-                </tr>
-                @empty
-                <tr><td colspan="7">Nenhuma rifa encontrada.</td></tr>
-                @endforelse
-            </tbody>
-        </table>
-    </div>
+    @if($raffles->count())
+        <div class="section">
+            <h2>Rifas ({{ $raffles->count() }})</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Título</th>
+                        <th>Prêmio</th>
+                        <th>Valor do bilhete</th>
+                        <th>Data do sorteio</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach($raffles as $raffle)
+                        <tr>
+                            <td>{{ $raffle->id }}</td>
+                            <td>{{ $raffle->title }}</td>
+                            <td>{{ $raffle->prize ?? '-' }}</td>
+                            <td>R$ {{ number_format((float) $raffle->ticket_price, 2, ',', '.') }}</td>
+                            <td>{{ optional($raffle->draw_date)->format('d/m/Y') }}</td>
+                            <td>{{ $raffle->status }}</td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
+    @elseif($filters['type'] === 'all' || $filters['type'] === 'raffles')
+        <p class="muted">Nenhuma rifa encontrada no período selecionado.</p>
     @endif
 
-    @if(isset($reports['events']))
-    <div class="section">
-        <h2>Eventos ({{ $reports['events']->count() }})</h2>
-        <table>
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Título</th>
-                    <th>Local</th>
-                    <th>Data</th>
-                    <th>Status</th>
-                </tr>
-            </thead>
-            <tbody>
-                @forelse($reports['events'] as $event)
-                <tr>
-                    <td>{{ $event->id }}</td>
-                    <td>{{ $event->title }}</td>
-                    <td>{{ $event->location }}</td>
-                    <td>{{ $event->date?->format('d/m/Y') }}</td>
-                    <td>{{ $event->active ? 'Publicado' : 'Rascunho' }}</td>
-                </tr>
-                @empty
-                <tr><td colspan="5">Nenhum evento encontrado.</td></tr>
-                @endforelse
-            </tbody>
-        </table>
-    </div>
+    @if($events->count())
+        <div class="section">
+            <h2>Eventos ({{ $events->count() }})</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Título</th>
+                        <th>Data</th>
+                        <th>Local</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach($events as $event)
+                        <tr>
+                            <td>{{ $event->id }}</td>
+                            <td>{{ $event->title }}</td>
+                            <td>{{ optional($event->date)->format('d/m/Y') }}</td>
+                            <td>{{ $event->location ?? '-' }}</td>
+                            <td>{{ $event->active ? 'Ativo' : 'Inativo' }}</td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
+    @elseif($filters['type'] === 'all' || $filters['type'] === 'events')
+        <p class="muted">Nenhum evento encontrado no período selecionado.</p>
     @endif
 
-    @if(isset($reports['donations']))
-    <div class="section">
-        <h2>Doações ({{ $reports['donations']->count() }})</h2>
-        <table>
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Data</th>
-                    <th>Valor</th>
-                    <th>Tipo</th>
-                    <th>Doador</th>
-                    <th>Observações</th>
-                </tr>
-            </thead>
-            <tbody>
-                @forelse($reports['donations'] as $donation)
-                <tr>
-                    <td>{{ $donation->id }}</td>
-                    <td>{{ $donation->date?->format('d/m/Y') }}</td>
-                    <td>R$ {{ number_format($donation->amount, 2, ',', '.') }}</td>
-                    <td>{{ $donation->type }}</td>
-                    <td>{{ $donation->donor_name ?? 'Anônimo' }}</td>
-                    <td>{{ $donation->description ?? '-' }}</td>
-                </tr>
-                @empty
-                <tr><td colspan="6">Nenhuma doação encontrada.</td></tr>
-                @endforelse
-            </tbody>
-        </table>
-    </div>
+    @if($donations->count())
+        <div class="section">
+            <h2>Doações ({{ $donations->count() }})</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Data</th>
+                        <th>Valor</th>
+                        <th>Tipo</th>
+                        <th>Doador</th>
+                        <th>Observações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach($donations as $donation)
+                        <tr>
+                            <td>{{ $donation->id }}</td>
+                            <td>{{ optional($donation->date)->format('d/m/Y') }}</td>
+                            <td>R$ {{ number_format((float) $donation->amount, 2, ',', '.') }}</td>
+                            <td>{{ $donation->type }}</td>
+                            <td>{{ $donation->donor_name ?? 'Anônimo' }}</td>
+                            <td>{{ $donation->description ?? '-' }}</td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
+    @elseif($filters['type'] === 'all' || $filters['type'] === 'donations')
+        <p class="muted">Nenhuma doação encontrada no período selecionado.</p>
     @endif
 </body>
 </html>

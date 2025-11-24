@@ -347,10 +347,12 @@
                 <i class="fas fa-heart"></i>
                 <span>Histórias</span>
             </a>
+            @if(Route::has('admin.reports.index'))
             <a href="{{ route('admin.reports.index') }}" class="menu-item {{ request()->routeIs('admin.reports.*') ? 'active' : '' }}">
-                <i class="fas fa-file-export"></i>
+                <i class="fas fa-chart-line"></i>
                 <span>Relatórios</span>
             </a>
+            @endif
             <a href="{{ route('admin.donations.index') }}" class="menu-item {{ request()->routeIs('admin.donations.*') ? 'active' : '' }}">
                 <i class="fas fa-dollar-sign"></i>
                 <span>Doações</span>
