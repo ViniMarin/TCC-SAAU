@@ -37,48 +37,36 @@
         </div>
     </div>
 
-    <h2 class="text-center mb-4">Animais Disponíveis para Adoção</h2>
+    <h2 class="text-center mb-4">Histórias de Adoções Realizadas</h2>
     <div class="row">
-        @forelse($animals as $animal)
+        @forelse($stories as $story)
         <div class="col-md-4 mb-4">
             <div class="card h-100">
-                @if($animal->photo_url)
-                <img src="{{ $animal->photo_url }}" class="card-img-top" alt="{{ $animal->name }}" style="height: 250px; object-fit: cover;">
+                @if($story->photo_url)
+                <img src="{{ $story->photo_url }}" class="card-img-top" alt="{{ $story->animal_name }}" style="height: 250px; object-fit: cover;">
                 @else
                 <div class="card-img-top bg-secondary d-flex align-items-center justify-content-center" style="height: 250px;">
-                    <i class="fas fa-paw fa-4x text-white"></i>
+                    <i class="fas fa-heart fa-4x text-white"></i>
                 </div>
                 @endif
-                <div class="card-body">
-                    @php
-                        $genderIcon = $animal->gender === 'macho' ? 'mars' : 'venus';
-                        $genderLabel = $animal->gender === 'macho' ? 'Macho' : 'Fêmea';
-                    @endphp
-                    <h5 class="card-title">{{ $animal->name }}</h5>
-                    <p class="card-text">
-                        <i class="fas fa-paw"></i> {{ ucfirst($animal->species) }} |
-                        <i class="fas fa-{{ $genderIcon }}"></i> {{ $genderLabel }}<br>
-                        @if($animal->age)
-                        <i class="fas fa-calendar"></i> {{ $animal->age }}<br>
-                        @endif
-                        @if($animal->size)
-                        <i class="fas fa-ruler"></i> Porte {{ ucfirst($animal->size) }}
-                        @endif
-                    </p>
-                    <a href="{{ route('animal.show', $animal->id) }}" class="btn btn-primary w-100">
-                        <i class="fas fa-heart"></i> Quero Adotar
+                <div class="card-body d-flex flex-column">
+                    <h5 class="card-title">{{ $story->animal_name }}</h5>
+                    <p class="text-muted mb-2"><i class="fas fa-user"></i> {{ $story->adopter_name }}</p>
+                    <p class="card-text flex-grow-1">{{ \Illuminate\Support\Str::limit($story->story, 140) }}</p>
+                    <a href="{{ route('stories.index') }}" class="btn btn-primary w-100 mt-auto">
+                        <i class="fas fa-book-open"></i> Ler mais histórias
                     </a>
                 </div>
             </div>
         </div>
         @empty
         <div class="col-12 text-center">
-            <p>Nenhum animal disponível no momento.</p>
+            <p>Ainda não há histórias aprovadas.</p>
         </div>
         @endforelse
     </div>
     <div class="text-center mt-4">
-        <a href="{{ route('animals') }}" class="btn btn-outline-primary">Ver Todos os Animais</a>
+        <a href="{{ route('stories.index') }}" class="btn btn-outline-primary">Ver todas as histórias</a>
     </div>
 </div>
 @endsection

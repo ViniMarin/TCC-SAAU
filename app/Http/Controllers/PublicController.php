@@ -21,10 +21,9 @@ class PublicController extends Controller
             'raffles' => Raffle::where('status', 'ativa')->count(),
         ];
 
-        $animals = Animal::where('status', 'disponivel')->latest()->take(6)->get();
-        $events = Event::where('active', true)->latest()->take(3)->get();
+        $stories = AdoptionStory::where('approved', true)->latest()->take(6)->get();
 
-        return view('public.home', compact('stats', 'animals', 'events'));
+        return view('public.home', compact('stats', 'stories'));
     }
 
     public function animals(Request $request)
