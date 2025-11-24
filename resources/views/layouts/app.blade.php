@@ -31,7 +31,7 @@
             flex: 1 0 auto;
         }
         .navbar {
-            background: rgb(23, 71, 158);
+            background: linear-gradient(135deg, #FF8C42 0%, #FDB913 50%, #FF8C42 100%);
             position: sticky !important;
             top: 0;
             z-index: 1030;
