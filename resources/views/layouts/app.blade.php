@@ -30,9 +30,11 @@
         #main-content {
             flex: 1 0 auto;
         }
-        .navbar { 
-            background: linear-gradient(135deg, #FF8C42 0%, #FDB913 50%, #FF8C42 100%); 
-            position: static !important;
+        .navbar {
+            background: linear-gradient(135deg, #FF8C42 0%, #FDB913 50%, #FF8C42 100%);
+            position: sticky !important;
+            top: 0;
+            z-index: 1030;
             box-shadow: 0 2px 10px rgba(0,0,0,0.1);
         }
         .navbar-brand img { 
@@ -54,12 +56,17 @@
         }
         .text-primary { color: var(--saau-orange) !important; }
         .bg-primary { background-color: var(--saau-orange) !important; }
-        .hero { 
-            background: linear-gradient(135deg, rgba(255,140,66,0.95) 0%, rgba(253,185,19,0.95) 50%, rgba(255,140,66,0.95) 100%); 
-            padding: 80px 0; 
-            color: white; 
+        .hero {
+            background: linear-gradient(135deg, rgba(255,140,66,0.95) 0%, rgba(253,185,19,0.95) 50%, rgba(255,140,66,0.95) 100%);
+            min-height: calc(100vh - 110px);
+            padding: 80px 0;
+            color: white;
             text-align: center;
             box-shadow: inset 0 0 50px rgba(0,0,0,0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
         }
         .card { 
             transition: all 0.3s; 
