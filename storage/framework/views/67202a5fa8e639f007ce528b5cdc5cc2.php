@@ -41,7 +41,7 @@
                             <td><?php echo e($raffle->total_tickets); ?></td>
                             <td><?php echo e(\Carbon\Carbon::parse($raffle->draw_date)->format('d/m/Y')); ?></td>
                             <td>
-                                <span class="badge bg-<?php echo e($raffle->status == 'ativa' ? 'success' : ($raffle->status == 'sorteada' ? 'info' : 'secondary')); ?>">
+                                <span class="badge bg-<?php echo e($raffle->status === 'ativa' ? 'success' : ($raffle->status === 'pausada' ? 'warning' : 'secondary')); ?>">
                                     <?php echo e(ucfirst($raffle->status)); ?>
 
                                 </span>

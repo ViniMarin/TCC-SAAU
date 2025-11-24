@@ -10,9 +10,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        if (DB::getDriverName() !== 'sqlite') {
-            DB::statement("ALTER TABLE animals MODIFY status ENUM('disponivel','em_processo','em_tratamento','adotado') DEFAULT 'disponivel'");
-        }
+        // Intentionally left empty. The enum was already updated in
+        // 2025_11_17_210000_update_animal_status_enum.php to include "em_tratamento",
+        // and running another ALTER with a different set of values would cause churn.
     }
 
     /**
@@ -20,8 +20,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        if (DB::getDriverName() !== 'sqlite') {
-            DB::statement("ALTER TABLE animals MODIFY status ENUM('disponivel','em_processo','adotado') DEFAULT 'disponivel'");
-        }
+        // No-op
     }
 };

@@ -146,7 +146,8 @@ unset($__errorArgs, $__bag); ?>
                 <div class="row">
                     <div class="col-md-6 mb-3">
                         <label for="draw_date" class="form-label">Data do Sorteio *</label>
-                        <input type="date" class="form-control <?php $__errorArgs = ['draw_date'];
+                        <input type="text" inputmode="numeric" maxlength="10" placeholder="DD/MM/AAAA"
+                               class="form-control <?php $__errorArgs = ['draw_date'];
 $__bag = $errors->getBag($__errorArgs[1] ?? 'default');
 if ($__bag->has($__errorArgs[0])) :
 if (isset($message)) { $__messageOriginal = $message; }
@@ -154,7 +155,7 @@ $message = $__bag->first($__errorArgs[0]); ?> is-invalid <?php unset($message);
 if (isset($__messageOriginal)) { $message = $__messageOriginal; }
 endif;
 unset($__errorArgs, $__bag); ?>"
-                               id="draw_date" name="draw_date" value="<?php echo e(old('draw_date')); ?>" required>
+                               id="draw_date" name="draw_date" value="<?php echo e($drawDateValue); ?>" required>
                         <?php $__errorArgs = ['draw_date'];
 $__bag = $errors->getBag($__errorArgs[1] ?? 'default');
 if ($__bag->has($__errorArgs[0])) :
@@ -228,29 +229,7 @@ unset($__errorArgs, $__bag); ?>
             </form>
         </div>
     </div>
- </div>
-<?php $__env->stopSection(); ?>
-
-<?php $__env->startSection('scripts'); ?>
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const drawDateInput = document.getElementById('draw_date');
-        if (!drawDateInput) return;
-
-        let lastValidValue = drawDateInput.value;
-
-        drawDateInput.addEventListener('input', () => {
-            const numericLength = drawDateInput.value.replace(/\D/g, '').length;
-
-            if (drawDateInput.validity.valid && numericLength <= 8) {
-                lastValidValue = drawDateInput.value;
-                return;
-            }
-
-            drawDateInput.value = lastValidValue;
-        });
-    });
-</script>
+</div>
 <?php $__env->stopSection(); ?>
 
 <?php $__env->startSection('scripts'); ?>

@@ -43,19 +43,19 @@
                             <td>{{ $raffle->total_tickets }}</td>
                             <td>{{ \Carbon\Carbon::parse($raffle->draw_date)->format('d/m/Y') }}</td>
                             <td>
-                                <span class="badge bg-{{ $raffle->status == 'ativa' ? 'success' : ($raffle->status == 'sorteada' ? 'info' : 'secondary') }}">
+                                <span class="badge bg-{{ $raffle->status === 'ativa' ? 'success' : ($raffle->status === 'pausada' ? 'warning' : 'secondary') }}">
                                     {{ ucfirst($raffle->status) }}
                                 </span>
                             </td>
                             <td class="align-middle text-center">
-                                <div class="d-inline-flex gap-2">
-                                    <a href="{{ route('admin.raffles.edit', $raffle) }}" class="btn btn-sm btn-warning d-inline-flex align-items-center justify-content-center">
+                                <div class="d-inline-flex align-items-center gap-2">
+                                    <a href="{{ route('admin.raffles.edit', $raffle) }}" class="btn btn-sm btn-warning">
                                         <i class="fas fa-edit"></i>
                                     </a>
-                                    <form action="{{ route('admin.raffles.destroy', $raffle) }}" method="POST" class="d-inline" onsubmit="return confirm('Tem certeza que deseja remover esta rifa?')">
+                                    <form action="{{ route('admin.raffles.destroy', $raffle) }}" method="POST" class="m-0" onsubmit="return confirm('Tem certeza que deseja remover esta rifa?')">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="submit" class="btn btn-sm btn-danger d-inline-flex align-items-center justify-content-center">
+                                        <button type="submit" class="btn btn-sm btn-danger">
                                             <i class="fas fa-trash"></i>
                                         </button>
                                     </form>
