@@ -1,12 +1,10 @@
-@extends('layouts.app')
+<?php $__env->startSection('title', 'FAQ - SAAU'); ?>
 
-@section('title', 'FAQ - SAAU')
-
-@section('header-content')
+<?php $__env->startSection('header-content'); ?>
     <h1 class="page-header-title">PERGUNTAS FREQUENTES</h1>
-@endsection
+<?php $__env->stopSection(); ?>
 
-@section('content')
+<?php $__env->startSection('content'); ?>
 <div class="container my-5">
     <div class="row justify-content-center">
         <div class="col-lg-8">
@@ -72,4 +70,5 @@
         </div>
     </div>
 </div>
-@endsection
+<?php $__env->stopSection(); ?>
+<?php echo $__env->make('layouts.app', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH C:\Users\eutei\OneDrive\Área de Trabalho\TCC-SAAU\resources\views/faq.blade.php ENDPATH**/ ?>

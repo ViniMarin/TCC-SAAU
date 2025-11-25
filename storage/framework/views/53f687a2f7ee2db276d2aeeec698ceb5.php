@@ -1,115 +1,69 @@
+<?php $__env->startSection('title', 'Como Funciona - SAAU'); ?>
+
+<?php $__env->startSection('header-content'); ?>
+    <h1 class="page-header-title">COMO FUNCIONA</h1>
+<?php $__env->stopSection(); ?>
+
 <?php $__env->startSection('content'); ?>
 <div class="container my-5">
-    <h1 class="text-center mb-5">Como Funciona a Adoção</h1>
-
-    <div class="row">
-        <div class="col-md-4 mb-4">
-            <div class="card h-100 text-center">
-                <div class="card-body">
-                    <div class="mb-3">
-                        <i class="fas fa-search fa-4x text-primary"></i>
-                    </div>
-                    <h3>1. Encontre seu Amigo</h3>
-                    <p>Navegue pela nossa galeria de animais disponíveis. Cada um tem uma história única e está esperando por você!</p>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-4 mb-4">
-            <div class="card h-100 text-center">
-                <div class="card-body">
-                    <div class="mb-3">
-                        <i class="fas fa-file-alt fa-4x text-success"></i>
-                    </div>
-                    <h3>2. Preencha o Formulário</h3>
-                    <p>Conte-nos sobre você, sua casa e por que deseja adotar. Queremos garantir o melhor match!</p>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-4 mb-4">
-            <div class="card h-100 text-center">
-                <div class="card-body">
-                    <div class="mb-3">
-                        <i class="fas fa-comments fa-4x text-info"></i>
-                    </div>
-                    <h3>3. Entrevista</h3>
-                    <p>Nossa equipe entrará em contato para uma conversa amigável e tirar todas as suas dúvidas.</p>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="row mt-4">
-        <div class="col-md-4 mb-4">
-            <div class="card h-100 text-center">
-                <div class="card-body">
-                    <div class="mb-3">
-                        <i class="fas fa-home fa-4x text-warning"></i>
-                    </div>
-                    <h3>4. Visita ao Lar</h3>
-                    <p>Realizamos uma visita para conhecer o ambiente onde o animal viverá e garantir sua segurança.</p>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-4 mb-4">
-            <div class="card h-100 text-center">
-                <div class="card-body">
-                    <div class="mb-3">
-                        <i class="fas fa-check-circle fa-4x text-success"></i>
-                    </div>
-                    <h3>5. Aprovação</h3>
-                    <p>Aprovado o pedido, você assina o termo de adoção responsável e pode buscar seu novo amigo!</p>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-4 mb-4">
-            <div class="card h-100 text-center">
-                <div class="card-body">
-                    <div class="mb-3">
-                        <i class="fas fa-heart fa-4x text-danger"></i>
-                    </div>
-                    <h3>6. Bem-vindo ao Lar!</h3>
-                    <p>Leve seu novo companheiro para casa e comece uma linda história de amor e companheirismo!</p>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="row mt-5">
+    <div class="row text-center mb-5">
         <div class="col-lg-8 mx-auto">
-            <div class="card bg-light">
-                <div class="card-body">
-                    <h3 class="text-center mb-4">O que você recebe na adoção?</h3>
-                    <div class="row">
-                        <div class="col-md-6">
-                            <ul class="list-unstyled">
-                                <li><i class="fas fa-check text-success"></i> Animal vacinado</li>
-                                <li><i class="fas fa-check text-success"></i> Animal vermifugado</li>
-                                <li><i class="fas fa-check text-success"></i> Animal castrado (quando possível)</li>
-                            </ul>
-                        </div>
-                        <div class="col-md-6">
-                            <ul class="list-unstyled">
-                                <li><i class="fas fa-check text-success"></i> Atestado de saúde</li>
-                                <li><i class="fas fa-check text-success"></i> Carteira de vacinação</li>
-                                <li><i class="fas fa-check text-success"></i> Suporte pós-adoção</li>
-                            </ul>
-                        </div>
+            <h2 class="fw-bold text-dark mb-3">O Processo de Adoção</h2>
+            <p class="text-muted lead">Adotar um amigo é um ato de amor e responsabilidade. Veja como é simples trazer um novo membro para a sua família.</p>
+        </div>
+    </div>
+
+    <div class="row g-4 justify-content-center">
+        <!-- Passo 1 -->
+        <div class="col-md-4 text-center">
+            <div class="card h-100 border-0 shadow-sm p-4 hover-lift" style="border-radius: 20px;">
+                <div class="mb-3">
+                    <div class="d-inline-flex align-items-center justify-content-center bg-light rounded-circle" style="width: 80px; height: 80px;">
+                        <i class="fas fa-search fa-2x text-primary"></i>
                     </div>
                 </div>
+                <h4 class="fw-bold text-dark">1. Escolha o seu Amigo</h4>
+                <p class="text-muted">Navegue pela nossa página de <a href="<?php echo e(route('animals')); ?>" class="text-decoration-none fw-bold text-primary">Animais Disponíveis</a>. Utilize os filtros para encontrar o animal que combina com o seu estilo de vida.</p>
+            </div>
+        </div>
+
+        <!-- Passo 2 -->
+        <div class="col-md-4 text-center">
+            <div class="card h-100 border-0 shadow-sm p-4 hover-lift" style="border-radius: 20px;">
+                <div class="mb-3">
+                    <div class="d-inline-flex align-items-center justify-content-center bg-light rounded-circle" style="width: 80px; height: 80px;">
+                        <i class="fas fa-file-signature fa-2x text-primary"></i>
+                    </div>
+                </div>
+                <h4 class="fw-bold text-dark">2. Manifeste Interesse</h4>
+                <p class="text-muted">Clique em "Quero Adotar" no perfil do animal. Preencha o formulário de interesse ou entre em contacto connosco.</p>
+            </div>
+        </div>
+
+        <!-- Passo 3 -->
+        <div class="col-md-4 text-center">
+            <div class="card h-100 border-0 shadow-sm p-4 hover-lift" style="border-radius: 20px;">
+                <div class="mb-3">
+                    <div class="d-inline-flex align-items-center justify-content-center bg-light rounded-circle" style="width: 80px; height: 80px;">
+                        <i class="fas fa-home fa-2x text-primary"></i>
+                    </div>
+                </div>
+                <h4 class="fw-bold text-dark">3. Entrevista e Lar</h4>
+                <p class="text-muted">Faremos uma breve entrevista e visita para garantir que o animal estará seguro. Se aprovado, leva o seu novo melhor amigo para casa!</p>
             </div>
         </div>
     </div>
 
     <div class="text-center mt-5">
-        <a href="<?php echo e(route('animals')); ?>" class="btn btn-primary btn-lg">
-            <i class="fas fa-paw"></i> Ver Animais Disponíveis
+        <a href="<?php echo e(route('animals')); ?>" class="btn btn-primary rounded-pill px-5 py-3 fw-bold shadow-sm text-white">
+            <i class="fas fa-paw me-2"></i> Começar a Procurar
         </a>
     </div>
 </div>
-<?php $__env->stopSection(); ?>
 
+<style>
+    .hover-lift { transition: transform 0.3s; }
+    .hover-lift:hover { transform: translateY(-5px); }
+</style>
+<?php $__env->stopSection(); ?>
 <?php echo $__env->make('layouts.app', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH C:\Users\eutei\OneDrive\Área de Trabalho\TCC-SAAU\resources\views/how-it-works.blade.php ENDPATH**/ ?>

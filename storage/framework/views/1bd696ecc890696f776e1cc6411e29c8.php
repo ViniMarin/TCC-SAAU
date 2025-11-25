@@ -45,16 +45,12 @@
                                 </span>
                             </td>
                             <td>
-                                <a href="<?php echo e(route('admin.animals.edit', $animal)); ?>" class="btn btn-sm btn-warning">
-                                    <i class="fas fa-edit"></i>
-                                </a>
-                                <form action="<?php echo e(route('admin.animals.destroy', $animal)); ?>" method="POST" class="d-inline" onsubmit="return confirm('Tem certeza que deseja remover este animal?')">
-                                    <?php echo csrf_field(); ?>
-                                    <?php echo method_field('DELETE'); ?>
-                                    <button type="submit" class="btn btn-sm btn-danger">
-                                        <i class="fas fa-trash"></i>
-                                    </button>
-                                </form>
+                                <?php echo $__env->make('admin.partials.action-buttons', [
+                                    'view' => route('admin.animals.show', $animal),
+                                    'edit' => route('admin.animals.edit', $animal),
+                                    'delete' => route('admin.animals.destroy', $animal),
+                                    'deleteMessage' => 'Tem certeza que deseja remover este animal?'
+                                ], \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
                             </td>
                         </tr>
                         <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>

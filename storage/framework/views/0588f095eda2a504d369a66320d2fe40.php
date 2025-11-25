@@ -1,117 +1,70 @@
+<?php $__env->startSection('title', 'Como Ajudar - SAAU'); ?>
+
+<?php $__env->startSection('header-content'); ?>
+    <h1 class="page-header-title">COMO AJUDAR</h1>
+<?php $__env->stopSection(); ?>
+
 <?php $__env->startSection('content'); ?>
 <div class="container my-5">
-    <h1 class="text-center mb-5">Como Você Pode Ajudar</h1>
-
-    <div class="row mb-5">
-        <div class="col-lg-8 mx-auto text-center">
-            <p class="lead">Existem várias formas de contribuir com a SAAU e fazer a diferença na vida dos animais abandonados de Umuarama. Escolha a que mais combina com você!</p>
+    <div class="row align-items-center mb-5">
+        <div class="col-lg-6 mb-4 mb-lg-0">
+            <h2 class="fw-bold text-dark mb-4">Faça a Diferença</h2>
+            <p class="text-muted lead mb-4">
+                A SAAU sobrevive graças à generosidade de pessoas como você. Não recebemos verbas governamentais fixas, por isso cada ajuda conta muito.
+            </p>
+            <ul class="list-unstyled text-muted">
+                <li class="mb-3"><i class="fas fa-check-circle text-warning me-2"></i> Alimentação para centenas de animais</li>
+                <li class="mb-3"><i class="fas fa-check-circle text-warning me-2"></i> Medicamentos e tratamentos veterinários</li>
+                <li class="mb-3"><i class="fas fa-check-circle text-warning me-2"></i> Manutenção do abrigo e limpeza</li>
+            </ul>
         </div>
-    </div>
-
-    <div class="row">
-        <div class="col-md-6 mb-4">
-            <div class="card h-100">
-                <div class="card-body">
-                    <h3><i class="fas fa-heart text-danger"></i> Adote</h3>
-                    <p>A forma mais direta de ajudar é dando um lar para um animal. Cada adoção salva uma vida e abre espaço para resgatarmos mais animais.</p>
-                    <a href="<?php echo e(route('animals')); ?>" class="btn btn-primary">Ver Animais</a>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-6 mb-4">
-            <div class="card h-100">
-                <div class="card-body">
-                    <h3><i class="fas fa-hand-holding-usd text-success"></i> Doe</h3>
-                    <p>Contribuições financeiras nos ajudam a manter os cuidados veterinários, alimentação e estrutura do abrigo.</p>
-                    <p><strong>PIX:</strong> saau@umuarama.org.br</p>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-6 mb-4">
-            <div class="card h-100">
-                <div class="card-body">
-                    <h3><i class="fas fa-gift text-info"></i> Doe Materiais</h3>
-                    <p>Aceitamos doações de:</p>
-                    <ul>
-                        <li>Ração para cães e gatos</li>
-                        <li>Medicamentos veterinários</li>
-                        <li>Cobertores e caminhas</li>
-                        <li>Brinquedos</li>
-                        <li>Produtos de limpeza</li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-6 mb-4">
-            <div class="card h-100">
-                <div class="card-body">
-                    <h3><i class="fas fa-hands-helping text-warning"></i> Seja Voluntário</h3>
-                    <p>Precisamos de ajuda com:</p>
-                    <ul>
-                        <li>Passeios com os animais</li>
-                        <li>Limpeza e manutenção</li>
-                        <li>Eventos e feiras de adoção</li>
-                        <li>Divulgação nas redes sociais</li>
-                        <li>Transporte de animais</li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-6 mb-4">
-            <div class="card h-100">
-                <div class="card-body">
-                    <h3><i class="fas fa-paw text-primary"></i> Apadrinhe</h3>
-                    <p>Não pode adotar mas quer ajudar um animal específico? Apadrinhe! Você contribui mensalmente com os custos de cuidado de um animal escolhido.</p>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-6 mb-4">
-            <div class="card h-100">
-                <div class="card-body">
-                    <h3><i class="fas fa-share-alt text-secondary"></i> Divulgue</h3>
-                    <p>Compartilhe nossos animais nas redes sociais! Quanto mais pessoas souberem, maiores as chances de adoção.</p>
-                    <p>
-                        <a href="#" class="btn btn-sm btn-primary"><i class="fab fa-facebook"></i> Facebook</a>
-                        <a href="#" class="btn btn-sm btn-danger"><i class="fab fa-instagram"></i> Instagram</a>
-                    </p>
+        <div class="col-lg-6">
+            <!-- Card de Doação PIX -->
+            <div class="card border-0 shadow-lg" style="border-radius: 20px; background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);">
+                <div class="card-body p-5 text-center">
+                    <i class="fas fa-hand-holding-heart fa-3x text-primary mb-3"></i>
+                    <h3 class="fw-bold text-dark">Doação via PIX</h3>
+                    <p class="text-muted">Qualquer valor ajuda a salvar vidas!</p>
+                    
+                    <div class="bg-white border rounded p-3 mb-3 mt-4">
+                        <code class="fs-5 text-dark fw-bold" id="pixKey">saau.umuarama@gmail.com</code>
+                    </div>
+                    <button class="btn btn-outline-primary btn-sm rounded-pill fw-bold" onclick="navigator.clipboard.writeText('saau.umuarama@gmail.com'); alert('Chave PIX copiada!');">
+                        <i class="far fa-copy me-1"></i> Copiar Chave
+                    </button>
                 </div>
             </div>
         </div>
     </div>
 
-    <div class="row mt-5">
-        <div class="col-lg-8 mx-auto">
-            <div class="card bg-warning text-dark">
-                <div class="card-body text-center">
-                    <h3>Participe de Nossas Rifas e Eventos!</h3>
-                    <p>Toda a renda é revertida para os cuidados dos animais. Confira nossas rifas ativas e eventos programados!</p>
-                    <div class="d-flex gap-2 justify-content-center">
-                        <a href="<?php echo e(route('raffles')); ?>" class="btn btn-dark">Ver Rifas</a>
-                        <a href="<?php echo e(route('events')); ?>" class="btn btn-dark">Ver Eventos</a>
+    <div class="row g-4">
+        <div class="col-md-6">
+            <div class="card h-100 border-0 shadow-sm p-4" style="border-radius: 20px;">
+                <div class="d-flex align-items-start">
+                    <div class="me-3">
+                        <i class="fas fa-hands-helping fa-2x text-warning"></i>
+                    </div>
+                    <div>
+                        <h4 class="fw-bold text-dark">Seja Voluntário</h4>
+                        <p class="text-muted">Precisamos de ajuda para passear com os cães, dar banho, limpar os canis ou ajudar em eventos. Doe o seu tempo e carinho!</p>
+                        <a href="#" class="btn btn-link p-0 text-primary fw-bold text-decoration-none">Saiba mais <i class="fas fa-arrow-right"></i></a>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-
-    <div class="row mt-5">
-        <div class="col-lg-8 mx-auto">
-            <div class="card">
-                <div class="card-body">
-                    <h4 class="text-center mb-4">Entre em Contato</h4>
-                    <p class="text-center">Quer saber mais sobre como ajudar? Fale conosco!</p>
-                    <div class="text-center">
-                        <p>
-                            <i class="fas fa-envelope"></i> contato@saau.org.br<br>
-                            <i class="fas fa-phone"></i> (44) 9999-9999<br>
-                            <i class="fab fa-instagram"></i> @saau_umuarama<br>
-                            <i class="fas fa-map-marker-alt"></i> Rua das Flores, 123 - Umuarama/PR
-                        </p>
+        <div class="col-md-6">
+            <div class="card h-100 border-0 shadow-sm p-4" style="border-radius: 20px;">
+                <div class="d-flex align-items-start">
+                    <div class="me-3">
+                        <i class="fas fa-share-alt fa-2x text-warning"></i>
+                    </div>
+                    <div>
+                        <h4 class="fw-bold text-dark">Divulgue</h4>
+                        <p class="text-muted">Siga as nossas redes sociais e partilhe os animais disponíveis. Quanto mais visibilidade, maiores as hipóteses de adoção!</p>
+                        <div class="mt-2">
+                            <a href="#" class="text-primary me-2"><i class="fab fa-instagram fa-lg"></i></a>
+                            <a href="#" class="text-primary"><i class="fab fa-facebook fa-lg"></i></a>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -119,5 +72,4 @@
     </div>
 </div>
 <?php $__env->stopSection(); ?>
-
 <?php echo $__env->make('layouts.app', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH C:\Users\eutei\OneDrive\Área de Trabalho\TCC-SAAU\resources\views/how-to-help.blade.php ENDPATH**/ ?>

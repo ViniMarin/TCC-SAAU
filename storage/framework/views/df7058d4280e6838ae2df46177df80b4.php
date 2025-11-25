@@ -64,6 +64,18 @@
     </div>
 </div>
 
+<div class="content-card">
+    <div class="card-header d-flex align-items-center justify-content-between">
+        <div>
+            <h2 class="card-title mb-1"><i class="fas fa-chart-line me-2"></i>Relatórios</h2>
+            <p class="text-muted mb-0">Gere PDFs com dados de animais, vacinas, rifas, eventos e doações.</p>
+        </div>
+        <a href="<?php echo e(route('admin.reports.index')); ?>" class="btn btn-primary">
+            <i class="fas fa-file-export me-1"></i>Abrir Relatórios
+        </a>
+    </div>
+</div>
+
 <!-- Recent Animals -->
 <div class="content-card">
     <div class="card-header">

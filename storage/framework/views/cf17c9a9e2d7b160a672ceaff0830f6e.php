@@ -18,6 +18,41 @@
             background-color: #f5f5f5;
             overflow-x: hidden;
         }
+
+        .action-buttons .action-btn {
+            width: 36px;
+            height: 36px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0;
+            border-radius: 8px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+            transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
+        }
+
+        .action-buttons .action-btn i {
+            font-size: 14px;
+        }
+
+        .action-buttons .action-btn:hover,
+        .action-buttons .action-btn:focus {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+            opacity: 0.95;
+        }
+
+        .action-buttons .btn-view {
+            background: #3498db;
+            color: #fff;
+            border: none;
+        }
+
+        .action-buttons .btn-view:hover,
+        .action-buttons .btn-view:focus {
+            background: #2c82c9;
+            color: #fff;
+        }
         
         /* Sidebar */
         .admin-sidebar {
@@ -347,6 +382,12 @@
                 <i class="fas fa-heart"></i>
                 <span>Histórias</span>
             </a>
+            <?php if(Route::has('admin.reports.index')): ?>
+            <a href="<?php echo e(route('admin.reports.index')); ?>" class="menu-item <?php echo e(request()->routeIs('admin.reports.*') ? 'active' : ''); ?>">
+                <i class="fas fa-chart-line"></i>
+                <span>Relatórios</span>
+            </a>
+            <?php endif; ?>
             <a href="<?php echo e(route('admin.donations.index')); ?>" class="menu-item <?php echo e(request()->routeIs('admin.donations.*') ? 'active' : ''); ?>">
                 <i class="fas fa-dollar-sign"></i>
                 <span>Doações</span>

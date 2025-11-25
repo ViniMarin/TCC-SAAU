@@ -37,16 +37,12 @@
                             </td>
                             <td><?php echo e($vaccine->notes ?? '-'); ?></td>
                             <td>
-                                <a href="<?php echo e(route('admin.vaccines.edit', $vaccine->id)); ?>" class="btn btn-sm btn-warning">
-                                    <i class="fas fa-edit"></i>
-                                </a>
-                                <form action="<?php echo e(route('admin.vaccines.destroy', $vaccine)); ?>" method="POST" class="d-inline" onsubmit="return confirm('Tem certeza que deseja remover este registro?')">
-                                    <?php echo csrf_field(); ?>
-                                    <?php echo method_field('DELETE'); ?>
-                                    <button type="submit" class="btn btn-sm btn-danger">
-                                        <i class="fas fa-trash"></i>
-                                    </button>
-                                </form>
+                                <?php echo $__env->make('admin.partials.action-buttons', [
+                                    'view' => route('admin.vaccines.show', $vaccine),
+                                    'edit' => route('admin.vaccines.edit', $vaccine->id),
+                                    'delete' => route('admin.vaccines.destroy', $vaccine),
+                                    'deleteMessage' => 'Tem certeza que deseja remover este registro?'
+                                ], \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
                             </td>
                         </tr>
                         <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
