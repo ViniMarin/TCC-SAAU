@@ -1,13 +1,11 @@
-@extends('layouts.app')
+<?php $__env->startSection('title', $event->title . ' - SAAU'); ?>
 
-@section('title', $event->title . ' - SAAU')
+<?php $__env->startSection('header-content'); ?>
+    <h1 class="page-header-title"><?php echo e($event->title); ?></h1>
+<?php $__env->stopSection(); ?>
 
-@section('header-content')
-    <h1 class="page-header-title">{{ $event->title }}</h1>
-@endsection
-
-@section('content')
-@php
+<?php $__env->startSection('content'); ?>
+<?php
     $dataFormatada = $event->date
         ? \Carbon\Carbon::parse($event->date)->format('d/m/Y')
         : null;
@@ -15,82 +13,86 @@
     $horaFormatada = $event->start_time
         ? \Carbon\Carbon::createFromFormat('H:i:s', $event->start_time)->format('H:i')
         : null;
-@endphp
+?>
 
 <div class="container my-5">
     <div class="row justify-content-center">
         <div class="col-lg-10">
 
-            {{-- CARD PRINCIPAL --}}
+            
             <div class="card border-0 shadow-sm rounded-4 overflow-hidden event-card-detail">
 
                 <div class="row g-0">
-                    {{-- IMAGEM DO EVENTO --}}
+                    
                     <div class="col-md-5">
-                        @if($event->image_url)
+                        <?php if($event->image_url): ?>
                             <div class="event-cover-wrapper">
-                                <img src="{{ $event->image_url }}"
-                                     alt="Imagem do evento {{ $event->title }}"
+                                <img src="<?php echo e($event->image_url); ?>"
+                                     alt="Imagem do evento <?php echo e($event->title); ?>"
                                      class="event-cover-img">
                             </div>
-                        @else
+                        <?php else: ?>
                             <div class="event-cover-placeholder d-flex flex-column align-items-center justify-content-center">
                                 <i class="fas fa-calendar-alt fa-3x mb-2 text-primary opacity-50"></i>
                                 <span class="text-muted small">Sem imagem cadastrada</span>
                             </div>
-                        @endif
+                        <?php endif; ?>
                     </div>
 
-                    {{-- INFORMAÇÕES --}}
+                    
                     <div class="col-md-7">
                         <div class="card-body p-4 p-lg-5 d-flex flex-column h-100">
 
-                            {{-- TÍTULO --}}
-                            <h2 class="fw-bold text-primary mb-3">{{ $event->title }}</h2>
+                            
+                            <h2 class="fw-bold text-primary mb-3"><?php echo e($event->title); ?></h2>
 
-                            {{-- DATA + HORÁRIO + LOCAL --}}
+                            
                             <div class="mb-3">
                                 <p class="text-muted small mb-1 fw-bold">
                                     <i class="fas fa-calendar-alt text-primary me-2"></i>
-                                    {{ $dataFormatada ?? 'Data não informada' }}
-                                    @if($horaFormatada)
-                                        às {{ $horaFormatada }}
-                                    @endif
+                                    <?php echo e($dataFormatada ?? 'Data não informada'); ?>
+
+                                    <?php if($horaFormatada): ?>
+                                        às <?php echo e($horaFormatada); ?>
+
+                                    <?php endif; ?>
                                 </p>
-                                @if($event->location)
+                                <?php if($event->location): ?>
                                     <p class="text-muted small mb-0 fw-bold">
                                         <i class="fas fa-map-marker-alt text-warning me-2"></i>
-                                        {{ $event->location }}
+                                        <?php echo e($event->location); ?>
+
                                     </p>
-                                @endif
+                                <?php endif; ?>
                             </div>
 
                             <hr class="text-muted opacity-25 my-3">
 
-                            {{-- DESCRIÇÃO --}}
+                            
                             <div class="mb-4">
                                 <h5 class="fw-bold mb-2 text-secondary">
                                     <i class="fas fa-info-circle me-2"></i>
                                     Sobre o evento
                                 </h5>
                                 <p class="text-muted" style="line-height: 1.7;">
-                                    {!! nl2br(e($event->description ?? 'Sem descrição cadastrada.')) !!}
+                                    <?php echo nl2br(e($event->description ?? 'Sem descrição cadastrada.')); ?>
+
                                 </p>
                             </div>
 
-                            {{-- BOTÕES --}}
+                            
                             <div class="mt-auto d-flex flex-wrap gap-2">
-                                <a href="{{ route('events') }}"
+                                <a href="<?php echo e(route('events')); ?>"
                                    class="btn btn-outline-secondary rounded-pill px-4">
                                     <i class="fas fa-arrow-left me-1"></i> Voltar para eventos
                                 </a>
 
-                                @if(!empty($event->link))
-                                    <a href="{{ $event->link }}" target="_blank"
+                                <?php if(!empty($event->link)): ?>
+                                    <a href="<?php echo e($event->link); ?>" target="_blank"
                                        class="btn btn-primary rounded-pill px-4">
                                         <i class="fas fa-external-link-alt me-1"></i> Acessar link do evento
                                     </a>
-                                @endif
+                                <?php endif; ?>
                             </div>
 
                         </div>
@@ -127,4 +129,6 @@
         background-color: #f8f9fa;
     }
 </style>
-@endsection
+<?php $__env->stopSection(); ?>
+
+<?php echo $__env->make('layouts.app', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH C:\Users\eutei\OneDrive\Área de Trabalho\alterações do antonio\TCC-SAAU\resources\views/public/event-show.blade.php ENDPATH**/ ?>

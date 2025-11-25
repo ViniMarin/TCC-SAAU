@@ -17,16 +17,15 @@ class PublicController extends Controller
         $stats = [
             'animals' => Animal::count(),
             'adopted' => Animal::where('status', 'adotado')->count(),
-            'events' => Event::where('active', true)->count(),
+            'events'  => Event::where('active', true)->count(),
             'raffles' => Raffle::where('status', 'ativa')->count(),
         ];
 
         $animals = Animal::where('status', 'disponivel')->latest()->take(6)->get();
-        $events = Event::where('active', true)->latest()->take(3)->get();
-        $stories = AdoptionStory::where('approved', true)->latest()->take(3)->get(); // Adicionado
+        $events  = Event::where('active', true)->latest()->take(3)->get();
+        $stories = AdoptionStory::where('approved', true)->latest()->take(3)->get();
 
-        return view('public.home', compact('stats', 'animals', 'events', 'stories')); // Variável 'stories' adicionada
-
+        return view('public.home', compact('stats', 'animals', 'events', 'stories'));
     }
 
     public function animals(Request $request)
@@ -63,29 +62,31 @@ class PublicController extends Controller
     public function adoptionRequest(Request $request, $id)
     {
         $validated = $request->validate([
-            'phone' => 'required|string',
-            'city_state' => 'required|string',
-            'housing_type' => 'required|string',
-            'had_pets' => 'nullable|string',
-            'message' => 'nullable|string',
+            'phone'       => 'required|string',
+            'city_state'  => 'required|string',
+            'housing_type'=> 'required|string',
+            'had_pets'    => 'nullable|string',
+            'message'     => 'nullable|string',
         ]);
 
         $user = $request->user();
 
         AdoptionRequest::create([
-            'id' => Str::uuid(),
-            'animal_id' => $id,
-            'full_name' => $user->name,
-            'email' => $user->email,
-            'phone' => $validated['phone'],
-            'city_state' => $validated['city_state'],
-            'housing_type' => $validated['housing_type'],
-            'had_pets' => $validated['had_pets'] ?? null,
-            'message' => $validated['message'] ?? null,
-            'status' => 'pendente',
+            'id'          => Str::uuid(),
+            'animal_id'   => $id,
+            'full_name'   => $user->name,
+            'email'       => $user->email,
+            'phone'       => $validated['phone'],
+            'city_state'  => $validated['city_state'],
+            'housing_type'=> $validated['housing_type'],
+            'had_pets'    => $validated['had_pets'] ?? null,
+            'message'     => $validated['message'] ?? null,
+            'status'      => 'pendente',
         ]);
 
-        return redirect()->route('animal.show', $id)->with('success', 'Pedido de adoção enviado com sucesso!');
+        return redirect()
+            ->route('animal.show', $id)
+            ->with('success', 'Pedido de adoção enviado com sucesso!');
     }
 
     public function events()
@@ -94,9 +95,13 @@ class PublicController extends Controller
         return view('public.events', compact('events'));
     }
 
-    public function eventShow($id)
+    public function eventShow(Event $event)
     {
-        $event = Event::findOrFail($id);
+        // Opcional: só exibe evento ativo
+        if (!$event->active) {
+            abort(404);
+        }
+
         return view('public.event-show', compact('event'));
     }
 
@@ -114,7 +119,9 @@ class PublicController extends Controller
     public function raffleShow(Raffle $raffle)
     {
         $ticketsSold = $raffle->tickets()->count();
-        $userTickets = auth()->check() ? $raffle->tickets()->where('user_id', auth()->id())->pluck('number')->toArray() : [];
+        $userTickets = auth()->check()
+            ? $raffle->tickets()->where('user_id', auth()->id())->pluck('number')->toArray()
+            : [];
 
         return view('public.raffle-show', compact('raffle', 'ticketsSold', 'userTickets'));
     }
@@ -125,8 +132,8 @@ class PublicController extends Controller
             'quantity' => 'required|integer|min:1',
         ]);
 
-        $quantity = $request->input('quantity');
-        $ticketsSold = $raffle->tickets()->count();
+        $quantity         = $request->input('quantity');
+        $ticketsSold      = $raffle->tickets()->count();
         $availableTickets = $raffle->total_tickets - $ticketsSold;
 
         if ($quantity > $availableTickets) {
@@ -134,20 +141,24 @@ class PublicController extends Controller
         }
 
         // 1. Encontrar números disponíveis
-        $existingNumbers = $raffle->tickets()->pluck('number')->toArray();
-        $allNumbers = range(1, $raffle->total_tickets);
+        $existingNumbers  = $raffle->tickets()->pluck('number')->toArray();
+        $allNumbers       = range(1, $raffle->total_tickets);
         $availableNumbers = array_diff($allNumbers, $existingNumbers);
 
         // 2. Selecionar números aleatórios
-        $randomNumbers = (array) array_rand($availableNumbers, $quantity);
+        $randomKeys   = (array) array_rand($availableNumbers, $quantity);
+        $randomNumbers = [];
+        foreach ($randomKeys as $key) {
+            $randomNumbers[] = $availableNumbers[$key];
+        }
 
         // 3. Criar os bilhetes
         $newTickets = [];
-        foreach ($randomNumbers as $key) {
+        foreach ($randomNumbers as $number) {
             $newTickets[] = [
-                'user_id' => auth()->id(),
-                'raffle_id' => $raffle->id,
-                'number' => $availableNumbers[$key],
+                'user_id'    => auth()->id(),
+                'raffle_id'  => $raffle->id,
+                'number'     => $number,
                 'created_at' => now(),
                 'updated_at' => now(),
             ];
@@ -155,9 +166,11 @@ class PublicController extends Controller
 
         \App\Models\RaffleTicket::insert($newTickets);
 
-        // 4. Redirecionar com sucesso
         $purchasedNumbers = implode(', ', array_column($newTickets, 'number'));
-        return redirect()->route('raffle.show', $raffle)->with('success', "Parabéns! Você comprou os bilhetes: {$purchasedNumbers}");
+
+        return redirect()
+            ->route('raffle.show', $raffle)
+            ->with('success', "Parabéns! Você comprou os bilhetes: {$purchasedNumbers}");
     }
 
     public function stories()
@@ -169,7 +182,6 @@ class PublicController extends Controller
     public function createStory(Request $request)
     {
         $adopterName = $request->user()->name;
-
         return view('public.story-create', compact('adopterName'));
     }
 
@@ -177,18 +189,20 @@ class PublicController extends Controller
     {
         $validated = $request->validate([
             'animal_name' => 'required|string|max:255',
-            'story' => 'required|string',
-            'photo_url' => 'nullable|url',
+            'story'       => 'required|string',
+            'photo_url'   => 'nullable|url',
         ]);
 
         AdoptionStory::create([
             'adopter_name' => $request->user()->name,
-            'animal_name' => $validated['animal_name'],
-            'story' => $validated['story'],
-            'photo_url' => $validated['photo_url'] ?? null,
-            'approved' => false,
+            'animal_name'  => $validated['animal_name'],
+            'story'        => $validated['story'],
+            'photo_url'    => $validated['photo_url'] ?? null,
+            'approved'     => false,
         ]);
 
-        return redirect()->route('stories.index')->with('success', 'História enviada com sucesso e aguarda aprovação.');
+        return redirect()
+            ->route('stories.index')
+            ->with('success', 'História enviada com sucesso e aguarda aprovação.');
     }
 }

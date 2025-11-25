@@ -26,8 +26,12 @@
 
                     {{-- Badge de Data (Sobreposto na Imagem) --}}
                     <div class="position-absolute top-0 end-0 m-3 bg-white rounded-3 shadow-sm text-center p-2" style="min-width: 60px;">
-                        <span class="d-block text-primary fw-bold small text-uppercase">{{ \Carbon\Carbon::parse($event->date)->format('M') }}</span>
-                        <span class="d-block text-dark fw-800 fs-4 lh-1">{{ \Carbon\Carbon::parse($event->date)->format('d') }}</span>
+                        <span class="d-block text-primary fw-bold small text-uppercase">
+                            {{ \Carbon\Carbon::parse($event->date)->format('M') }}
+                        </span>
+                        <span class="d-block text-dark fw-800 fs-4 lh-1">
+                            {{ \Carbon\Carbon::parse($event->date)->format('d') }}
+                        </span>
                     </div>
                 </div>
 
@@ -36,6 +40,25 @@
                     
                     {{-- Título --}}
                     <h4 class="card-title fw-bold text-primary mb-2">{{ $event->title }}</h4>
+
+                    @php
+                        $dataFormatada = $event->date
+                            ? \Carbon\Carbon::parse($event->date)->format('d/m/Y')
+                            : null;
+
+                        $horaFormatada = $event->start_time
+                            ? \Carbon\Carbon::createFromFormat('H:i:s', $event->start_time)->format('H:i')
+                            : null;
+                    @endphp
+                    
+                    {{-- Data + Horário --}}
+                    <p class="text-muted small mb-1 fw-bold">
+                        <i class="fas fa-calendar-alt text-primary me-2"></i>
+                        {{ $dataFormatada }}
+                        @if($horaFormatada)
+                            às {{ $horaFormatada }}
+                        @endif
+                    </p>
                     
                     {{-- Localização --}}
                     <p class="text-muted small mb-3 fw-bold">
@@ -49,11 +72,12 @@
                         {{ Str::limit($event->description, 120) }}
                     </p>
 
-                    {{-- Botão (Sem link específico no momento, mas preparado) --}}
+                    {{-- Botão "Saiba Mais" levando para a página do evento --}}
                     <div class="mt-auto">
-                        <button class="btn btn-outline-primary w-100 rounded-pill fw-bold py-2 shadow-sm">
+                        <a href="{{ route('events.show', $event) }}"
+                           class="btn btn-outline-primary w-100 rounded-pill fw-bold py-2 shadow-sm">
                             SAIBA MAIS
-                        </button>
+                        </a>
                     </div>
 
                 </div>

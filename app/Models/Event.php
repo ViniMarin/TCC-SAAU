@@ -14,13 +14,14 @@ class Event extends Model
         'title',
         'description',
         'date',
+        'start_time',   // 👈 novo
         'location',
         'active',
-        'image_url'
+        'image_url',
     ];
 
     protected $casts = [
-        'date' => 'date',
+        'date'   => 'date',
         'active' => 'boolean',
     ];
 }

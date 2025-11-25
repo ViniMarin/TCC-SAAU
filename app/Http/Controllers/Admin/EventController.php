@@ -9,7 +9,6 @@ use Illuminate\Support\Str;
 
 class EventController extends Controller
 {
-
     public function index()
     {
         $events = Event::latest()->paginate(10);
@@ -29,18 +28,22 @@ class EventController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'title' => 'required|string|max:255',
+            'title'       => 'required|string|max:255',
             'description' => 'nullable|string',
-            'date' => 'required|date|after_or_equal:today',
-            'location' => 'nullable|string|max:255',
-            'active' => 'boolean',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
+            // aceita o dia atual
+            'date'        => 'required|date|after_or_equal:today',
+            'start_time'  => 'required|date_format:H:i',         // 👈 novo
+            'location'    => 'nullable|string|max:255',
+            'active'      => 'boolean',
+            'image'       => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
+        // checkbox
         $validated['active'] = $request->has('active');
 
+        // ajusta caminho da imagem
         if ($request->hasFile('image')) {
-            $file = $request->file('image');
+            $file     = $request->file('image');
             $filename = Str::uuid() . '.' . $file->getClientOriginalExtension();
             $file->move(public_path('storage/events'), $filename);
             $validated['image_url'] = '/storage/events/' . $filename;
@@ -60,26 +63,27 @@ class EventController extends Controller
     public function update(Request $request, Event $event)
     {
         $validated = $request->validate([
-            'title' => 'required|string|max:255',
+            'title'       => 'required|string|max:255',
             'description' => 'nullable|string',
-            'date' => 'required|date|after_or_equal:today',
-            'location' => 'nullable|string|max:255',
-            'active' => 'boolean',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
+            'date'        => 'required|date|after_or_equal:today',
+            'start_time'  => 'required|date_format:H:i',       // 👈 novo
+            'location'    => 'nullable|string|max:255',
+            'active'      => 'boolean',
+            'image'       => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
         $validated['active'] = $request->has('active');
 
         if ($request->hasFile('image')) {
-            // Delete old image
+            // apaga a antiga
             if ($event->image_url) {
                 $oldPath = public_path($event->image_url);
                 if (file_exists($oldPath)) {
-                    unlink($oldPath);
+                    @unlink($oldPath);
                 }
             }
 
-            $file = $request->file('image');
+            $file     = $request->file('image');
             $filename = Str::uuid() . '.' . $file->getClientOriginalExtension();
             $file->move(public_path('storage/events'), $filename);
             $validated['image_url'] = '/storage/events/' . $filename;
@@ -93,11 +97,10 @@ class EventController extends Controller
 
     public function destroy(Event $event)
     {
-        // Delete image
         if ($event->image_url) {
             $oldPath = public_path($event->image_url);
             if (file_exists($oldPath)) {
-                unlink($oldPath);
+                @unlink($oldPath);
             }
         }
 

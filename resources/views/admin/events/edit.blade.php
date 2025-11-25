@@ -42,10 +42,16 @@
                             $eventDateValue = $eventDateValue;
                         }
                     }
+
+                    $startTimeValue = old('start_time', $event->start_time
+                        ? \Carbon\Carbon::createFromFormat('H:i:s', $event->start_time)->format('H:i')
+                        : ''
+                    );
                 @endphp
 
                 <div class="row">
-                    <div class="col-md-6 mb-3">
+                    {{-- DATA --}}
+                    <div class="col-md-4 mb-3">
                         <label for="date" class="form-label">Data *</label>
                         <input type="text" inputmode="numeric" maxlength="10" placeholder="DD/MM/AAAA"
                                class="form-control @error('date') is-invalid @enderror"
@@ -55,7 +61,22 @@
                         @enderror
                     </div>
 
-                    <div class="col-md-6 mb-3">
+                    {{-- HORÁRIO DE INÍCIO --}}
+                    <div class="col-md-4 mb-3">
+                        <label for="start_time" class="form-label">Horário de início *</label>
+                        <input type="time"
+                               id="start_time"
+                               name="start_time"
+                               class="form-control @error('start_time') is-invalid @enderror"
+                               value="{{ $startTimeValue }}"
+                               required>
+                        @error('start_time')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+
+                    {{-- LOCAL --}}
+                    <div class="col-md-4 mb-3">
                         <label for="location" class="form-label">Local</label>
                         <input type="text" class="form-control @error('location') is-invalid @enderror" 
                                id="location" name="location" value="{{ old('location', $event->location) }}">
