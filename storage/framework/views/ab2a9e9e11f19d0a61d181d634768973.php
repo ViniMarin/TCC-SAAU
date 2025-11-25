@@ -1,0 +1,166 @@
+<?php $__env->startSection('title', 'Login - SAAU'); ?>
+
+
+<?php $__env->startSection('header-content'); ?>
+    <h1 class="page-header-title">LOGIN</h1>
+<?php $__env->stopSection(); ?>
+
+<?php $__env->startSection('content'); ?>
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-md-5 col-lg-4">
+            <div class="card border-0 shadow-lg p-4" style="border-radius: 20px; overflow: hidden;">
+                <div class="card-body">
+                    
+                    
+                    <div class="text-center mb-4 mt-2">
+                        <div class="d-inline-flex align-items-center justify-content-center bg-light rounded-circle mb-3" style="width: 80px; height: 80px;">
+                            <i class="fas fa-user fa-3x text-primary"></i>
+                        </div>
+                        <h4 class="fw-bold text-dark">Bem-vindo de volta!</h4>
+                        <p class="text-muted small">Aceda à sua conta para continuar.</p>
+                    </div>
+
+                    <form method="POST" action="<?php echo e(route('login')); ?>">
+                        <?php echo csrf_field(); ?>
+
+                        
+                        <div class="mb-3">
+                            <label for="email" class="form-label small fw-bold text-muted text-uppercase">E-mail</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light border-end-0 rounded-start-pill ps-3">
+                                    <i class="fas fa-envelope text-primary"></i>
+                                </span>
+                                <input id="email" type="email" class="form-control border-start-0 rounded-end-pill bg-light py-2 <?php $__errorArgs = ['email'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?> is-invalid <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>" name="email" value="<?php echo e(old('email')); ?>" required autocomplete="email" autofocus placeholder="seu@email.com">
+                            </div>
+                            <?php $__errorArgs = ['email'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
+                                <span class="invalid-feedback d-block mt-1 small" role="alert">
+                                    <strong><?php echo e($message); ?></strong>
+                                </span>
+                            <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
+                        </div>
+
+                        
+                        <div class="mb-3">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <label for="password" class="form-label small fw-bold text-muted text-uppercase">Senha</label>
+                                <?php if(Route::has('password.request')): ?>
+                                    <a class="text-decoration-none small text-warning fw-bold hover-text-primary" href="<?php echo e(route('password.request')); ?>">
+                                        Esqueceu a senha?
+                                    </a>
+                                <?php endif; ?>
+                            </div>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light border-end-0 rounded-start-pill ps-3">
+                                    <i class="fas fa-lock text-primary"></i>
+                                </span>
+                                <input id="password" type="password" class="form-control border-start-0 rounded-end-pill bg-light py-2 <?php $__errorArgs = ['password'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?> is-invalid <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>" name="password" required autocomplete="current-password" placeholder="••••••••">
+                            </div>
+                            <?php $__errorArgs = ['password'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
+                                <span class="invalid-feedback d-block mt-1 small" role="alert">
+                                    <strong><?php echo e($message); ?></strong>
+                                </span>
+                            <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
+                        </div>
+
+                        
+                        <div class="mb-4 form-check ms-1">
+                            <input class="form-check-input border-primary" type="checkbox" name="remember" id="remember" <?php echo e(old('remember') ? 'checked' : ''); ?>>
+                            <label class="form-check-label small text-muted fw-bold" for="remember">
+                                Manter conectado
+                            </label>
+                        </div>
+
+                        
+                        <div class="d-grid mb-4">
+                            <button type="submit" class="btn btn-primary rounded-pill py-2 fw-bold shadow-sm btn-lg">
+                                ENTRAR <i class="fas fa-sign-in-alt ms-2"></i>
+                            </button>
+                        </div>
+
+                        
+                        <div class="text-center border-top pt-3 border-light-subtle">
+                            <p class="small text-muted mb-1">Não tem uma conta?</p>
+                            <a href="<?php echo e(route('register')); ?>" class="text-decoration-none fw-bold text-primary hover-text-warning transition-colors">
+                                Crie a sua conta agora <i class="fas fa-arrow-right small ms-1"></i>
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* Remove a borda de foco padrão do bootstrap para ficar mais clean e azul */
+    .form-control:focus, .form-check-input:focus {
+        box-shadow: none;
+        border-color: var(--saau-blue-primary);
+    }
+    
+    /* Cor do checkbox quando marcado */
+    .form-check-input:checked {
+        background-color: var(--saau-blue-primary);
+        border-color: var(--saau-blue-primary);
+    }
+
+    .input-group-text {
+        border-color: #dee2e6;
+    }
+    
+    /* Ajuste para unir o ícone com o input visualmente */
+    .form-control {
+        border-left: none;
+    }
+    
+    .input-group:focus-within .input-group-text {
+        border-color: var(--saau-blue-primary);
+        background-color: #fff;
+    }
+    .input-group:focus-within .form-control {
+        border-color: var(--saau-blue-primary);
+        background-color: #fff;
+    }
+
+    /* Efeitos de hover customizados */
+    .hover-text-primary:hover {
+        color: var(--saau-blue-primary) !important;
+    }
+    .hover-text-warning:hover {
+        color: var(--saau-yellow) !important;
+    }
+    .transition-colors {
+        transition: color 0.3s ease;
+    }
+</style>
+<?php $__env->stopSection(); ?>
+<?php echo $__env->make('layouts.app', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH C:\Users\eutei\OneDrive\Área de Trabalho\alterações do antonio\TCC-SAAU\resources\views/auth/login.blade.php ENDPATH**/ ?>

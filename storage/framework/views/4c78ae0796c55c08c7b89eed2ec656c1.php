@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@yield('title', 'Painel Administrativo - SAAU')</title>
+    <title><?php echo $__env->yieldContent('title', 'Painel Administrativo - SAAU'); ?></title>
     
     <!-- Bootstrap 5 -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -233,20 +233,20 @@
             .toggle-sidebar { display: none; }
         }
     </style>
-    @yield('styles')
+    <?php echo $__env->yieldContent('styles'); ?>
 </head>
 <body>
 
     <!-- Sidebar -->
     <nav class="sidebar" id="sidebar">
         <div class="sidebar-header">
-            <a href="{{ route('home') }}" class="sidebar-brand" target="_blank">
+            <a href="<?php echo e(route('home')); ?>" class="sidebar-brand" target="_blank">
                 <i class="fas fa-paw"></i> SAAU ADMIN
             </a>
         </div>
         <ul class="sidebar-menu">
             <li>
-                <a href="{{ route('admin.dashboard') }}" class="sidebar-link {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">
+                <a href="<?php echo e(route('admin.dashboard')); ?>" class="sidebar-link <?php echo e(request()->routeIs('admin.dashboard') ? 'active' : ''); ?>">
                     <i class="fas fa-tachometer-alt"></i> Dashboard
                 </a>
             </li>
@@ -254,22 +254,22 @@
             <li class="text-uppercase small fw-bold text-white-50 px-4 mt-3 mb-2">Gerenciamento</li>
             
             <li>
-                <a href="{{ route('admin.animals.index') }}" class="sidebar-link {{ request()->routeIs('admin.animals.*') ? 'active' : '' }}">
+                <a href="<?php echo e(route('admin.animals.index')); ?>" class="sidebar-link <?php echo e(request()->routeIs('admin.animals.*') ? 'active' : ''); ?>">
                     <i class="fas fa-dog"></i> Animais
                 </a>
             </li>
             <li>
-                <a href="{{ route('admin.adoption-requests.index') }}" class="sidebar-link {{ request()->routeIs('admin.adoption-requests.*') ? 'active' : '' }}">
+                <a href="<?php echo e(route('admin.adoption-requests.index')); ?>" class="sidebar-link <?php echo e(request()->routeIs('admin.adoption-requests.*') ? 'active' : ''); ?>">
                     <i class="fas fa-file-contract"></i> Pedidos de Adoção
                 </a>
             </li>
             <li>
-                <a href="{{ route('admin.vaccines.index') }}" class="sidebar-link {{ request()->routeIs('admin.vaccines.*') ? 'active' : '' }}">
+                <a href="<?php echo e(route('admin.vaccines.index')); ?>" class="sidebar-link <?php echo e(request()->routeIs('admin.vaccines.*') ? 'active' : ''); ?>">
                     <i class="fas fa-syringe"></i> Vacinas
                 </a>
             </li>
             <li>
-                <a href="{{ route('admin.stories.index') }}" class="sidebar-link {{ request()->routeIs('admin.stories.*') ? 'active' : '' }}">
+                <a href="<?php echo e(route('admin.stories.index')); ?>" class="sidebar-link <?php echo e(request()->routeIs('admin.stories.*') ? 'active' : ''); ?>">
                     <i class="fas fa-book-open"></i> Histórias
                 </a>
             </li>
@@ -277,17 +277,17 @@
             <li class="text-uppercase small fw-bold text-white-50 px-4 mt-3 mb-2">Eventos & Financeiro</li>
 
             <li>
-                <a href="{{ route('admin.events.index') }}" class="sidebar-link {{ request()->routeIs('admin.events.*') ? 'active' : '' }}">
+                <a href="<?php echo e(route('admin.events.index')); ?>" class="sidebar-link <?php echo e(request()->routeIs('admin.events.*') ? 'active' : ''); ?>">
                     <i class="fas fa-calendar-alt"></i> Eventos
                 </a>
             </li>
             <li>
-                <a href="{{ route('admin.raffles.index') }}" class="sidebar-link {{ request()->routeIs('admin.raffles.*') ? 'active' : '' }}">
+                <a href="<?php echo e(route('admin.raffles.index')); ?>" class="sidebar-link <?php echo e(request()->routeIs('admin.raffles.*') ? 'active' : ''); ?>">
                     <i class="fas fa-ticket-alt"></i> Rifas
                 </a>
             </li>
             <li>
-                <a href="{{ route('admin.donations.index') }}" class="sidebar-link {{ request()->routeIs('admin.donations.*') ? 'active' : '' }}">
+                <a href="<?php echo e(route('admin.donations.index')); ?>" class="sidebar-link <?php echo e(request()->routeIs('admin.donations.*') ? 'active' : ''); ?>">
                     <i class="fas fa-hand-holding-usd"></i> Doações
                 </a>
             </li>
@@ -295,12 +295,12 @@
             <li class="text-uppercase small fw-bold text-white-50 px-4 mt-3 mb-2">Sistema</li>
 
             <li>
-                <a href="{{ route('admin.users.index') }}" class="sidebar-link {{ request()->routeIs('admin.users.*') ? 'active' : '' }}">
+                <a href="<?php echo e(route('admin.users.index')); ?>" class="sidebar-link <?php echo e(request()->routeIs('admin.users.*') ? 'active' : ''); ?>">
                     <i class="fas fa-users"></i> Usuários
                 </a>
             </li>
             <li>
-                <a href="{{ route('admin.reports.index') }}" class="sidebar-link {{ request()->routeIs('admin.reports.*') ? 'active' : '' }}">
+                <a href="<?php echo e(route('admin.reports.index')); ?>" class="sidebar-link <?php echo e(request()->routeIs('admin.reports.*') ? 'active' : ''); ?>">
                     <i class="fas fa-chart-bar"></i> Relatórios
                 </a>
             </li>
@@ -317,14 +317,14 @@
                     <i class="fas fa-bars text-primary"></i>
                 </div>
                 <div class="page-title">
-                    <h4>@yield('page-title', 'Painel de Controle')</h4>
+                    <h4><?php echo $__env->yieldContent('page-title', 'Painel de Controle'); ?></h4>
                 </div>
             </div>
 
             <div class="user-profile">
                 <div class="user-info text-end d-none d-md-block">
-                    <span>{{ auth()->user()->name }}</span>
-                    <small>{{ ucfirst(auth()->user()->role) }}</small>
+                    <span><?php echo e(auth()->user()->name); ?></span>
+                    <small><?php echo e(ucfirst(auth()->user()->role)); ?></small>
                 </div>
                 <div class="dropdown">
                     <a href="#" class="d-flex align-items-center text-decoration-none" id="userDropdown" data-bs-toggle="dropdown">
@@ -334,14 +334,14 @@
                     </a>
                     <ul class="dropdown-menu dropdown-menu-end border-0 shadow p-2" style="border-radius: 10px;">
                         <li>
-                            <a class="dropdown-item rounded" href="{{ route('home') }}" target="_blank">
+                            <a class="dropdown-item rounded" href="<?php echo e(route('home')); ?>" target="_blank">
                                 <i class="fas fa-external-link-alt me-2 text-muted"></i> Ver Site
                             </a>
                         </li>
                         <li><hr class="dropdown-divider"></li>
                         <li>
-                            <form action="{{ route('admin.logout') }}" method="POST">
-                                @csrf
+                            <form action="<?php echo e(route('admin.logout')); ?>" method="POST">
+                                <?php echo csrf_field(); ?>
                                 <button type="submit" class="dropdown-item rounded text-danger fw-bold">
                                     <i class="fas fa-sign-out-alt me-2"></i> Sair
                                 </button>
@@ -353,22 +353,24 @@
         </div>
 
         <!-- Alertas -->
-        @if(session('success'))
+        <?php if(session('success')): ?>
             <div class="alert alert-success alert-dismissible fade show border-0 shadow-sm rounded-3 mb-4" role="alert">
-                <i class="fas fa-check-circle me-2"></i> {{ session('success') }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-            </div>
-        @endif
+                <i class="fas fa-check-circle me-2"></i> <?php echo e(session('success')); ?>
 
-        @if(session('error'))
-            <div class="alert alert-danger alert-dismissible fade show border-0 shadow-sm rounded-3 mb-4" role="alert">
-                <i class="fas fa-exclamation-circle me-2"></i> {{ session('error') }}
                 <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
             </div>
-        @endif
+        <?php endif; ?>
+
+        <?php if(session('error')): ?>
+            <div class="alert alert-danger alert-dismissible fade show border-0 shadow-sm rounded-3 mb-4" role="alert">
+                <i class="fas fa-exclamation-circle me-2"></i> <?php echo e(session('error')); ?>
+
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        <?php endif; ?>
 
         <!-- Conteúdo da Página -->
-        @yield('content')
+        <?php echo $__env->yieldContent('content'); ?>
 
     </div>
 
@@ -379,6 +381,6 @@
             document.getElementById('sidebar').classList.toggle('active');
         });
     </script>
-    @yield('scripts')
+    <?php echo $__env->yieldContent('scripts'); ?>
 </body>
-</html>
+</html><?php /**PATH C:\Users\eutei\OneDrive\Área de Trabalho\alterações do antonio\TCC-SAAU\resources\views/layouts/admin.blade.php ENDPATH**/ ?>

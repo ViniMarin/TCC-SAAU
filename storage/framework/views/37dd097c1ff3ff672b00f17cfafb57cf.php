@@ -1,55 +1,55 @@
-@extends('layouts.app')
+<?php $__env->startSection('title', 'Eventos - SAAU'); ?>
 
-@section('title', 'Eventos - SAAU')
-
-@section('header-content')
+<?php $__env->startSection('header-content'); ?>
     <h1 class="page-header-title">EVENTOS</h1>
-@endsection
+<?php $__env->stopSection(); ?>
 
-@section('content')
+<?php $__env->startSection('content'); ?>
 <div class="container my-5">
     <div class="row g-4">
-        @forelse($events as $event)
+        <?php $__empty_1 = true; $__currentLoopData = $events; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $event): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
         <div class="col-md-6 col-xl-4 d-flex align-items-stretch">
             
             <div class="card h-100 w-100 border-0 shadow-sm card-custom hover-lift">
                 
-                {{-- FOTO DO EVENTO --}}
+                
                 <div class="position-relative overflow-hidden img-container">
-                    @if($event->image_url)
-                        <img src="{{ $event->image_url }}" class="card-img-top" alt="{{ $event->title }}">
-                    @else
+                    <?php if($event->image_url): ?>
+                        <img src="<?php echo e($event->image_url); ?>" class="card-img-top" alt="<?php echo e($event->title); ?>">
+                    <?php else: ?>
                         <div class="card-img-top bg-light d-flex align-items-center justify-content-center">
                             <i class="fas fa-calendar-alt fa-3x text-primary opacity-25"></i>
                         </div>
-                    @endif
+                    <?php endif; ?>
 
-                    {{-- Badge de Data (Sobreposto na Imagem) --}}
+                    
                     <div class="position-absolute top-0 end-0 m-3 bg-white rounded-3 shadow-sm text-center p-2" style="min-width: 60px;">
-                        <span class="d-block text-primary fw-bold small text-uppercase">{{ \Carbon\Carbon::parse($event->date)->format('M') }}</span>
-                        <span class="d-block text-dark fw-800 fs-4 lh-1">{{ \Carbon\Carbon::parse($event->date)->format('d') }}</span>
+                        <span class="d-block text-primary fw-bold small text-uppercase"><?php echo e(\Carbon\Carbon::parse($event->date)->format('M')); ?></span>
+                        <span class="d-block text-dark fw-800 fs-4 lh-1"><?php echo e(\Carbon\Carbon::parse($event->date)->format('d')); ?></span>
                     </div>
                 </div>
 
-                {{-- CORPO DO CARD --}}
+                
                 <div class="card-body p-4 d-flex flex-column">
                     
-                    {{-- Título --}}
-                    <h4 class="card-title fw-bold text-primary mb-2">{{ $event->title }}</h4>
                     
-                    {{-- Localização --}}
+                    <h4 class="card-title fw-bold text-primary mb-2"><?php echo e($event->title); ?></h4>
+                    
+                    
                     <p class="text-muted small mb-3 fw-bold">
-                        <i class="fas fa-map-marker-alt text-warning me-2"></i> {{ $event->location }}
+                        <i class="fas fa-map-marker-alt text-warning me-2"></i> <?php echo e($event->location); ?>
+
                     </p>
 
                     <hr class="text-muted opacity-25 my-3">
 
-                    {{-- Descrição --}}
+                    
                     <p class="card-text text-muted small flex-grow-1 mb-4">
-                        {{ Str::limit($event->description, 120) }}
+                        <?php echo e(Str::limit($event->description, 120)); ?>
+
                     </p>
 
-                    {{-- Botão (Sem link específico no momento, mas preparado) --}}
+                    
                     <div class="mt-auto">
                         <button class="btn btn-outline-primary w-100 rounded-pill fw-bold py-2 shadow-sm">
                             SAIBA MAIS
@@ -60,7 +60,7 @@
             </div>
 
         </div>
-        @empty
+        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
         <div class="col-12">
             <div class="text-center py-5 bg-white rounded-4 shadow-sm">
                 <div class="mb-3 text-muted opacity-50">
@@ -70,7 +70,7 @@
                 <p class="text-muted">Fique ligado em nossas redes sociais para novidades!</p>
             </div>
         </div>
-        @endforelse
+        <?php endif; ?>
     </div>
 </div>
 
@@ -106,4 +106,5 @@
     
     .fw-800 { font-weight: 800; }
 </style>
-@endsection
+<?php $__env->stopSection(); ?>
+<?php echo $__env->make('layouts.app', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH C:\Users\eutei\OneDrive\Área de Trabalho\alterações do antonio\TCC-SAAU\resources\views/public/events.blade.php ENDPATH**/ ?>
