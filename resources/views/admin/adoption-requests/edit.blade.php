@@ -1,0 +1,163 @@
+@extends('layouts.admin')
+
+@section('content')
+<div class="container my-5">
+
+    @php
+        $status = $adoptionRequest->status;
+        $badgeClass = $status === 'aprovado'
+            ? 'success'
+            : ($status === 'rejeitado' ? 'danger' : 'warning');
+    @endphp
+
+    <div class="d-flex justify-content-between align-items-start flex-wrap gap-3 mb-4">
+        <div>
+            <a href="{{ route('admin.adoption-requests.index') }}"
+               class="text-decoration-none text-secondary d-inline-flex align-items-center mb-2">
+                <i class="fas fa-arrow-left me-2"></i> Voltar para a lista
+            </a>
+            <h1 class="mb-1">Editar Pedido de Adoção</h1>
+            <p class="text-muted mb-0">
+                Altere o status e as observações internas deste pedido.
+            </p>
+        </div>
+
+        <div class="text-end">
+            <span class="badge rounded-pill bg-{{ $badgeClass }} px-3 py-2 text-uppercase">
+                <i class="fas fa-flag me-1"></i>{{ ucfirst($status) }}
+            </span>
+            <p class="text-muted small mb-0 mt-2">
+                Recebido em {{ $adoptionRequest->created_at->format('d/m/Y H:i') }}
+            </p>
+        </div>
+    </div>
+
+    <div class="row g-4">
+
+        {{-- Coluna com resumo só para contexto (somente leitura) --}}
+        <div class="col-lg-8">
+            <div class="card shadow-sm border-0 mb-3">
+                <div class="card-body">
+                    <h5 class="mb-3">Informações do adotante</h5>
+
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <div class="border rounded-3 p-3 h-100 bg-light-subtle">
+                                <small class="text-muted text-uppercase d-block">Nome completo</small>
+                                <span class="fw-semibold">{{ $adoptionRequest->adopter_name ?? 'Não informado' }}</span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="border rounded-3 p-3 h-100 bg-light-subtle">
+                                <small class="text-muted text-uppercase d-block">Telefone</small>
+                                <span class="fw-semibold">{{ $adoptionRequest->adopter_phone ?? 'Não informado' }}</span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="border rounded-3 p-3 h-100 bg-light-subtle">
+                                <small class="text-muted text-uppercase d-block">E-mail</small>
+                                <span class="fw-semibold">{{ $adoptionRequest->adopter_email ?? 'Não informado' }}</span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="border rounded-3 p-3 h-100 bg-light-subtle">
+                                <small class="text-muted text-uppercase d-block">Cidade / Estado</small>
+                                <span class="fw-semibold">{{ $adoptionRequest->city_state ?? 'Não informado' }}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            @if($adoptionRequest->animal)
+                <div class="card shadow-sm border-0">
+                    <div class="card-body">
+                        <h5 class="mb-3">Animal solicitado</h5>
+
+                        <div class="d-flex align-items-center flex-wrap gap-3">
+                            @if($adoptionRequest->animal->photo_url)
+                                <img src="{{ $adoptionRequest->animal->photo_url }}"
+                                     alt="{{ $adoptionRequest->animal->name }}"
+                                     class="rounded"
+                                     style="width: 100px; height: 100px; object-fit: cover;">
+                            @endif
+
+                            <div class="flex-grow-1">
+                                <h5 class="mb-1">{{ $adoptionRequest->animal->name }}</h5>
+                                <div class="d-flex flex-wrap gap-2 small">
+                                    <span class="badge bg-primary-subtle text-primary">
+                                        {{ ucfirst($adoptionRequest->animal->species) }}
+                                    </span>
+                                    <span class="badge bg-secondary-subtle text-secondary">
+                                        {{ $adoptionRequest->animal->breed ?? 'Raça não informada' }}
+                                    </span>
+                                    <span class="badge bg-info-subtle text-info">
+                                        {{ $adoptionRequest->animal->age ?? 'Idade não informada' }}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            @endif
+        </div>
+
+        {{-- Coluna de edição de fato --}}
+        <div class="col-lg-4">
+            <div class="card shadow-sm border-0 mb-3">
+                <div class="card-body">
+                    <h5 class="mb-3">Atualizar andamento</h5>
+
+                    <form action="{{ route('admin.adoption-requests.update', $adoptionRequest) }}"
+                          method="POST" class="vstack gap-3">
+                        @csrf
+                        @method('PUT')
+
+                        <div>
+                            <label for="status" class="form-label fw-semibold">Status</label>
+                            <select class="form-select" id="status" name="status" required>
+                                <option value="pendente"  {{ $adoptionRequest->status == 'pendente'  ? 'selected' : '' }}>Pendente</option>
+                                <option value="aprovado"  {{ $adoptionRequest->status == 'aprovado'  ? 'selected' : '' }}>Aprovado</option>
+                                <option value="rejeitado" {{ $adoptionRequest->status == 'rejeitado' ? 'selected' : '' }}>Rejeitado</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label for="admin_notes" class="form-label fw-semibold">Observações internas</label>
+                            <textarea class="form-control"
+                                      id="admin_notes"
+                                      name="admin_notes"
+                                      rows="4"
+                                      placeholder="Ex.: Motivo da aprovação ou pontos de atenção">{{ old('admin_notes', $adoptionRequest->admin_notes) }}</textarea>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary w-100">
+                            <i class="fas fa-save me-1"></i> Salvar alterações
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <div class="card shadow-sm border-0 bg-light-subtle">
+                <div class="card-body">
+                    <h6 class="fw-bold mb-2">Excluir pedido</h6>
+                    <p class="text-muted small">
+                        Remove definitivamente este registro do sistema.
+                    </p>
+
+                    <form action="{{ route('admin.adoption-requests.destroy', $adoptionRequest) }}"
+                          method="POST"
+                          onsubmit="return confirm('Tem certeza que deseja remover este pedido?')">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit" class="btn btn-outline-danger w-100">
+                            <i class="fas fa-trash me-1"></i> Remover pedido
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+@endsection

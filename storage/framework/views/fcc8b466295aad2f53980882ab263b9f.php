@@ -1,37 +1,53 @@
+<?php $__env->startSection('title', 'Pedido de Adoção - SAAU'); ?>
+<?php $__env->startSection('page-title', 'Pedido de Adoção'); ?>
+
 <?php $__env->startSection('content'); ?>
 <div class="container my-5">
+
+    
     <div class="d-flex justify-content-between align-items-start flex-wrap gap-3 mb-4">
         <div>
             <a href="<?php echo e(route('admin.adoption-requests.index')); ?>" class="text-decoration-none text-secondary d-inline-flex align-items-center mb-2">
                 <i class="fas fa-arrow-left me-2"></i> Voltar para a lista
             </a>
             <h1 class="mb-1">Pedido de Adoção</h1>
-            <p class="text-muted mb-0">Reveja o cadastro, acompanhe mensagens e atualize o status.</p>
+            <p class="text-muted mb-0">Reveja o cadastro, acompanhe mensagens e atualize o status deste pedido.</p>
         </div>
+
+        <?php
+            $status = $adoptionRequest->status;
+            $badgeClass = $status === 'aprovado'
+                ? 'success'
+                : ($status === 'rejeitado' ? 'danger' : 'warning');
+        ?>
+
         <div class="text-end">
-            <span class="badge rounded-pill bg-<?php echo e($adoptionRequest->status === 'aprovado' ? 'success' : ($adoptionRequest->status === 'rejeitado' ? 'danger' : 'warning')); ?> px-3 py-2 text-uppercase">
-                <i class="fas fa-flag me-1"></i><?php echo e(ucfirst($adoptionRequest->status)); ?>
+            <span class="badge rounded-pill bg-<?php echo e($badgeClass); ?> px-3 py-2 text-uppercase">
+                <i class="fas fa-flag me-1"></i><?php echo e(ucfirst($status)); ?>
 
             </span>
-            <p class="text-muted small mb-0 mt-2">Recebido em <?php echo e($adoptionRequest->created_at->format('d/m/Y H:i')); ?></p>
+            <p class="text-muted small mb-0 mt-2">
+                Recebido em <?php echo e($adoptionRequest->created_at->format('d/m/Y H:i')); ?>
+
+            </p>
         </div>
     </div>
 
     <div class="row g-4">
+        
         <div class="col-lg-8">
+
+            
             <div class="card shadow-sm border-0 mb-3">
                 <div class="card-body">
-                    <div class="d-flex justify-content-between align-items-center mb-3">
-                        <div class="d-flex align-items-center gap-3">
-                            <span class="bg-primary-subtle text-primary rounded-3 d-inline-flex align-items-center justify-content-center" style="width: 42px; height: 42px;">
-                                <i class="fas fa-user"></i>
-                            </span>
-                            <div>
-                                <h5 class="mb-0">Informações do adotante</h5>
-                                <small class="text-muted">Dados principais para contato e análise.</small>
-                            </div>
+                    <div class="d-flex align-items-center gap-3 mb-3">
+                        <span class="bg-primary-subtle text-primary rounded-3 d-inline-flex align-items-center justify-content-center" style="width: 42px; height: 42px;">
+                            <i class="fas fa-user"></i>
+                        </span>
+                        <div>
+                            <h5 class="mb-0">Informações do adotante</h5>
+                            <small class="text-muted">Dados principais para contato e análise.</small>
                         </div>
-                        <span class="badge bg-light text-secondary border">Pedido #<?php echo e($adoptionRequest->id); ?></span>
                     </div>
 
                     <div class="row g-3">
@@ -78,6 +94,7 @@
                 </div>
             </div>
 
+            
             <div class="card shadow-sm border-0 mb-3">
                 <div class="card-body">
                     <div class="d-flex align-items-center gap-3 mb-3">
@@ -114,8 +131,14 @@
                                         <?php echo e($adoptionRequest->animal->age ?? 'Idade não informada'); ?>
 
                                     </span>
-                                    <span class="badge bg-<?php echo e($adoptionRequest->animal->status == 'disponivel' ? 'success-subtle text-success' : 'secondary-subtle text-secondary'); ?>">
-                                        <?php echo e(ucfirst($adoptionRequest->animal->status)); ?>
+                                    <?php
+                                        $animalStatus = $adoptionRequest->animal->status ?? 'indefinido';
+                                        $animalStatusClass = $animalStatus === 'disponivel'
+                                            ? 'bg-success-subtle text-success'
+                                            : 'bg-secondary-subtle text-secondary';
+                                    ?>
+                                    <span class="badge <?php echo e($animalStatusClass); ?>">
+                                        <?php echo e(ucfirst($animalStatus)); ?>
 
                                     </span>
                                 </div>
@@ -129,6 +152,7 @@
                 </div>
             </div>
 
+            
             <?php if($adoptionRequest->message): ?>
                 <div class="card shadow-sm border-0 mb-3">
                     <div class="card-body">
@@ -146,6 +170,7 @@
                 </div>
             <?php endif; ?>
 
+            
             <div class="card shadow-sm border-0">
                 <div class="card-body">
                     <div class="d-flex align-items-center gap-3 mb-2">
@@ -162,44 +187,113 @@
             </div>
         </div>
 
+        
         <div class="col-lg-4">
+
+            
+            <?php
+                $statusTextClass = $status === 'aprovado'
+                    ? 'text-success'
+                    : ($status === 'rejeitado' ? 'text-danger' : 'text-warning');
+            ?>
+
             <div class="card shadow-sm border-0 mb-3">
                 <div class="card-body">
-                    <div class="d-flex align-items-center gap-3 mb-3">
-                        <span class="bg-warning-subtle text-warning rounded-3 d-inline-flex align-items-center justify-content-center" style="width: 42px; height: 42px;">
-                            <i class="fas fa-tasks"></i>
-                        </span>
-                        <div>
-                            <h5 class="mb-0">Atualizar andamento</h5>
-                            <small class="text-muted">Altere o status e registre comentários.</small>
-                        </div>
-                    </div>
+                    <h5 class="mb-3">Resumo do pedido</h5>
+                    <dl class="row mb-0 small">
+                        <dt class="col-5 text-muted">Status atual</dt>
+                        <dd class="col-7 fw-semibold <?php echo e($statusTextClass); ?>">
+                            <?php echo e(ucfirst($status)); ?>
 
-                    <form action="<?php echo e(route('admin.adoption-requests.update', $adoptionRequest)); ?>" method="POST" class="vstack gap-3">
-                        <?php echo csrf_field(); ?>
-                        <?php echo method_field('PUT'); ?>
+                        </dd>
 
-                        <div>
-                            <label for="status" class="form-label fw-semibold">Status</label>
-                            <select class="form-select" id="status" name="status" required>
-                                <option value="pendente"  <?php echo e($adoptionRequest->status == 'pendente'  ? 'selected' : ''); ?>>Pendente</option>
-                                <option value="aprovado"  <?php echo e($adoptionRequest->status == 'aprovado'  ? 'selected' : ''); ?>>Aprovado</option>
-                                <option value="rejeitado" <?php echo e($adoptionRequest->status == 'rejeitado' ? 'selected' : ''); ?>>Rejeitado</option>
-                            </select>
-                        </div>
+                        <dt class="col-5 text-muted mt-2">Data de recebimento</dt>
+                        <dd class="col-7 mt-2">
+                            <?php echo e($adoptionRequest->created_at->format('d/m/Y')); ?>
 
-                        <div>
-                            <label for="admin_notes" class="form-label fw-semibold">Observações</label>
-                            <textarea class="form-control" id="admin_notes" name="admin_notes" rows="4" placeholder="Ex.: Motivo da aprovação ou pontos de atenção"><?php echo e($adoptionRequest->admin_notes); ?></textarea>
-                        </div>
+                        </dd>
 
-                        <button type="submit" class="btn btn-primary w-100">
-                            <i class="fas fa-save me-1"></i> Salvar alterações
-                        </button>
-                    </form>
+                        <?php if($adoptionRequest->animal): ?>
+                            <dt class="col-5 text-muted mt-2">Animal</dt>
+                            <dd class="col-7 mt-2">
+                                <?php echo e($adoptionRequest->animal->name); ?>
+
+                            </dd>
+                        <?php endif; ?>
+
+                        <dt class="col-5 text-muted mt-2">Adotante</dt>
+                        <dd class="col-7 mt-2">
+                            <?php echo e($adoptionRequest->adopter_name ?? 'Não informado'); ?>
+
+                        </dd>
+                    </dl>
                 </div>
             </div>
 
+            
+            <?php if($status === 'pendente'): ?>
+                <div class="card shadow-sm border-0 mb-3">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center gap-3 mb-3">
+                            <span class="bg-warning-subtle text-warning rounded-3 d-inline-flex align-items-center justify-content-center" style="width: 42px; height: 42px;">
+                                <i class="fas fa-tasks"></i>
+                            </span>
+                            <div>
+                                <h5 class="mb-0">Atualizar andamento</h5>
+                                <small class="text-muted">Defina se o pedido será aprovado ou rejeitado.</small>
+                            </div>
+                        </div>
+
+                        <form action="<?php echo e(route('admin.adoption-requests.update', $adoptionRequest)); ?>" method="POST" class="vstack gap-3">
+                            <?php echo csrf_field(); ?>
+                            <?php echo method_field('PUT'); ?>
+
+                            <div>
+                                <label for="status" class="form-label fw-semibold">Nova situação</label>
+                                <select class="form-select" id="status" name="status" required>
+                                    <option value="aprovado">Aprovar pedido</option>
+                                    <option value="rejeitado">Rejeitar pedido</option>
+                                </select>
+                                <small class="text-muted d-block mt-1">
+                                    Após definir como Aprovado ou Rejeitado, novas alterações devem ser feitas pela tela de <strong>Editar</strong>.
+                                </small>
+                            </div>
+
+                            <div>
+                                <label for="admin_notes" class="form-label fw-semibold">Observações</label>
+                                <textarea class="form-control" id="admin_notes" name="admin_notes" rows="4" placeholder="Ex.: Motivo da aprovação ou pontos de atenção"><?php echo e($adoptionRequest->admin_notes); ?></textarea>
+                            </div>
+
+                            <button type="submit" class="btn btn-primary w-100">
+                                <i class="fas fa-save me-1"></i> Salvar alterações
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            <?php else: ?>
+                <div class="card shadow-sm border-0 mb-3">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center gap-3 mb-2">
+                            <span class="bg-warning-subtle text-warning rounded-3 d-inline-flex align-items-center justify-content-center" style="width: 42px; height: 42px;">
+                                <i class="fas fa-lock"></i>
+                            </span>
+                            <div>
+                                <h5 class="mb-0">Andamento já definido</h5>
+                                <small class="text-muted">
+                                    Este pedido está <strong><?php echo e(ucfirst($status)); ?></strong>.  
+                                    Para alterar o status ou as observações, utilize o botão <strong>Editar</strong> na lista de pedidos.
+                                </small>
+                            </div>
+                        </div>
+
+                        <a href="<?php echo e(route('admin.adoption-requests.edit', $adoptionRequest)); ?>" class="btn btn-outline-primary w-100 mt-3">
+                            <i class="fas fa-edit me-1"></i> Ir para edição do pedido
+                        </a>
+                    </div>
+                </div>
+            <?php endif; ?>
+
+            
             <div class="card shadow-sm border-0 bg-light-subtle">
                 <div class="card-body">
                     <div class="d-flex align-items-center gap-3 mb-3">
@@ -221,6 +315,7 @@
                     </form>
                 </div>
             </div>
+
         </div>
     </div>
 </div>
