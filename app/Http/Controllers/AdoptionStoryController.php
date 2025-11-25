@@ -2,72 +2,53 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\AdoptionRequest;
 use App\Models\AdoptionStory;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class AdoptionStoryController extends Controller
 {
-    public function create(Request $request)
+    public function index()
     {
-        $user = $request->user();
-        $approvedRequests = $this->approvedAdoptionsForUser($user);
+        // Mostra apenas histórias aprovadas na área pública
+        $stories = AdoptionStory::where('is_approved', true)->latest()->paginate(9);
+        return view('public.stories', compact('stories'));
+    }
 
-        if ($approvedRequests->isEmpty()) {
-            return redirect()->route('stories.index')
-                ->with('error', 'Você precisa ter uma adoção aprovada para compartilhar sua história.');
-        }
-
-        return view('public.adoption-stories.create', [
-            'user' => $user,
-            'adoptedAnimals' => $approvedRequests,
-        ]);
+    public function create()
+    {
+        return view('public.adoption-stories.create');
     }
 
     public function store(Request $request)
     {
-        $user = $request->user();
-        $approvedRequests = $this->approvedAdoptionsForUser($user);
-
-        if ($approvedRequests->isEmpty()) {
-            return redirect()->route('stories.index')
-                ->with('error', 'Você precisa ter uma adoção aprovada para compartilhar sua história.');
-        }
-
-        $validated = $request->validate([
+        $request->validate([
             'animal_name' => 'required|string|max:255',
-            'story' => 'required|string|min:50',
-            'photo' => 'nullable|image|max:5120',
+            'title' => 'nullable|string|max:255',
+            'story' => 'required|string',
+            'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
-        $photoPath = null;
+        $data = [
+            'user_id' => Auth::id(),
+            'adopter_name' => Auth::user()->name,
+            'animal_name' => $request->animal_name,
+            'title' => $request->title,
+            'story' => $request->story,
+            'is_approved' => false, // Precisa de aprovação do admin
+        ];
+
         if ($request->hasFile('photo')) {
-            $photoPath = $request->file('photo')->store('stories', 'public');
-            $photoPath = '/storage/' . $photoPath;
+            // Salva a imagem na pasta 'storage/app/public/adoption_stories'
+            $path = $request->file('photo')->store('adoption_stories', 'public');
+            
+            // Gera a URL pública: /storage/adoption_stories/nome_arquivo.jpg
+            $data['photo_url'] = Storage::url($path);
         }
 
-        AdoptionStory::create([
-            'adopter_name' => $user->name,
-            'animal_name' => $validated['animal_name'],
-            'story' => $validated['story'],
-            'photo_url' => $photoPath,
-            'approved' => false,
-        ]);
+        AdoptionStory::create($data);
 
-        return redirect()->route('stories.index')
-            ->with('success', 'História enviada para avaliação! Entraremos em contato após a aprovação.');
-    }
-
-    protected function approvedAdoptionsForUser($user)
-    {
-        return AdoptionRequest::with('animal')
-            ->where('email', $user->email)
-            ->where('status', 'aprovado')
-            ->get()
-            ->map(function ($request) {
-                return [
-                    'animal_name' => optional($request->animal)->name ?? $request->animal_id,
-                ];
-            });
+        return redirect()->route('stories.index')->with('success', 'Sua história foi enviada com sucesso e aguarda aprovação!');
     }
 }
