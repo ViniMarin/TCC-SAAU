@@ -9,8 +9,13 @@
         <div class="col-md-6 mb-4">
             <div class="card h-100">
                 <?php if($story->photo_url): ?>
-                <img src="<?php echo e($story->photo_url); ?>" class="card-img-top" alt="<?php echo e($story->animal_name); ?>" style="height: 250px; object-fit: cover;">
+                    <img src="<?php echo e($story->photo_url); ?>" class="card-img-top" alt="<?php echo e($story->animal_name); ?>" style="height: 250px; object-fit: cover;">
+                <?php else: ?>
+                    <div class="d-flex align-items-center justify-content-center bg-light text-muted" style="height: 250px;">
+                        Sem foto enviada
+                    </div>
                 <?php endif; ?>
+
                 <div class="card-body">
                     <h5 class="card-title"><?php echo e($story->animal_name); ?></h5>
                     <p class="card-text"><strong>Adotante:</strong> <?php echo e($story->adopter_name); ?></p>
@@ -18,12 +23,13 @@
                     <p class="card-text">
                         <small class="text-muted"><?php echo e($story->created_at->format('d/m/Y')); ?></small>
                         <?php if($story->approved): ?>
-                        <span class="badge bg-success">Aprovada</span>
+                            <span class="badge bg-success">Aprovada</span>
                         <?php else: ?>
-                        <span class="badge bg-warning">Pendente</span>
+                            <span class="badge bg-warning">Pendente</span>
                         <?php endif; ?>
                     </p>
                 </div>
+
                 <div class="card-footer">
                     <div class="d-flex gap-2">
                         <?php if(!$story->approved): ?>
@@ -44,6 +50,7 @@
                         </form>
                     </div>
                 </div>
+
             </div>
         </div>
         <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>

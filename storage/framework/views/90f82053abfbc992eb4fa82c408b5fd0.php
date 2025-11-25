@@ -133,4 +133,5 @@
     .text-shadow { text-shadow: 1px 1px 2px rgba(0,0,0,0.8); }
 </style>
 <?php $__env->stopSection(); ?>
+
 <?php echo $__env->make('layouts.app', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH C:\Users\eutei\OneDrive\Área de Trabalho\alterações do antonio\TCC-SAAU\resources\views/public/stories.blade.php ENDPATH**/ ?>

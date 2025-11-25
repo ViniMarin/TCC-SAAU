@@ -62,26 +62,26 @@ class PublicController extends Controller
     public function adoptionRequest(Request $request, $id)
     {
         $validated = $request->validate([
-            'phone'       => 'required|string',
-            'city_state'  => 'required|string',
-            'housing_type'=> 'required|string',
-            'had_pets'    => 'nullable|string',
-            'message'     => 'nullable|string',
+            'phone'        => 'required|string',
+            'city_state'   => 'required|string',
+            'housing_type' => 'required|string',
+            'had_pets'     => 'nullable|string',
+            'message'      => 'nullable|string',
         ]);
 
         $user = $request->user();
 
         AdoptionRequest::create([
-            'id'          => Str::uuid(),
-            'animal_id'   => $id,
-            'full_name'   => $user->name,
-            'email'       => $user->email,
-            'phone'       => $validated['phone'],
-            'city_state'  => $validated['city_state'],
-            'housing_type'=> $validated['housing_type'],
-            'had_pets'    => $validated['had_pets'] ?? null,
-            'message'     => $validated['message'] ?? null,
-            'status'      => 'pendente',
+            'id'           => Str::uuid(),
+            'animal_id'    => $id,
+            'full_name'    => $user->name,
+            'email'        => $user->email,
+            'phone'        => $validated['phone'],
+            'city_state'   => $validated['city_state'],
+            'housing_type' => $validated['housing_type'],
+            'had_pets'     => $validated['had_pets'] ?? null,
+            'message'      => $validated['message'] ?? null,
+            'status'       => 'pendente',
         ]);
 
         return redirect()
@@ -146,7 +146,7 @@ class PublicController extends Controller
         $availableNumbers = array_diff($allNumbers, $existingNumbers);
 
         // 2. Selecionar números aleatórios
-        $randomKeys   = (array) array_rand($availableNumbers, $quantity);
+        $randomKeys    = (array) array_rand($availableNumbers, $quantity);
         $randomNumbers = [];
         foreach ($randomKeys as $key) {
             $randomNumbers[] = $availableNumbers[$key];
@@ -187,19 +187,28 @@ class PublicController extends Controller
 
     public function storeStory(Request $request)
     {
+        // AGORA USANDO UPLOAD DE ARQUIVO "photo"
         $validated = $request->validate([
             'animal_name' => 'required|string|max:255',
             'story'       => 'required|string',
-            'photo_url'   => 'nullable|url',
+            'photo'       => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:5120',
         ]);
 
-        AdoptionStory::create([
+        $data = [
             'adopter_name' => $request->user()->name,
             'animal_name'  => $validated['animal_name'],
             'story'        => $validated['story'],
-            'photo_url'    => $validated['photo_url'] ?? null,
             'approved'     => false,
-        ]);
+        ];
+
+        if ($request->hasFile('photo')) {
+            // grava em storage/app/public/stories
+            // no banco fica "stories/arquivo.ext"
+            $path = $request->file('photo')->store('stories', 'public');
+            $data['photo_url'] = $path;
+        }
+
+        AdoptionStory::create($data);
 
         return redirect()
             ->route('stories.index')

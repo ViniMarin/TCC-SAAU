@@ -11,8 +11,13 @@
         <div class="col-md-6 mb-4">
             <div class="card h-100">
                 @if($story->photo_url)
-                <img src="{{ $story->photo_url }}" class="card-img-top" alt="{{ $story->animal_name }}" style="height: 250px; object-fit: cover;">
+                    <img src="{{ $story->photo_url }}" class="card-img-top" alt="{{ $story->animal_name }}" style="height: 250px; object-fit: cover;">
+                @else
+                    <div class="d-flex align-items-center justify-content-center bg-light text-muted" style="height: 250px;">
+                        Sem foto enviada
+                    </div>
                 @endif
+
                 <div class="card-body">
                     <h5 class="card-title">{{ $story->animal_name }}</h5>
                     <p class="card-text"><strong>Adotante:</strong> {{ $story->adopter_name }}</p>
@@ -20,12 +25,13 @@
                     <p class="card-text">
                         <small class="text-muted">{{ $story->created_at->format('d/m/Y') }}</small>
                         @if($story->approved)
-                        <span class="badge bg-success">Aprovada</span>
+                            <span class="badge bg-success">Aprovada</span>
                         @else
-                        <span class="badge bg-warning">Pendente</span>
+                            <span class="badge bg-warning">Pendente</span>
                         @endif
                     </p>
                 </div>
+
                 <div class="card-footer">
                     <div class="d-flex gap-2">
                         @if(!$story->approved)
@@ -46,6 +52,7 @@
                         </form>
                     </div>
                 </div>
+
             </div>
         </div>
         @empty
