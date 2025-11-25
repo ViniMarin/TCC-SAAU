@@ -33,7 +33,15 @@
                                 <span class="input-group-text bg-light border-end-0 rounded-start-pill ps-3">
                                     <i class="fas fa-envelope text-primary"></i>
                                 </span>
-                                <input id="email" type="email" class="form-control border-start-0 rounded-end-pill bg-light py-2 @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required autocomplete="email" autofocus placeholder="seu@email.com">
+                                <input id="email"
+                                       type="email"
+                                       class="form-control border-start-0 rounded-end-pill bg-light py-2 @error('email') is-invalid @enderror"
+                                       name="email"
+                                       value="{{ old('email') }}"
+                                       required
+                                       autocomplete="email"
+                                       autofocus
+                                       placeholder="seu@email.com">
                             </div>
                             @error('email')
                                 <span class="invalid-feedback d-block mt-1 small" role="alert">
@@ -56,7 +64,13 @@
                                 <span class="input-group-text bg-light border-end-0 rounded-start-pill ps-3">
                                     <i class="fas fa-lock text-primary"></i>
                                 </span>
-                                <input id="password" type="password" class="form-control border-start-0 rounded-end-pill bg-light py-2 @error('password') is-invalid @enderror" name="password" required autocomplete="current-password" placeholder="••••••••">
+                                <input id="password"
+                                       type="password"
+                                       class="form-control border-start-0 rounded-end-pill bg-light py-2 @error('password') is-invalid @enderror"
+                                       name="password"
+                                       required
+                                       autocomplete="current-password"
+                                       placeholder="••••••••">
                             </div>
                             @error('password')
                                 <span class="invalid-feedback d-block mt-1 small" role="alert">
@@ -67,7 +81,11 @@
 
                         {{-- Checkbox Lembrar --}}
                         <div class="mb-4 form-check ms-1">
-                            <input class="form-check-input border-primary" type="checkbox" name="remember" id="remember" {{ old('remember') ? 'checked' : '' }}>
+                            <input class="form-check-input border-primary"
+                                   type="checkbox"
+                                   name="remember"
+                                   id="remember"
+                                   {{ old('remember') ? 'checked' : '' }}>
                             <label class="form-check-label small text-muted fw-bold" for="remember">
                                 Manter conectado
                             </label>
@@ -96,7 +114,8 @@
 
 <style>
     /* Remove a borda de foco padrão do bootstrap para ficar mais clean e azul */
-    .form-control:focus, .form-check-input:focus {
+    .form-control:focus,
+    .form-check-input:focus {
         box-shadow: none;
         border-color: var(--saau-blue-primary);
     }

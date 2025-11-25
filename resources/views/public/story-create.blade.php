@@ -88,9 +88,7 @@
                             <label for="photo" class="form-label small fw-bold text-muted text-uppercase">Foto do Pet (Opcional)</label>
                             <div class="input-group">
                                 <input type="file" class="form-control rounded-pill bg-light border-0" id="photo" name="photo" accept="image/*">
-                                <label class="input-group-text rounded-end-pill bg-primary text-white border-primary" for="photo">
-                                    <i class="fas fa-upload me-2"></i> Escolher
-                                </label>
+                                
                             </div>
                             <div class="form-text small text-muted ms-2 mt-1">
                                 <i class="fas fa-camera me-1 text-warning"></i> A imagem será exibida após aprovação.

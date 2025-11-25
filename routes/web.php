@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\AdminAnimalController;
 use App\Http\Controllers\Admin\ReportController;
 use App\Http\Controllers\AdoptionStoryController;
+use App\Http\Controllers\RafflePublicController; // 👈 NOVO
 
 // Rotas públicas
 Route::get('/', [PublicController::class, 'home'])->name('home');
@@ -20,9 +21,13 @@ Route::post('/animal/{id}/adotar', [PublicController::class, 'adoptionRequest'])
 Route::get('/eventos', [PublicController::class, 'events'])->name('events');
 Route::get('/eventos/{event}', [PublicController::class, 'eventShow'])->name('events.show');
 
-// Rifas
-Route::get('/rifas', [PublicController::class, 'raffles'])->name('raffles');
-Route::get('/rifas/{raffle}', [PublicController::class, 'raffleShow'])->name('raffle.show');
+// Rifas (públicas)
+Route::get('/rifas', [RafflePublicController::class, 'index'])->name('raffles');
+// 👇 nome da rota corrigido para combinar com route('raffle.show', $raffle)
+Route::get('/rifas/{raffle}', [RafflePublicController::class, 'show'])->name('raffle.show');
+Route::post('/rifas/{raffle}/comprar', [RafflePublicController::class, 'buy'])
+    ->middleware('auth')
+    ->name('raffle.buy');
 
 // Histórias públicas (listagem)
 Route::get('/stories', [PublicController::class, 'stories'])->name('stories.index');

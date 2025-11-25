@@ -247,6 +247,7 @@
 
                     <?php if(auth()->guard()->check()): ?>
                         <?php if(auth()->user()->role === 'admin' || auth()->user()->role === 'veterinario'): ?>
+                        
                         <li class="nav-item dropdown ms-lg-2">
                             <a class="nav-link dropdown-toggle btn btn-outline-dark px-3 rounded-pill" href="#" role="button" data-bs-toggle="dropdown" style="border: 1px solid var(--saau-dark);">
                                 <i class="fas fa-user-shield me-1"></i> <?php echo e(auth()->user()->name); ?>
@@ -256,14 +257,16 @@
                                 <li><a class="dropdown-item" href="<?php echo e(route('admin.dashboard')); ?>">Painel Administrativo</a></li>
                                 <li><hr class="dropdown-divider"></li>
                                 <li>
-                                    <form action="<?php echo e(route('admin.logout')); ?>" method="POST">
-                                        <?php echo csrf_field(); ?>
-                                        <button type="submit" class="dropdown-item text-danger">Sair</button>
-                                    </form>
+                                    <a href="#"
+                                       class="dropdown-item text-danger"
+                                       onclick="event.preventDefault(); document.getElementById('admin-logout-form').submit();">
+                                        Sair
+                                    </a>
                                 </li>
                             </ul>
                         </li>
                         <?php else: ?>
+                        
                         <li class="nav-item dropdown ms-lg-2">
                             <a class="nav-link dropdown-toggle btn btn-primary text-white px-3 shadow-sm rounded-pill" href="#" role="button" data-bs-toggle="dropdown">
                                 <i class="fas fa-user me-1"></i> <?php echo e(auth()->user()->name); ?>
@@ -274,10 +277,11 @@
                                 <li><a class="dropdown-item" href="<?php echo e(route('adoption-stories.create')); ?>">Enviar história</a></li>
                                 <li><hr class="dropdown-divider"></li>
                                 <li>
-                                    <form action="<?php echo e(route('logout')); ?>" method="POST">
-                                        <?php echo csrf_field(); ?>
-                                        <button type="submit" class="dropdown-item text-danger">Sair</button>
-                                    </form>
+                                    <a href="#"
+                                       class="dropdown-item text-danger"
+                                       onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                                        Sair
+                                    </a>
                                 </li>
                             </ul>
                         </li>
@@ -383,6 +387,15 @@
             </div>
         </div>
     </footer>
+
+    
+    <form id="logout-form" action="<?php echo e(route('logout')); ?>" method="POST" class="d-none">
+        <?php echo csrf_field(); ?>
+    </form>
+
+    <form id="admin-logout-form" action="<?php echo e(route('admin.logout')); ?>" method="POST" class="d-none">
+        <?php echo csrf_field(); ?>
+    </form>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <?php echo $__env->yieldContent('scripts'); ?>

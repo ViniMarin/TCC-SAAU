@@ -11,7 +11,6 @@
     <div class="row g-4">
         @forelse($raffles as $raffle)
         <div class="col-md-6 col-xl-4 d-flex align-items-stretch">
-            
             <div class="card h-100 w-100 border-0 shadow-sm card-custom hover-lift">
                 
                 {{-- FOTO DA RIFA --}}
@@ -23,7 +22,7 @@
                             <i class="fas fa-ticket-alt fa-3x text-primary opacity-25"></i>
                         </div>
                     @endif
-                    
+
                     {{-- Badge de Preço --}}
                     <div class="position-absolute bottom-0 end-0 m-3">
                         <span class="badge bg-warning text-dark shadow fw-bold fs-6 px-3 py-2 rounded-pill">
@@ -34,9 +33,8 @@
 
                 {{-- CORPO DO CARD --}}
                 <div class="card-body p-4 d-flex flex-column text-center">
-                    
                     <h4 class="card-title fw-bold text-primary mb-2">{{ $raffle->title }}</h4>
-                    <p class="text-muted small mb-3">{{ Str::limit($raffle->description, 80) }}</p>
+                    <p class="text-muted small mb-3">{{ \Illuminate\Support\Str::limit($raffle->description, 80) }}</p>
 
                     <div class="bg-light rounded-3 p-3 mb-4 border border-light-subtle">
                         <small class="d-block text-muted text-uppercase fw-bold mb-1" style="font-size: 0.7rem;">Prêmio</small>
@@ -46,14 +44,13 @@
                     </div>
 
                     <div class="mt-auto">
-                        <button class="btn btn-outline-primary w-100 rounded-pill fw-bold py-2 shadow-sm">
+                        <a href="{{ route('raffle.show', $raffle) }}"
+                           class="btn btn-outline-primary w-100 rounded-pill fw-bold py-2 shadow-sm">
                             PARTICIPAR
-                        </button>
+                        </a>
                     </div>
-
                 </div>
             </div>
-
         </div>
         @empty
         <div class="col-12">
@@ -70,7 +67,6 @@
 </div>
 
 <style>
-    /* CSS Padrão (Replicado) */
     .card-custom {
         border-radius: 20px;
         transition: transform 0.3s ease, box-shadow 0.3s ease;

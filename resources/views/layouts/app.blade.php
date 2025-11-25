@@ -247,6 +247,7 @@
 
                     @auth
                         @if(auth()->user()->role === 'admin' || auth()->user()->role === 'veterinario')
+                        {{-- Usuário logado no site e com perfil admin/veterinário --}}
                         <li class="nav-item dropdown ms-lg-2">
                             <a class="nav-link dropdown-toggle btn btn-outline-dark px-3 rounded-pill" href="#" role="button" data-bs-toggle="dropdown" style="border: 1px solid var(--saau-dark);">
                                 <i class="fas fa-user-shield me-1"></i> {{ auth()->user()->name }}
@@ -255,14 +256,16 @@
                                 <li><a class="dropdown-item" href="{{ route('admin.dashboard') }}">Painel Administrativo</a></li>
                                 <li><hr class="dropdown-divider"></li>
                                 <li>
-                                    <form action="{{ route('admin.logout') }}" method="POST">
-                                        @csrf
-                                        <button type="submit" class="dropdown-item text-danger">Sair</button>
-                                    </form>
+                                    <a href="#"
+                                       class="dropdown-item text-danger"
+                                       onclick="event.preventDefault(); document.getElementById('admin-logout-form').submit();">
+                                        Sair
+                                    </a>
                                 </li>
                             </ul>
                         </li>
                         @else
+                        {{-- Usuário comum logado no site público --}}
                         <li class="nav-item dropdown ms-lg-2">
                             <a class="nav-link dropdown-toggle btn btn-primary text-white px-3 shadow-sm rounded-pill" href="#" role="button" data-bs-toggle="dropdown">
                                 <i class="fas fa-user me-1"></i> {{ auth()->user()->name }}
@@ -272,10 +275,11 @@
                                 <li><a class="dropdown-item" href="{{ route('adoption-stories.create') }}">Enviar história</a></li>
                                 <li><hr class="dropdown-divider"></li>
                                 <li>
-                                    <form action="{{ route('logout') }}" method="POST">
-                                        @csrf
-                                        <button type="submit" class="dropdown-item text-danger">Sair</button>
-                                    </form>
+                                    <a href="#"
+                                       class="dropdown-item text-danger"
+                                       onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                                        Sair
+                                    </a>
                                 </li>
                             </ul>
                         </li>
@@ -381,6 +385,15 @@
             </div>
         </div>
     </footer>
+
+    {{-- Forms ocultos para logout público e admin (POST + CSRF, evitando 419) --}}
+    <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+        @csrf
+    </form>
+
+    <form id="admin-logout-form" action="{{ route('admin.logout') }}" method="POST" class="d-none">
+        @csrf
+    </form>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     @yield('scripts')

@@ -31,14 +31,22 @@
                                 <span class="input-group-text bg-light border-end-0 rounded-start-pill ps-3">
                                     <i class="fas fa-envelope text-primary"></i>
                                 </span>
-                                <input id="email" type="email" class="form-control border-start-0 rounded-end-pill bg-light py-2 <?php $__errorArgs = ['email'];
+                                <input id="email"
+                                       type="email"
+                                       class="form-control border-start-0 rounded-end-pill bg-light py-2 <?php $__errorArgs = ['email'];
 $__bag = $errors->getBag($__errorArgs[1] ?? 'default');
 if ($__bag->has($__errorArgs[0])) :
 if (isset($message)) { $__messageOriginal = $message; }
 $message = $__bag->first($__errorArgs[0]); ?> is-invalid <?php unset($message);
 if (isset($__messageOriginal)) { $message = $__messageOriginal; }
 endif;
-unset($__errorArgs, $__bag); ?>" name="email" value="<?php echo e(old('email')); ?>" required autocomplete="email" autofocus placeholder="seu@email.com">
+unset($__errorArgs, $__bag); ?>"
+                                       name="email"
+                                       value="<?php echo e(old('email')); ?>"
+                                       required
+                                       autocomplete="email"
+                                       autofocus
+                                       placeholder="seu@email.com">
                             </div>
                             <?php $__errorArgs = ['email'];
 $__bag = $errors->getBag($__errorArgs[1] ?? 'default');
@@ -68,14 +76,20 @@ unset($__errorArgs, $__bag); ?>
                                 <span class="input-group-text bg-light border-end-0 rounded-start-pill ps-3">
                                     <i class="fas fa-lock text-primary"></i>
                                 </span>
-                                <input id="password" type="password" class="form-control border-start-0 rounded-end-pill bg-light py-2 <?php $__errorArgs = ['password'];
+                                <input id="password"
+                                       type="password"
+                                       class="form-control border-start-0 rounded-end-pill bg-light py-2 <?php $__errorArgs = ['password'];
 $__bag = $errors->getBag($__errorArgs[1] ?? 'default');
 if ($__bag->has($__errorArgs[0])) :
 if (isset($message)) { $__messageOriginal = $message; }
 $message = $__bag->first($__errorArgs[0]); ?> is-invalid <?php unset($message);
 if (isset($__messageOriginal)) { $message = $__messageOriginal; }
 endif;
-unset($__errorArgs, $__bag); ?>" name="password" required autocomplete="current-password" placeholder="••••••••">
+unset($__errorArgs, $__bag); ?>"
+                                       name="password"
+                                       required
+                                       autocomplete="current-password"
+                                       placeholder="••••••••">
                             </div>
                             <?php $__errorArgs = ['password'];
 $__bag = $errors->getBag($__errorArgs[1] ?? 'default');
@@ -93,7 +107,11 @@ unset($__errorArgs, $__bag); ?>
 
                         
                         <div class="mb-4 form-check ms-1">
-                            <input class="form-check-input border-primary" type="checkbox" name="remember" id="remember" <?php echo e(old('remember') ? 'checked' : ''); ?>>
+                            <input class="form-check-input border-primary"
+                                   type="checkbox"
+                                   name="remember"
+                                   id="remember"
+                                   <?php echo e(old('remember') ? 'checked' : ''); ?>>
                             <label class="form-check-label small text-muted fw-bold" for="remember">
                                 Manter conectado
                             </label>
@@ -122,7 +140,8 @@ unset($__errorArgs, $__bag); ?>
 
 <style>
     /* Remove a borda de foco padrão do bootstrap para ficar mais clean e azul */
-    .form-control:focus, .form-check-input:focus {
+    .form-control:focus,
+    .form-check-input:focus {
         box-shadow: none;
         border-color: var(--saau-blue-primary);
     }
@@ -163,4 +182,5 @@ unset($__errorArgs, $__bag); ?>
     }
 </style>
 <?php $__env->stopSection(); ?>
+
 <?php echo $__env->make('layouts.app', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH C:\Users\eutei\OneDrive\Área de Trabalho\alterações do antonio\TCC-SAAU\resources\views/auth/login.blade.php ENDPATH**/ ?>

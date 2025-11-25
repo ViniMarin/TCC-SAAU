@@ -4,72 +4,76 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 
 class LoginController extends Controller
 {
-    /*
-    |--------------------------------------------------------------------------
-    | Login Controller
-    |--------------------------------------------------------------------------
-    |
-    | This controller handles authenticating users for the application and
-    | redirecting them to your home screen. The controller uses a trait
-    | to conveniently provide its functionality to your applications.
-    |
-    */
-
     use AuthenticatesUsers;
 
     /**
-     * Where to redirect users after login.
-     *
-     * @var string
+     * Para onde redirecionar depois do login.
      */
     protected $redirectTo = '/';
 
-    /**
-     * Create a new controller instance.
-     *
-     * @return void
-     */
     public function __construct()
     {
         $this->middleware('guest')->except('logout');
-        $this->middleware('auth')->only('logout');
     }
 
     /**
-     * Efetua o logout apenas do guard padrão (adotantes), mantendo outras sessões ativas.
+     * LOGIN do site público com mesma regra de senha do admin.
+     */
+    public function login(Request $request)
+    {
+        // 1) Validação básica
+        $credentials = $request->validate(
+            [
+                'email'    => 'required|email',
+                'password' => 'required|string',
+            ],
+            [
+                'email.required'    => 'Informe o e-mail.',
+                'email.email'       => 'Informe um e-mail válido.',
+                'password.required' => 'Informe a senha.',
+            ]
+        );
+
+        // 2) Regra de complexidade da senha
+        $password = $credentials['password'];
+
+        if (!preg_match('/^(?=.*[A-Z])(?=.*[^A-Za-z0-9]).{8,}$/', $password)) {
+            return back()->withErrors([
+                'email' => 'Login ou senha inválidos.',
+            ])->onlyInput('email');
+        }
+
+        // 3) Tentativa de login no guard padrão (web)
+        if (Auth::guard('web')->attempt($credentials, $request->boolean('remember'))) {
+            $request->session()->regenerate();
+
+            return redirect()->intended($this->redirectPath());
+        }
+
+        // 4) Falhou
+        return back()->withErrors([
+            'email' => 'Login ou senha inválidos.',
+        ])->onlyInput('email');
+    }
+
+    /**
+     * LOGOUT do site público
+     * (não derruba o painel admin).
      */
     public function logout(Request $request)
     {
-        $this->guard()->logout();
+        // Sai só do guard web
+        Auth::guard('web')->logout();
 
+        // Não usamos ->invalidate() aqui
         $request->session()->regenerate();
         $request->session()->regenerateToken();
 
-        if ($response = $this->loggedOut($request)) {
-            return $response;
-        }
-
         return redirect('/');
-    }
-
-    /**
-     * Impede que usuários administrativos façam login pelo site principal.
-     */
-    protected function authenticated(Request $request, $user)
-    {
-        if (in_array($user->role, ['admin', 'veterinario'])) {
-            $this->guard()->logout();
-
-            $request->session()->regenerate();
-            $request->session()->regenerateToken();
-
-            return redirect()->route('login')->withErrors([
-                'email' => 'Acesso negado. Utilize o login administrativo para entrar.',
-            ]);
-        }
     }
 }
