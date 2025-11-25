@@ -5,7 +5,8 @@
 
 <div class="content-card">
     <div class="card-header d-flex justify-content-between align-items-center">
-        <h2 class="card-title mb-0">Atualizar Informações do Usuário</h2>
+        
+        <div></div>
         <a href="<?php echo e(route('admin.users.index')); ?>" class="btn btn-secondary btn-sm">
             <i class="fas fa-arrow-left me-1"></i> Voltar
         </a>
@@ -17,7 +18,8 @@
 
         <div class="mb-3">
             <label for="name" class="form-label">Nome *</label>
-            <input type="text" class="form-control <?php $__errorArgs = ['name'];
+            <input type="text"
+                   class="form-control <?php $__errorArgs = ['name'];
 $__bag = $errors->getBag($__errorArgs[1] ?? 'default');
 if ($__bag->has($__errorArgs[0])) :
 if (isset($message)) { $__messageOriginal = $message; }
@@ -25,7 +27,10 @@ $message = $__bag->first($__errorArgs[0]); ?> is-invalid <?php unset($message);
 if (isset($__messageOriginal)) { $message = $__messageOriginal; }
 endif;
 unset($__errorArgs, $__bag); ?>"
-                   id="name" name="name" value="<?php echo e(old('name', $user->name)); ?>" required>
+                   id="name"
+                   name="name"
+                   value="<?php echo e(old('name', $user->name)); ?>"
+                   required>
             <?php $__errorArgs = ['name'];
 $__bag = $errors->getBag($__errorArgs[1] ?? 'default');
 if ($__bag->has($__errorArgs[0])) :
@@ -40,7 +45,8 @@ unset($__errorArgs, $__bag); ?>
 
         <div class="mb-3">
             <label for="email" class="form-label">Email *</label>
-            <input type="email" class="form-control <?php $__errorArgs = ['email'];
+            <input type="email"
+                   class="form-control <?php $__errorArgs = ['email'];
 $__bag = $errors->getBag($__errorArgs[1] ?? 'default');
 if ($__bag->has($__errorArgs[0])) :
 if (isset($message)) { $__messageOriginal = $message; }
@@ -48,7 +54,10 @@ $message = $__bag->first($__errorArgs[0]); ?> is-invalid <?php unset($message);
 if (isset($__messageOriginal)) { $message = $__messageOriginal; }
 endif;
 unset($__errorArgs, $__bag); ?>"
-                   id="email" name="email" value="<?php echo e(old('email', $user->email)); ?>" required>
+                   id="email"
+                   name="email"
+                   value="<?php echo e(old('email', $user->email)); ?>"
+                   required>
             <?php $__errorArgs = ['email'];
 $__bag = $errors->getBag($__errorArgs[1] ?? 'default');
 if ($__bag->has($__errorArgs[0])) :
@@ -63,7 +72,8 @@ unset($__errorArgs, $__bag); ?>
 
         <div class="mb-3">
             <label for="password" class="form-label">Nova Senha</label>
-            <input type="password" class="form-control <?php $__errorArgs = ['password'];
+            <input type="password"
+                   class="form-control <?php $__errorArgs = ['password'];
 $__bag = $errors->getBag($__errorArgs[1] ?? 'default');
 if ($__bag->has($__errorArgs[0])) :
 if (isset($message)) { $__messageOriginal = $message; }
@@ -71,7 +81,11 @@ $message = $__bag->first($__errorArgs[0]); ?> is-invalid <?php unset($message);
 if (isset($__messageOriginal)) { $message = $__messageOriginal; }
 endif;
 unset($__errorArgs, $__bag); ?>"
-                   id="password" name="password">
+                   id="password"
+                   name="password"
+                   autocomplete="new-password"
+                   pattern="(?=.*[A-Z])(?=.*[^A-Za-z0-9]).{8,}"
+                   title="A senha deve ter pelo menos 8 caracteres, com ao menos 1 letra maiúscula e 1 caractere especial.">
             <?php $__errorArgs = ['password'];
 $__bag = $errors->getBag($__errorArgs[1] ?? 'default');
 if ($__bag->has($__errorArgs[0])) :
@@ -82,7 +96,12 @@ $message = $__bag->first($__errorArgs[0]); ?>
 if (isset($__messageOriginal)) { $message = $__messageOriginal; }
 endif;
 unset($__errorArgs, $__bag); ?>
-            <small class="text-muted">Deixe em branco para manter a senha atual. Mínimo de 6 caracteres.</small>
+            <small class="text-muted d-block mt-1">
+                Deixe em branco para manter a senha atual.<br>
+                A senha deve ter <strong>pelo menos 8 caracteres</strong>,
+                com ao menos <strong>1 letra maiúscula</strong> e
+                <strong>1 caractere especial</strong>.
+            </small>
         </div>
 
         <div class="mb-3">
@@ -95,7 +114,9 @@ $message = $__bag->first($__errorArgs[0]); ?> is-invalid <?php unset($message);
 if (isset($__messageOriginal)) { $message = $__messageOriginal; }
 endif;
 unset($__errorArgs, $__bag); ?>"
-                    id="role" name="role" required>
+                    id="role"
+                    name="role"
+                    required>
                 <option value="">Selecione...</option>
                 <option value="admin" <?php echo e(old('role', $user->role) == 'admin' ? 'selected' : ''); ?>>Administrador</option>
                 <option value="veterinario" <?php echo e(old('role', $user->role) == 'veterinario' ? 'selected' : ''); ?>>Veterinário</option>

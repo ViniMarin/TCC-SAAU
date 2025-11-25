@@ -31,12 +31,25 @@ class UserController extends Controller
 
     public function store(Request $request)
     {
-        $validated = $request->validate([
-            'name'     => 'required|string|max:255',
-            'email'    => 'required|email|unique:users,email',
-            'password' => 'required|string|min:6',
-            'role'     => 'required|in:admin,veterinario,usuario',
-        ]);
+        $validated = $request->validate(
+            [
+                'name'     => 'required|string|max:255',
+                'email'    => 'required|email|unique:users,email',
+                'password' => [
+                    'required',
+                    'string',
+                    'min:8',
+                    // pelo menos 1 maiúscula e 1 caractere especial
+                    'regex:/^(?=.*[A-Z])(?=.*[^A-Za-z0-9]).+$/',
+                ],
+                'role'     => 'required|in:admin,veterinario,usuario',
+            ],
+            [
+                'email.unique'   => 'Este e-mail já está cadastrado.',
+                'password.min'   => 'A senha deve ter pelo menos 8 caracteres.',
+                'password.regex' => 'A senha deve ter pelo menos 8 caracteres, com ao menos 1 letra maiúscula e 1 caractere especial.',
+            ]
+        );
 
         $validated['password'] = Hash::make($validated['password']);
 
@@ -53,12 +66,24 @@ class UserController extends Controller
 
     public function update(Request $request, User $user)
     {
-        $validated = $request->validate([
-            'name'     => 'required|string|max:255',
-            'email'    => 'required|email|unique:users,email,' . $user->id,
-            'password' => 'nullable|string|min:6',
-            'role'     => 'required|in:admin,veterinario,usuario',
-        ]);
+        $validated = $request->validate(
+            [
+                'name'     => 'required|string|max:255',
+                'email'    => 'required|email|unique:users,email,' . $user->id,
+                'password' => [
+                    'nullable',
+                    'string',
+                    'min:8',
+                    'regex:/^(?=.*[A-Z])(?=.*[^A-Za-z0-9]).+$/',
+                ],
+                'role'     => 'required|in:admin,veterinario,usuario',
+            ],
+            [
+                'email.unique'   => 'Este e-mail já está cadastrado.',
+                'password.min'   => 'A nova senha deve ter pelo menos 8 caracteres.',
+                'password.regex' => 'A nova senha deve ter pelo menos 8 caracteres, com ao menos 1 letra maiúscula e 1 caractere especial.',
+            ]
+        );
 
         if (!empty($validated['password'])) {
             $validated['password'] = Hash::make($validated['password']);

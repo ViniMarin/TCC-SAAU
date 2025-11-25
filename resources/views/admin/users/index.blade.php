@@ -1,5 +1,7 @@
 @extends('layouts.admin')
 
+@section('page-title', 'Gerenciar Usuários')
+
 @section('content')
 <div class="container my-5">
     <div class="d-flex justify-content-between align-items-center mb-4">
@@ -8,20 +10,6 @@
             <i class="fas fa-plus"></i> Criar Novo Usuário
         </a>
     </div>
-
-    @if(session('success'))
-        <div class="alert alert-success alert-dismissible fade show" role="alert">
-            {{ session('success') }}
-            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-        </div>
-    @endif
-
-    @if(session('error'))
-        <div class="alert alert-danger alert-dismissible fade show" role="alert">
-            {{ session('error') }}
-            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-        </div>
-    @endif
 
     @php
         $roleLabels = [
@@ -42,14 +30,14 @@
     <div class="card">
         <div class="card-body">
             <div class="table-responsive">
-                <table class="table table-hover">
+                <table class="table table-hover align-middle">
                     <thead>
                         <tr>
                             <th>Nome</th>
                             <th>Email</th>
                             <th>Perfil</th>
                             <th>Cadastro</th>
-                            <th>Ações</th>
+                            <th class="text-center" style="width: 180px;">Ações</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -68,26 +56,30 @@
                                     </span>
                                 </td>
                                 <td>{{ $user->created_at->format('d/m/Y') }}</td>
-                                <td>
-                                    @if($user->id !== auth('admin')->id())
-                                        @include('admin.partials.action-buttons', [
-                                            'view'          => route('admin.users.show', $user),
-                                            'edit'          => route('admin.users.edit', $user->id),
-                                            'delete'        => route('admin.users.destroy', $user),
-                                            'deleteMessage' => 'Tem certeza que deseja remover este usuário?',
-                                        ])
-                                    @else
-                                        @include('admin.partials.action-buttons', [
-                                            'view' => route('admin.users.show', $user),
-                                            'edit' => route('admin.users.edit', $user->id),
-                                        ])
-                                        <span class="badge bg-success ms-2">Você</span>
-                                    @endif
+                                <td class="text-center">
+                                    <div class="d-inline-flex align-items-center gap-1">
+                                        @if($user->id !== auth('admin')->id())
+                                            @include('admin.partials.action-buttons', [
+                                                'view'          => route('admin.users.show', $user),
+                                                'edit'          => route('admin.users.edit', $user->id),
+                                                'delete'        => route('admin.users.destroy', $user),
+                                                'deleteMessage' => 'Tem certeza que deseja remover este usuário?',
+                                            ])
+                                        @else
+                                            @include('admin.partials.action-buttons', [
+                                                'view' => route('admin.users.show', $user),
+                                                'edit' => route('admin.users.edit', $user->id),
+                                            ])
+                                            <span class="badge bg-success ms-2 align-self-center">Você</span>
+                                        @endif
+                                    </div>
                                 </td>
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="5" class="text-center">Nenhum usuário cadastrado.</td>
+                                <td colspan="5" class="text-center text-muted">
+                                    Nenhum usuário cadastrado.
+                                </td>
                             </tr>
                         @endforelse
                     </tbody>

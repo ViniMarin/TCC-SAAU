@@ -1,3 +1,5 @@
+<?php $__env->startSection('page-title', 'Gerenciar Usuários'); ?>
+
 <?php $__env->startSection('content'); ?>
 <div class="container my-5">
     <div class="d-flex justify-content-between align-items-center mb-4">
@@ -6,22 +8,6 @@
             <i class="fas fa-plus"></i> Criar Novo Usuário
         </a>
     </div>
-
-    <?php if(session('success')): ?>
-        <div class="alert alert-success alert-dismissible fade show" role="alert">
-            <?php echo e(session('success')); ?>
-
-            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-        </div>
-    <?php endif; ?>
-
-    <?php if(session('error')): ?>
-        <div class="alert alert-danger alert-dismissible fade show" role="alert">
-            <?php echo e(session('error')); ?>
-
-            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-        </div>
-    <?php endif; ?>
 
     <?php
         $roleLabels = [
@@ -42,14 +28,14 @@
     <div class="card">
         <div class="card-body">
             <div class="table-responsive">
-                <table class="table table-hover">
+                <table class="table table-hover align-middle">
                     <thead>
                         <tr>
                             <th>Nome</th>
                             <th>Email</th>
                             <th>Perfil</th>
                             <th>Cadastro</th>
-                            <th>Ações</th>
+                            <th class="text-center" style="width: 180px;">Ações</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -69,26 +55,30 @@
                                     </span>
                                 </td>
                                 <td><?php echo e($user->created_at->format('d/m/Y')); ?></td>
-                                <td>
-                                    <?php if($user->id !== auth('admin')->id()): ?>
-                                        <?php echo $__env->make('admin.partials.action-buttons', [
-                                            'view'          => route('admin.users.show', $user),
-                                            'edit'          => route('admin.users.edit', $user->id),
-                                            'delete'        => route('admin.users.destroy', $user),
-                                            'deleteMessage' => 'Tem certeza que deseja remover este usuário?',
-                                        ], \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
-                                    <?php else: ?>
-                                        <?php echo $__env->make('admin.partials.action-buttons', [
-                                            'view' => route('admin.users.show', $user),
-                                            'edit' => route('admin.users.edit', $user->id),
-                                        ], \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
-                                        <span class="badge bg-success ms-2">Você</span>
-                                    <?php endif; ?>
+                                <td class="text-center">
+                                    <div class="d-inline-flex align-items-center gap-1">
+                                        <?php if($user->id !== auth('admin')->id()): ?>
+                                            <?php echo $__env->make('admin.partials.action-buttons', [
+                                                'view'          => route('admin.users.show', $user),
+                                                'edit'          => route('admin.users.edit', $user->id),
+                                                'delete'        => route('admin.users.destroy', $user),
+                                                'deleteMessage' => 'Tem certeza que deseja remover este usuário?',
+                                            ], \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
+                                        <?php else: ?>
+                                            <?php echo $__env->make('admin.partials.action-buttons', [
+                                                'view' => route('admin.users.show', $user),
+                                                'edit' => route('admin.users.edit', $user->id),
+                                            ], \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
+                                            <span class="badge bg-success ms-2 align-self-center">Você</span>
+                                        <?php endif; ?>
+                                    </div>
                                 </td>
                             </tr>
                         <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
                             <tr>
-                                <td colspan="5" class="text-center">Nenhum usuário cadastrado.</td>
+                                <td colspan="5" class="text-center text-muted">
+                                    Nenhum usuário cadastrado.
+                                </td>
                             </tr>
                         <?php endif; ?>
                     </tbody>
