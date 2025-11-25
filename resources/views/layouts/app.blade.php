@@ -315,9 +315,21 @@
                         A Sociedade de Amparo aos Animais de Umuarama é uma organização dedicada a resgatar, cuidar e encontrar lares amorosos para animais abandonados em nossa região.
                     </p>
                     <div class="mt-4">
-                        <a href="https://facebook.com" target="_blank" class="social-btn me-2"><i class="fab fa-facebook-f"></i></a>
-                        <a href="https://instagram.com" target="_blank" class="social-btn me-2"><i class="fab fa-instagram"></i></a>
-                        <a href="https://whatsapp.com" target="_blank" class="social-btn"><i class="fab fa-whatsapp"></i></a>
+                        <a href="https://www.facebook.com/saauajude/?locale=pt_BR"
+                           target="_blank" rel="noopener"
+                           class="social-btn me-2">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                        <a href="https://www.instagram.com/saau.umuarama/"
+                           target="_blank" rel="noopener"
+                           class="social-btn me-2">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                        <a href="https://wa.me/5544984328357"
+                           target="_blank" rel="noopener"
+                           class="social-btn">
+                            <i class="fab fa-whatsapp"></i>
+                        </a>
                     </div>
                 </div>
 

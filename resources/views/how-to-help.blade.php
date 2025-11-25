@@ -48,12 +48,21 @@
                     </div>
                     <div>
                         <h4 class="fw-bold text-dark">Seja Voluntário</h4>
-                        <p class="text-muted">Precisamos de ajuda para passear com os cães, dar banho, limpar os canis ou ajudar em eventos. Doe o seu tempo e carinho!</p>
-                        <a href="#" class="btn btn-link p-0 text-primary fw-bold text-decoration-none">Saiba mais <i class="fas fa-arrow-right"></i></a>
+                        <p class="text-muted">
+                            Precisamos de ajuda para passear com os cães, dar banho, limpar os canis ou ajudar em eventos. Doe o seu tempo e carinho!
+                        </p>
+                        {{-- Link para WhatsApp oficial da SAAU --}}
+                        <a href="https://wa.me/5544984328357"
+                           target="_blank"
+                           rel="noopener noreferrer"
+                           class="btn btn-link p-0 text-primary fw-bold text-decoration-none">
+                            Saiba mais <i class="fas fa-arrow-right"></i>
+                        </a>
                     </div>
                 </div>
             </div>
         </div>
+
         <div class="col-md-6">
             <div class="card h-100 border-0 shadow-sm p-4" style="border-radius: 20px;">
                 <div class="d-flex align-items-start">
@@ -62,10 +71,24 @@
                     </div>
                     <div>
                         <h4 class="fw-bold text-dark">Divulgue</h4>
-                        <p class="text-muted">Siga as nossas redes sociais e partilhe os animais disponíveis. Quanto mais visibilidade, maiores as hipóteses de adoção!</p>
+                        <p class="text-muted">
+                            Siga as nossas redes sociais e partilhe os animais disponíveis. Quanto mais visibilidade, maiores as hipóteses de adoção!
+                        </p>
                         <div class="mt-2">
-                            <a href="#" class="text-primary me-2"><i class="fab fa-instagram fa-lg"></i></a>
-                            <a href="#" class="text-primary"><i class="fab fa-facebook fa-lg"></i></a>
+                            {{-- Instagram oficial --}}
+                            <a href="https://www.instagram.com/saau.umuarama/"
+                               target="_blank"
+                               rel="noopener noreferrer"
+                               class="text-primary me-2">
+                                <i class="fab fa-instagram fa-lg"></i>
+                            </a>
+                            {{-- Facebook oficial --}}
+                            <a href="https://www.facebook.com/saauajude/?locale=pt_BR"
+                               target="_blank"
+                               rel="noopener noreferrer"
+                               class="text-primary">
+                                <i class="fab fa-facebook fa-lg"></i>
+                            </a>
                         </div>
                     </div>
                 </div>
