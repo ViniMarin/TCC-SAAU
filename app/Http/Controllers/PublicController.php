@@ -97,7 +97,7 @@ class PublicController extends Controller
 
     public function eventShow(Event $event)
     {
-        // Opcional: só exibe evento ativo
+        // só exibe evento ativo
         if (!$event->active) {
             abort(404);
         }
@@ -179,6 +179,16 @@ class PublicController extends Controller
         return view('public.stories', compact('stories'));
     }
 
+    public function storyShow(AdoptionStory $story)
+    {
+        // só permite visualizar histórias aprovadas
+        if (!$story->approved) {
+            abort(404);
+        }
+
+        return view('public.story-show', compact('story'));
+    }
+
     public function createStory(Request $request)
     {
         $adopterName = $request->user()->name;
@@ -187,7 +197,7 @@ class PublicController extends Controller
 
     public function storeStory(Request $request)
     {
-        // AGORA USANDO UPLOAD DE ARQUIVO "photo"
+        // Upload de arquivo "photo"
         $validated = $request->validate([
             'animal_name' => 'required|string|max:255',
             'story'       => 'required|string',

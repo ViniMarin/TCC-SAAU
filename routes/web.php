@@ -27,13 +27,16 @@ Route::get('/rifas/{raffle}', [PublicController::class, 'raffleShow'])->name('ra
 // Histórias públicas (listagem)
 Route::get('/stories', [PublicController::class, 'stories'])->name('stories.index');
 
-// Histórias de adoção (form antigo do PublicController)
+// Formulário de histórias (fluxo atual do PublicController)
 Route::middleware('auth')->group(function () {
     Route::get('/stories/create', [PublicController::class, 'createStory'])->name('stories.create');
     Route::post('/stories', [PublicController::class, 'storeStory'])->name('stories.store');
 });
 
-// Histórias de adoção (fluxo novo com verificação de adoção aprovada)
+// Página "LER COMPLETA" da história
+Route::get('/stories/{story}', [PublicController::class, 'storyShow'])->name('stories.show');
+
+// Histórias de adoção (fluxo antigo /minha-historia, se ainda for usar)
 Route::middleware('auth')->group(function () {
     Route::get('/minha-historia/criar', [AdoptionStoryController::class, 'create'])->name('adoption-stories.create');
     Route::post('/minha-historia', [AdoptionStoryController::class, 'store'])->name('adoption-stories.store');

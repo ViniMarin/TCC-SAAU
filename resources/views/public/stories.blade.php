@@ -42,7 +42,17 @@
                 {{-- FOTO --}}
                 <div class="position-relative overflow-hidden img-container">
                     @if($story->photo_url)
-                        <img src="{{ $story->photo_url }}" class="card-img-top" alt="{{ $story->animal_name }}">
+                        @php
+                            $photo = $story->photo_url;
+                            if (str_starts_with($photo, 'http')) {
+                                $photoUrl = $photo;
+                            } elseif (str_starts_with($photo, '/storage/')) {
+                                $photoUrl = asset(ltrim($photo, '/'));
+                            } else {
+                                $photoUrl = asset('storage/' . $photo);
+                            }
+                        @endphp
+                        <img src="{{ $photoUrl }}" class="card-img-top" alt="{{ $story->animal_name }}">
                     @else
                         <div class="card-img-top bg-light d-flex align-items-center justify-content-center">
                             <i class="fas fa-heart fa-3x text-danger opacity-25"></i>
@@ -74,7 +84,8 @@
                     </div>
 
                     <div class="mt-auto text-end">
-                        <a href="#" class="btn btn-link text-decoration-none fw-bold text-primary p-0 stretched-link">
+                        <a href="{{ route('stories.show', $story) }}"
+                           class="btn btn-link text-decoration-none fw-bold text-primary p-0 stretched-link">
                             LER COMPLETA <i class="fas fa-arrow-right ms-1"></i>
                         </a>
                     </div>
