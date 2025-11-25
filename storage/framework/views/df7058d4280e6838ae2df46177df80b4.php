@@ -1,222 +1,195 @@
-<?php $__env->startSection('title', 'Dashboard - Painel Admin'); ?>
+<?php $__env->startSection('title', 'Dashboard - SAAU'); ?>
+<?php $__env->startSection('page-title', 'Visão Geral do Sistema'); ?>
 
 <?php $__env->startSection('content'); ?>
-<div class="page-header">
-    <h1 class="page-title">Dashboard</h1>
-</div>
-
-<!-- Stats Cards -->
-<div class="stats-grid">
-    <div class="stat-card blue">
-        <div class="stat-icon">
-            <i class="fas fa-paw"></i>
-        </div>
-        <div class="stat-label">Total de Animais</div>
-        <div class="stat-value"><?php echo e($stats['total_animals']); ?></div>
-    </div>
+<div class="container-fluid">
     
-    <div class="stat-card green">
-        <div class="stat-icon">
-            <i class="fas fa-heart"></i>
+    <!-- Cards de Estatísticas -->
+    <div class="row g-4 mb-5">
+        
+        <!-- Card Animais -->
+        <div class="col-xl-3 col-md-6">
+            <div class="card border-0 shadow-sm h-100 stat-card" style="border-left: 5px solid var(--saau-blue-primary) !important;">
+                <div class="card-body">
+                    <div class="d-flex align-items-center justify-content-between mb-3">
+                        <div>
+                            <h6 class="text-muted text-uppercase fw-bold mb-1" style="font-size: 0.75rem; letter-spacing: 1px;">Animais</h6>
+                            <h2 class="mb-0 fw-bold text-dark"><?php echo e($totalAnimals ?? 0); ?></h2>
+                        </div>
+                        <div class="stat-icon bg-blue-soft">
+                            <i class="fas fa-dog"></i>
+                        </div>
+                    </div>
+                    <div class="d-flex align-items-center small">
+                        <span class="text-success fw-bold me-2"><i class="fas fa-arrow-up"></i> Novos</span>
+                        <span class="text-muted">este mês</span>
+                    </div>
+                </div>
+            </div>
         </div>
-        <div class="stat-label">Animais Disponíveis</div>
-        <div class="stat-value"><?php echo e($stats['available']); ?></div>
+
+        <!-- Card Adoções -->
+        <div class="col-xl-3 col-md-6">
+            <div class="card border-0 shadow-sm h-100 stat-card" style="border-left: 5px solid var(--saau-yellow) !important;">
+                <div class="card-body">
+                    <div class="d-flex align-items-center justify-content-between mb-3">
+                        <div>
+                            <h6 class="text-muted text-uppercase fw-bold mb-1" style="font-size: 0.75rem; letter-spacing: 1px;">Adoções</h6>
+                            <h2 class="mb-0 fw-bold text-dark"><?php echo e($totalAdoptions ?? 0); ?></h2>
+                        </div>
+                        <div class="stat-icon bg-yellow-soft">
+                            <i class="fas fa-home"></i>
+                        </div>
+                    </div>
+                    <div class="d-flex align-items-center small">
+                        <span class="text-success fw-bold me-2"><i class="fas fa-check"></i> Realizadas</span>
+                        <span class="text-muted">total</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Card Usuários -->
+        <div class="col-xl-3 col-md-6">
+            <div class="card border-0 shadow-sm h-100 stat-card" style="border-left: 5px solid var(--saau-blue-dark) !important;">
+                <div class="card-body">
+                    <div class="d-flex align-items-center justify-content-between mb-3">
+                        <div>
+                            <h6 class="text-muted text-uppercase fw-bold mb-1" style="font-size: 0.75rem; letter-spacing: 1px;">Usuários</h6>
+                            <h2 class="mb-0 fw-bold text-dark"><?php echo e($totalUsers ?? 0); ?></h2>
+                        </div>
+                        <div class="stat-icon bg-blue-soft" style="color: var(--saau-blue-dark); background-color: rgba(0, 61, 128, 0.1);">
+                            <i class="fas fa-users"></i>
+                        </div>
+                    </div>
+                    <div class="d-flex align-items-center small">
+                        <span class="text-primary fw-bold me-2">Cadastrados</span>
+                        <span class="text-muted">no sistema</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Card Rifas -->
+        <div class="col-xl-3 col-md-6">
+            <div class="card border-0 shadow-sm h-100 stat-card" style="border-left: 5px solid #28a745 !important;">
+                <div class="card-body">
+                    <div class="d-flex align-items-center justify-content-between mb-3">
+                        <div>
+                            <h6 class="text-muted text-uppercase fw-bold mb-1" style="font-size: 0.75rem; letter-spacing: 1px;">Rifas Ativas</h6>
+                            <h2 class="mb-0 fw-bold text-dark"><?php echo e($activeRaffles ?? 0); ?></h2>
+                        </div>
+                        <div class="stat-icon bg-green-soft">
+                            <i class="fas fa-ticket-alt"></i>
+                        </div>
+                    </div>
+                    <div class="d-flex align-items-center small">
+                        <span class="text-success fw-bold me-2">Em andamento</span>
+                        <span class="text-muted">agora</span>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
-    <div class="stat-card teal">
-        <div class="stat-icon">
-            <i class="fas fa-stethoscope"></i>
+    <!-- Seção de Ações Rápidas e Gráficos (Exemplo) -->
+    <div class="row g-4">
+        <div class="col-lg-8">
+            <div class="card border-0 shadow-sm" style="border-radius: 15px;">
+                <div class="card-header bg-white border-bottom-0 pt-4 px-4 d-flex justify-content-between align-items-center">
+                    <h5 class="fw-bold text-primary mb-0">Últimos Pedidos de Adoção</h5>
+                    <a href="<?php echo e(route('admin.adoption-requests.index')); ?>" class="btn btn-sm btn-outline-primary rounded-pill px-3">Ver Todos</a>
+                </div>
+                <div class="card-body px-4 pb-4">
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle">
+                            <thead class="bg-light text-muted small text-uppercase">
+                                <tr>
+                                    <th class="border-0 rounded-start">Solicitante</th>
+                                    <th class="border-0">Animal</th>
+                                    <th class="border-0">Data</th>
+                                    <th class="border-0 rounded-end text-end">Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                
+                                <?php $__empty_1 = true; $__currentLoopData = $recentRequests ?? []; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $request): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
+                                <tr>
+                                    <td class="fw-bold text-dark"><?php echo e($request->user->name ?? 'Anônimo'); ?></td>
+                                    <td class="text-primary"><?php echo e($request->animal->name ?? 'Animal'); ?></td>
+                                    <td class="text-muted small"><?php echo e($request->created_at->format('d/m/Y')); ?></td>
+                                    <td class="text-end">
+                                        <span class="badge bg-warning text-dark rounded-pill px-3">Pendente</span>
+                                    </td>
+                                </tr>
+                                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
+                                <tr>
+                                    <td colspan="4" class="text-center text-muted py-4">
+                                        <i class="far fa-folder-open fa-2x mb-2 d-block opacity-25"></i>
+                                        Nenhum pedido recente.
+                                    </td>
+                                </tr>
+                                <?php endif; ?>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
         </div>
-        <div class="stat-label">Animais em Tratamento</div>
-        <div class="stat-value"><?php echo e($stats['in_treatment']); ?></div>
-    </div>
 
-    <div class="stat-card purple">
-        <div class="stat-icon">
-            <i class="fas fa-check-circle"></i>
-        </div>
-        <div class="stat-label">Adoções Realizadas</div>
-        <div class="stat-value"><?php echo e($stats['adopted']); ?></div>
-    </div>
-    
-    <div class="stat-card orange">
-        <div class="stat-icon">
-            <i class="fas fa-clock"></i>
-        </div>
-        <div class="stat-label">Pedidos Pendentes</div>
-        <div class="stat-value"><?php echo e($stats['pending_requests']); ?></div>
-    </div>
-    
-    <div class="stat-card yellow">
-        <div class="stat-icon">
-            <i class="fas fa-dollar-sign"></i>
-        </div>
-        <div class="stat-label">Total Doado</div>
-        <div class="stat-value">R$ <?php echo e(number_format($stats['total_donations'], 2, ',', '.')); ?></div>
-    </div>
-    
-    <div class="stat-card red">
-        <div class="stat-icon">
-            <i class="fas fa-syringe"></i>
-        </div>
-        <div class="stat-label">Vacinas Aplicadas</div>
-        <div class="stat-value"><?php echo e($stats['total_vaccines']); ?></div>
-    </div>
-</div>
-
-<div class="content-card">
-    <div class="card-header d-flex align-items-center justify-content-between">
-        <div>
-            <h2 class="card-title mb-1"><i class="fas fa-chart-line me-2"></i>Relatórios</h2>
-            <p class="text-muted mb-0">Gere PDFs com dados de animais, vacinas, rifas, eventos e doações.</p>
-        </div>
-        <a href="<?php echo e(route('admin.reports.index')); ?>" class="btn btn-primary">
-            <i class="fas fa-file-export me-1"></i>Abrir Relatórios
-        </a>
-    </div>
-</div>
-
-<!-- Recent Animals -->
-<div class="content-card">
-    <div class="card-header">
-        <h2 class="card-title"><i class="fas fa-paw me-2"></i>Animais Recentes</h2>
-        <a href="<?php echo e(route('admin.animals.index')); ?>" class="btn btn-primary btn-sm">
-            <i class="fas fa-eye me-1"></i>Ver Todos
-        </a>
-    </div>
-    
-    <div class="table-responsive">
-        <table class="table table-hover">
-            <thead>
-                <tr>
-                    <th>Nome</th>
-                    <th>Espécie</th>
-                    <th>Status</th>
-                    <th>Ações</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php $__empty_1 = true; $__currentLoopData = $recent_animals; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $animal): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
-                <tr>
-                    <td><strong><?php echo e($animal->name); ?></strong></td>
-                    <td><?php echo e(ucfirst($animal->species)); ?></td>
-                    <td>
-                        <?php if($animal->status === 'available' || $animal->status === 'disponivel'): ?>
-                        <span class="badge bg-success">Disponível</span>
-                        <?php elseif($animal->status === 'adopted' || $animal->status === 'adotado'): ?>
-                        <span class="badge bg-primary">Adotado</span>
-                        <?php else: ?>
-                        <span class="badge bg-warning">Em Tratamento</span>
-                        <?php endif; ?>
-                    </td>
-                    <td>
-                        <a href="<?php echo e(route('admin.animals.edit', $animal->id)); ?>" class="btn btn-sm btn-primary">
-                            <i class="fas fa-edit"></i>
+        <div class="col-lg-4">
+            <div class="card border-0 shadow-sm h-100" style="border-radius: 15px;">
+                <div class="card-header bg-white border-bottom-0 pt-4 px-4">
+                    <h5 class="fw-bold text-dark mb-0">Acesso Rápido</h5>
+                </div>
+                <div class="card-body px-4">
+                    <div class="d-grid gap-3">
+                        <a href="<?php echo e(route('admin.animals.create')); ?>" class="btn btn-outline-primary text-start p-3 rounded-3 d-flex align-items-center transition-hover">
+                            <div class="bg-blue-soft rounded-circle p-2 me-3 d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
+                                <i class="fas fa-plus"></i>
+                            </div>
+                            <div>
+                                <span class="d-block fw-bold">Novo Animal</span>
+                                <small class="text-muted">Cadastrar para adoção</small>
+                            </div>
                         </a>
-                    </td>
-                </tr>
-                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
-                <tr>
-                    <td colspan="4" class="text-center text-muted py-4">
-                        <i class="fas fa-inbox fa-2x mb-2 d-block"></i>
-                        <p>Nenhum animal cadastrado ainda.</p>
-                    </td>
-                </tr>
-                <?php endif; ?>
-            </tbody>
-        </table>
-    </div>
-</div>
-
-<!-- Recent Adoption Requests -->
-<div class="content-card">
-    <div class="card-header">
-        <h2 class="card-title"><i class="fas fa-clipboard-list me-2"></i>Pedidos de Adoção Recentes</h2>
-        <a href="<?php echo e(route('admin.adoption-requests.index')); ?>" class="btn btn-primary btn-sm">
-            <i class="fas fa-eye me-1"></i>Ver Todos
-        </a>
-    </div>
-    
-    <div class="table-responsive">
-        <table class="table table-hover">
-            <thead>
-                <tr>
-                    <th>Adotante</th>
-                    <th>Animal</th>
-                    <th>Status</th>
-                    <th>Ações</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php $__empty_1 = true; $__currentLoopData = $recent_requests; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $request): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
-                <tr>
-                    <td><strong><?php echo e($request->adopter_name); ?></strong></td>
-                    <td><?php echo e($request->animal->name ?? 'Animal não encontrado'); ?></td>
-                    <td>
-                        <?php if($request->status === 'pending' || $request->status === 'pendente'): ?>
-                        <span class="badge bg-warning">Pendente</span>
-                        <?php elseif($request->status === 'approved' || $request->status === 'aprovado'): ?>
-                        <span class="badge bg-success">Aprovado</span>
-                        <?php else: ?>
-                        <span class="badge bg-danger">Rejeitado</span>
-                        <?php endif; ?>
-                    </td>
-                    <td>
-                        <a href="<?php echo e(route('admin.adoption-requests.show', $request->id)); ?>" class="btn btn-sm btn-primary">
-                            <i class="fas fa-eye"></i>
+                        
+                        <a href="<?php echo e(route('admin.events.create')); ?>" class="btn btn-outline-secondary text-start p-3 rounded-3 d-flex align-items-center transition-hover border-0 bg-light">
+                            <div class="bg-white rounded-circle p-2 me-3 d-flex align-items-center justify-content-center text-secondary shadow-sm" style="width: 40px; height: 40px;">
+                                <i class="fas fa-calendar-plus"></i>
+                            </div>
+                            <div>
+                                <span class="d-block fw-bold text-dark">Novo Evento</span>
+                                <small class="text-muted">Divulgar ação</small>
+                            </div>
                         </a>
-                    </td>
-                </tr>
-                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
-                <tr>
-                    <td colspan="4" class="text-center text-muted py-4">
-                        <i class="fas fa-inbox fa-2x mb-2 d-block"></i>
-                        <p>Nenhum pedido de adoção ainda.</p>
-                    </td>
-                </tr>
-                <?php endif; ?>
-            </tbody>
-        </table>
+
+                        <a href="<?php echo e(route('admin.raffles.create')); ?>" class="btn btn-outline-secondary text-start p-3 rounded-3 d-flex align-items-center transition-hover border-0 bg-light">
+                            <div class="bg-white rounded-circle p-2 me-3 d-flex align-items-center justify-content-center text-warning shadow-sm" style="width: 40px; height: 40px;">
+                                <i class="fas fa-ticket-alt"></i>
+                            </div>
+                            <div>
+                                <span class="d-block fw-bold text-dark">Nova Rifa</span>
+                                <small class="text-muted">Criar campanha</small>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
+
 </div>
 
-<!-- Recent Donations -->
-<div class="content-card">
-    <div class="card-header">
-        <h2 class="card-title"><i class="fas fa-dollar-sign me-2"></i>Doações Recentes</h2>
-        <a href="<?php echo e(route('admin.donations.index')); ?>" class="btn btn-primary btn-sm">
-            <i class="fas fa-eye me-1"></i>Ver Todas
-        </a>
-    </div>
-    
-    <div class="table-responsive">
-        <table class="table table-hover">
-            <thead>
-                <tr>
-                    <th>Doador</th>
-                    <th>Data</th>
-                    <th>Valor</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php $__empty_1 = true; $__currentLoopData = $recent_donations; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $donation): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
-                <tr>
-                    <td><strong><?php echo e($donation->donor_name ?? 'Anônimo'); ?></strong></td>
-                    <td><?php echo e(\Carbon\Carbon::parse($donation->date)->format('d/m/Y')); ?></td>
-                    <td><span class="text-success fw-bold">R$ <?php echo e(number_format($donation->amount, 2, ',', '.')); ?></span></td>
-                </tr>
-                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
-                <tr>
-                    <td colspan="3" class="text-center text-muted py-4">
-                        <i class="fas fa-inbox fa-2x mb-2 d-block"></i>
-                        <p>Nenhuma doação registrada.</p>
-                    </td>
-                </tr>
-                <?php endif; ?>
-            </tbody>
-        </table>
-    </div>
-</div>
+<style>
+    .transition-hover {
+        transition: all 0.2s ease;
+    }
+    .transition-hover:hover {
+        transform: translateX(5px);
+        background-color: var(--saau-light);
+        border-color: var(--saau-blue-primary);
+    }
+</style>
 <?php $__env->stopSection(); ?>
-
 <?php echo $__env->make('layouts.admin', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH C:\Users\eutei\OneDrive\Área de Trabalho\TCC-SAAU\resources\views/admin/dashboard.blade.php ENDPATH**/ ?>

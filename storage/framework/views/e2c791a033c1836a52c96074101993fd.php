@@ -7,14 +7,6 @@
         </a>
     </div>
 
-    <?php if(session('success')): ?>
-    <div class="alert alert-success alert-dismissible fade show" role="alert">
-        <?php echo e(session('success')); ?>
-
-        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-    </div>
-    <?php endif; ?>
-
     <div class="card">
         <div class="card-body">
             <div class="table-responsive">
@@ -51,16 +43,12 @@
                                 </span>
                             </td>
                             <td>
-                                <a href="<?php echo e(route('admin.events.edit', $event)); ?>" class="btn btn-sm btn-warning">
-                                    <i class="fas fa-edit"></i>
-                                </a>
-                                <form action="<?php echo e(route('admin.events.destroy', $event)); ?>" method="POST" class="d-inline" onsubmit="return confirm('Tem certeza que deseja remover este evento?')">
-                                    <?php echo csrf_field(); ?>
-                                    <?php echo method_field('DELETE'); ?>
-                                    <button type="submit" class="btn btn-sm btn-danger">
-                                        <i class="fas fa-trash"></i>
-                                    </button>
-                                </form>
+                                <?php echo $__env->make('admin.partials.action-buttons', [
+                                    'view' => route('admin.events.show', $event),
+                                    'edit' => route('admin.events.edit', $event),
+                                    'delete' => route('admin.events.destroy', $event),
+                                    'deleteMessage' => 'Tem certeza que deseja remover este evento?'
+                                ], \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
                             </td>
                         </tr>
                         <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>

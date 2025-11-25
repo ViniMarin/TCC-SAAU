@@ -7,14 +7,6 @@
         </a>
     </div>
 
-    <?php if(session('success')): ?>
-    <div class="alert alert-success alert-dismissible fade show" role="alert">
-        <?php echo e(session('success')); ?>
-
-        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-    </div>
-    <?php endif; ?>
-
     <div class="card mb-4">
         <div class="card-body text-center">
             <h3 class="text-success">Total Arrecadado</h3>
@@ -28,35 +20,39 @@
                 <table class="table table-hover">
                     <thead>
                         <tr>
-                            <th>Data</th>
-                            <th>Valor</th>
-                            <th>Tipo</th>
-                            <th>Doador</th>
-                            <th>Observações</th>
-                            <th>Ações</th>
+                            <th class="align-middle text-center">Data</th>
+                            <th class="align-middle text-center">Valor</th>
+                            <th class="align-middle text-center">Tipo</th>
+                            <th class="align-middle">Doador</th>
+                            <th class="align-middle">Observações</th>
+                            <th class="align-middle text-center">Ações</th>
                         </tr>
                     </thead>
                     <tbody>
                         <?php $__empty_1 = true; $__currentLoopData = $donations; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $donation): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
                         <tr>
-                            <td><?php echo e(\Carbon\Carbon::parse($donation->date)->format('d/m/Y')); ?></td>
-                            <td class="text-success fw-bold">R$ <?php echo e(number_format($donation->amount, 2, ',', '.')); ?></td>
-                            <td>
-                                <span class="badge bg-info"><?php echo e(ucfirst($donation->donation_type)); ?></span>
+                            <td class="align-middle text-center"><?php echo e(\Carbon\Carbon::parse($donation->date)->format('d/m/Y')); ?></td>
+                            <td class="align-middle text-center text-success fw-bold">R$ <?php echo e(number_format($donation->amount, 2, ',', '.')); ?></td>
+                            <td class="align-middle text-center">
+                                <?php
+                                    $typeLabels = [
+                                        'dinheiro' => 'Dinheiro',
+                                        'racao' => 'Ração',
+                                        'medicamento' => 'Medicamento',
+                                        'outro' => 'Outro',
+                                    ];
+                                ?>
+                                <span class="badge bg-info"><?php echo e($typeLabels[$donation->type] ?? ucfirst($donation->type)); ?></span>
                             </td>
                             <td><?php echo e($donation->donor_name ?? 'Anônimo'); ?></td>
                             <td><?php echo e($donation->notes ?? '-'); ?></td>
                             <td>
-                                <a href="<?php echo e(route('admin.donations.edit', $donation->id)); ?>" class="btn btn-sm btn-primary">
-                                    <i class="fas fa-edit"></i>
-                                </a>
-                                <form action="<?php echo e(route('admin.donations.destroy', $donation)); ?>" method="POST" class="d-inline" onsubmit="return confirm('Tem certeza que deseja remover esta doação?')">
-                                    <?php echo csrf_field(); ?>
-                                    <?php echo method_field('DELETE'); ?>
-                                    <button type="submit" class="btn btn-sm btn-danger">
-                                        <i class="fas fa-trash"></i>
-                                    </button>
-                                </form>
+                                <?php echo $__env->make('admin.partials.action-buttons', [
+                                    'view' => route('admin.donations.show', $donation),
+                                    'edit' => route('admin.donations.edit', $donation->id),
+                                    'delete' => route('admin.donations.destroy', $donation),
+                                    'deleteMessage' => 'Tem certeza que deseja remover esta doação?'
+                                ], \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
                             </td>
                         </tr>
                         <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>

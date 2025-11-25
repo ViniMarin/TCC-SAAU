@@ -73,7 +73,7 @@
         /* --- NAVBAR --- */
         .navbar {
             background-color: #ffffff !important;
-            /* CORREÇÃO 1: Linha superior amarela */
+            /* Linha superior amarela */
             border-top: 5px solid var(--saau-yellow); 
             box-shadow: 0 4px 12px rgba(0,0,0,0.08); 
             padding-top: 15px;
@@ -92,7 +92,7 @@
             align-items: center;
         }
         
-        /* CORREÇÃO 2: Logo Amarelo (rgb(249, 168, 112) foi removido em favor do padrão amarelo) */
+        /* Logo Amarelo */
         .navbar-brand i {
             color: var(--saau-yellow) !important; 
             font-size: 2rem;
@@ -152,7 +152,7 @@
             align-items: center;
             justify-content: center;
             position: relative;
-            z-index: 10;
+            z-index: 10; /* Nível 10 */
         }
 
         .page-header-title {
@@ -166,7 +166,15 @@
             text-shadow: 0 4px 10px rgba(0,0,0,0.2); 
         }
 
-        .banner-area { position: relative; z-index: 5; }
+        /* CORREÇÃO DE CAMADA (Z-INDEX):
+           Aumentei para 15 para ficar acima da faixa de título (que é 10).
+           Isso permite que o banner da Home, que está dentro desta div,
+           possa sobrepor a faixa azul.
+        */
+        .banner-area { 
+            position: relative; 
+            z-index: 15; 
+        }
 
         /* --- FOOTER (AZUL COM LINHA AMARELA) --- */
         footer { 
@@ -180,8 +188,7 @@
             box-shadow: 0 -10px 30px rgba(0,0,0,0.05);
             position: relative;
             background: linear-gradient(to bottom, var(--saau-blue-primary), var(--saau-blue-dark));
-            
-            /* CORREÇÃO 3: Linha superior do footer amarela */
+            /* Linha superior do footer amarela */
             border-top: 5px solid var(--saau-yellow);
         }
 

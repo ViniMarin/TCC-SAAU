@@ -1,6 +1,9 @@
 <?php $__env->startSection('title', 'Início - SAAU'); ?>
 
 
+<?php $__env->startSection('header-content'); ?>
+<?php $__env->stopSection(); ?>
+
 <?php $__env->startSection('banner'); ?>
 <div class="container home-banner-wrapper">
     <div class="banner-frame">
@@ -10,16 +13,17 @@
         <img src="<?php echo e(asset('images/banner-novo.jpg')); ?>" 
              alt="Banner SAAU" 
              class="img-fluid w-100 h-100"
-             style="object-fit: cover; min-height: 400px; background-color: #e0e0e0;"
+             style="object-fit: cover; min-height: 450px; background-color: #e0e0e0;"
              onerror="this.style.display='none'; document.getElementById('placeholder-banner').style.display='flex';">
 
         
-        <div id="placeholder-banner" style="display: none; height: 450px; width: 100%; background-color: #e9ecef; align-items: center; justify-content: center; text-align: center; color: #6c757d;">
-            <div>
-                <i class="fas fa-image fa-4x mb-3 opacity-50"></i>
-                <h4>Coloque seu Banner Aqui</h4>
-                <p class="small">Tamanho sugerido: 1200x450px</p>
-            </div>
+        <div id="placeholder-banner" style="display: none; height: 450px; width: 100%; background-color: #f8f9fa; align-items: center; justify-content: center; text-align: center; color: #6c757d; flex-direction: column;">
+            <i class="fas fa-image fa-4x mb-3 text-primary opacity-25"></i>
+            <h3 class="fw-bold text-primary">Espaço para seu Banner</h3>
+            <p class="text-muted">Recomendado: 1200x450px</p>
+            <a href="<?php echo e(route('animals')); ?>" class="btn btn-primary rounded-pill px-4 mt-3 shadow-sm">
+                Ver Animais
+            </a>
         </div>
 
     </div>
@@ -27,15 +31,16 @@
 <?php $__env->stopSection(); ?>
 
 <?php $__env->startSection('content'); ?>
-<div class="container my-5">
+<div class="container my-5 pt-3">
     
+    <!-- Cards de Estatísticas -->
     <div class="row text-center mb-5 g-4">
         <div class="col-md-3 col-sm-6">
             <div class="card h-100 border-0 shadow-sm p-4 hover-lift" style="border-radius: 20px;">
                 <div class="mb-3">
                     <i class="fas fa-paw fa-3x text-primary opacity-75"></i>
                 </div>
-                <h2 class="text-dark fw-bold display-5"><?php echo e($stats['animals']); ?></h2>
+                <h2 class="text-dark fw-bold display-5"><?php echo e($stats['animals'] ?? 0); ?></h2>
                 <p class="text-muted fw-bold text-uppercase small ls-1">Animais Cadastrados</p>
             </div>
         </div>
@@ -44,7 +49,7 @@
                 <div class="mb-3">
                     <i class="fas fa-home fa-3x text-primary opacity-75"></i>
                 </div>
-                <h2 class="text-dark fw-bold display-5"><?php echo e($stats['adopted']); ?></h2>
+                <h2 class="text-dark fw-bold display-5"><?php echo e($stats['adopted'] ?? 0); ?></h2>
                 <p class="text-muted fw-bold text-uppercase small ls-1">Adoções Realizadas</p>
             </div>
         </div>
@@ -53,7 +58,7 @@
                 <div class="mb-3">
                     <i class="fas fa-calendar-alt fa-3x text-primary opacity-75"></i>
                 </div>
-                <h2 class="text-dark fw-bold display-5"><?php echo e($stats['events']); ?></h2>
+                <h2 class="text-dark fw-bold display-5"><?php echo e($stats['events'] ?? 0); ?></h2>
                 <p class="text-muted fw-bold text-uppercase small ls-1">Eventos Ativos</p>
             </div>
         </div>
@@ -62,19 +67,21 @@
                 <div class="mb-3">
                     <i class="fas fa-ticket-alt fa-3x text-primary opacity-75"></i>
                 </div>
-                <h2 class="text-dark fw-bold display-5"><?php echo e($stats['raffles']); ?></h2>
+                <h2 class="text-dark fw-bold display-5"><?php echo e($stats['raffles'] ?? 0); ?></h2>
                 <p class="text-muted fw-bold text-uppercase small ls-1">Rifas Ativas</p>
             </div>
         </div>
     </div>
 
+    <!-- Título Histórias -->
     <div class="text-center mb-5">
-        <h2 class="fw-bold" style="color: var(--saau-dark);">
+        <h2 class="fw-bold text-dark">
             <i class="fas fa-book-open text-warning me-2"></i> Histórias de Finais Felizes
         </h2>
         <p class="text-muted">Veja como a adoção transformou a vida desses animais</p>
     </div>
 
+    <!-- Grid de Histórias -->
     <div class="row g-4">
         <?php $__empty_1 = true; $__currentLoopData = $stories; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $story): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
         <div class="col-md-4">
@@ -122,24 +129,28 @@
 </div>
 
 <style>
-    /* ESTILOS ESPECÍFICOS PARA O BANNER DE SOBREPOSIÇÃO */
+    /* ESTILOS DO BANNER FLUTUANTE */
     .home-banner-wrapper {
-        margin-top: -120px; /* Puxa o banner 120px para cima da faixa azul */
+        /* A margem negativa puxa o banner para cima da faixa azul */
+        /* Z-index 30 garante que fique na frente da faixa azul (que tem z-index 10) */
+        margin-top: -150px; 
         position: relative;
-        z-index: 30; /* Garante que fique na frente da faixa azul */
-        padding: 0 20px; /* Margem lateral para não colar na borda da tela em mobile */
+        z-index: 30; 
+        padding: 0 15px;
     }
 
     .banner-frame {
         border-radius: 20px;
         overflow: hidden;
         background-color: #ffffff;
-        /* Sombra forte para dar destaque e efeito "flutuante" */
-        box-shadow: 0 20px 40px rgba(0,0,0,0.2); 
+        /* Sombra forte para dar o efeito de flutuação */
+        box-shadow: 0 20px 40px rgba(0, 86, 179, 0.15); 
         min-height: 400px;
+        /* Moldura branca opcional */
+        border: 8px solid #ffffff; 
     }
 
-    /* Ajustes gerais */
+    /* Efeitos de Hover dos Cards */
     .ls-1 { letter-spacing: 1px; }
     .hover-lift { transition: transform 0.3s ease, box-shadow 0.3s ease; }
     .hover-lift:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,50,100,0.1) !important; }

@@ -47,18 +47,12 @@
                                 </span>
                             </td>
                             <td class="align-middle text-center">
-                                <div class="d-inline-flex gap-2">
-                                    <a href="<?php echo e(route('admin.raffles.edit', $raffle)); ?>" class="btn btn-sm btn-warning d-inline-flex align-items-center justify-content-center">
-                                        <i class="fas fa-edit"></i>
-                                    </a>
-                                    <form action="<?php echo e(route('admin.raffles.destroy', $raffle)); ?>" method="POST" class="d-inline" onsubmit="return confirm('Tem certeza que deseja remover esta rifa?')">
-                                        <?php echo csrf_field(); ?>
-                                        <?php echo method_field('DELETE'); ?>
-                                        <button type="submit" class="btn btn-sm btn-danger d-inline-flex align-items-center justify-content-center">
-                                            <i class="fas fa-trash"></i>
-                                        </button>
-                                    </form>
-                                </div>
+                                <?php echo $__env->make('admin.partials.action-buttons', [
+                                    'view' => route('admin.raffles.show', $raffle),
+                                    'edit' => route('admin.raffles.edit', $raffle),
+                                    'delete' => route('admin.raffles.destroy', $raffle),
+                                    'deleteMessage' => 'Tem certeza que deseja remover esta rifa?'
+                                ], \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
                             </td>
                         </tr>
                         <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>

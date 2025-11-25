@@ -49,19 +49,19 @@
                             </td>
                             <td><?php echo e($user->created_at->format('d/m/Y')); ?></td>
                             <td>
-                                <a href="<?php echo e(route('admin.users.edit', $user->id)); ?>" class="btn btn-sm btn-primary">
-                                    <i class="fas fa-edit"></i>
-                                </a>
                                 <?php if($user->id !== auth('admin')->id()): ?>
-                                <form action="<?php echo e(route('admin.users.destroy', $user)); ?>" method="POST" class="d-inline" onsubmit="return confirm('Tem certeza que deseja remover este usuário?')">
-                                    <?php echo csrf_field(); ?>
-                                    <?php echo method_field('DELETE'); ?>
-                                    <button type="submit" class="btn btn-sm btn-danger">
-                                        <i class="fas fa-trash"></i>
-                                    </button>
-                                </form>
+                                <?php echo $__env->make('admin.partials.action-buttons', [
+                                    'view' => route('admin.users.show', $user),
+                                    'edit' => route('admin.users.edit', $user->id),
+                                    'delete' => route('admin.users.destroy', $user),
+                                    'deleteMessage' => 'Tem certeza que deseja remover este usuário?'
+                                ], \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
                                 <?php else: ?>
-                                <span class="badge bg-success ms-1">Você</span>
+                                <?php echo $__env->make('admin.partials.action-buttons', [
+                                    'view' => route('admin.users.show', $user),
+                                    'edit' => route('admin.users.edit', $user->id),
+                                ], \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
+                                <span class="badge bg-success ms-2">Você</span>
                                 <?php endif; ?>
                             </td>
                         </tr>
