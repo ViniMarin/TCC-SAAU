@@ -17,16 +17,25 @@ class DashboardController extends Controller
     public function index()
     {
         $stats = [
+            // Animais
             'total_animals' => Animal::count(),
-            'available' => Animal::where('status', 'disponivel')->count(),
-            'adopted' => Animal::where('status', 'adotado')->count(),
-            'in_treatment' => Animal::where('status', 'em_tratamento')->count(),
+            'new_animals_month' => Animal::whereMonth('created_at', now()->month)->count(),
+
+            // Adoções
+            'adopted' => AdoptionRequest::where('status', 'aprovado')->count(),
             'pending_requests' => AdoptionRequest::where('status', 'pendente')->count(),
-            'approved_requests' => AdoptionRequest::where('status', 'aprovado')->count(),
-            'active_events' => Event::where('active', true)->count(),
-            'active_raffles' => Raffle::where('status', 'ativa')->count(),
-            'total_donations' => Donation::sum('amount'),
+
+            // Usuários
             'total_users' => User::count(),
+            'new_users_month' => User::whereMonth('created_at', now()->month)->count(),
+
+            // Rifas
+            'active_raffles' => Raffle::where('status', 'ativa')->count(),
+            'total_raffles' => Raffle::count(),
+
+            // Outros
+            'active_events' => Event::where('active', true)->count(),
+            'total_donations' => Donation::sum('amount'),
             'total_vaccines' => Vaccine::count(),
             'castrated' => Animal::where('castrated', true)->count(),
             'vaccinated' => Animal::where('vaccinated', true)->count(),

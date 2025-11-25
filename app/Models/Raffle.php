@@ -26,4 +26,9 @@ class Raffle extends Model
         'ticket_price' => 'decimal:2',
         'total_tickets' => 'integer',
     ];
+
+    public function tickets()
+    {
+        return $this->hasMany(RaffleTicket::class);
+    }
 }

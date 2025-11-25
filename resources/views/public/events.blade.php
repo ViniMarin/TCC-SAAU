@@ -1,109 +1,32 @@
 @extends('layouts.app')
-
-@section('title', 'Eventos - SAAU')
-
-@section('header-content')
-    <h1 class="page-header-title">EVENTOS</h1>
-@endsection
-
 @section('content')
 <div class="container my-5">
-    <div class="row g-4">
+    <h1 class="text-center mb-4">Eventos</h1>
+    <div class="row">
         @forelse($events as $event)
-        <div class="col-md-6 col-xl-4 d-flex align-items-stretch">
-            
-            <div class="card h-100 w-100 border-0 shadow-sm card-custom hover-lift">
-                
-                {{-- FOTO DO EVENTO --}}
-                <div class="position-relative overflow-hidden img-container">
-                    @if($event->image_url)
-                        <img src="{{ $event->image_url }}" class="card-img-top" alt="{{ $event->title }}">
-                    @else
-                        <div class="card-img-top bg-light d-flex align-items-center justify-content-center">
-                            <i class="fas fa-calendar-alt fa-3x text-primary opacity-25"></i>
-                        </div>
-                    @endif
-
-                    {{-- Badge de Data (Sobreposto na Imagem) --}}
-                    <div class="position-absolute top-0 end-0 m-3 bg-white rounded-3 shadow-sm text-center p-2" style="min-width: 60px;">
-                        <span class="d-block text-primary fw-bold small text-uppercase">{{ \Carbon\Carbon::parse($event->date)->format('M') }}</span>
-                        <span class="d-block text-dark fw-800 fs-4 lh-1">{{ \Carbon\Carbon::parse($event->date)->format('d') }}</span>
-                    </div>
+        <div class="col-md-4 mb-4">
+            <div class="card">
+                @if($event->image_url)
+                <img src="{{ $event->image_url }}" class="card-img-top" alt="Imagem do evento {{ $event->title }}" style="height: 200px; object-fit: cover;">
+                @else
+                <div class="card-img-top bg-light d-flex align-items-center justify-content-center" style="height: 200px;">
+                    <i class="fas fa-calendar fa-3x text-muted"></i>
                 </div>
-
-                {{-- CORPO DO CARD --}}
-                <div class="card-body p-4 d-flex flex-column">
-                    
-                    {{-- Título --}}
-                    <h4 class="card-title fw-bold text-primary mb-2">{{ $event->title }}</h4>
-                    
-                    {{-- Localização --}}
-                    <p class="text-muted small mb-3 fw-bold">
-                        <i class="fas fa-map-marker-alt text-warning me-2"></i> {{ $event->location }}
-                    </p>
-
-                    <hr class="text-muted opacity-25 my-3">
-
-                    {{-- Descrição --}}
-                    <p class="card-text text-muted small flex-grow-1 mb-4">
-                        {{ Str::limit($event->description, 120) }}
-                    </p>
-
-                    {{-- Botão (Sem link específico no momento, mas preparado) --}}
-                    <div class="mt-auto">
-                        <button class="btn btn-outline-primary w-100 rounded-pill fw-bold py-2 shadow-sm">
-                            SAIBA MAIS
-                        </button>
-                    </div>
-
+                @endif
+                <div class="card-body">
+                    <h5>{{ $event->title }}</h5>
+                    <p>{{ $event->description }}</p>
+                    <p><i class="fas fa-calendar"></i> {{ \Carbon\Carbon::parse($event->date)->format('d/m/Y') }}</p>
+                    <p><i class="fas fa-map-marker-alt"></i> {{ $event->location }}</p>
+                </div>
+                <div class="card-footer text-center">
+                    <a href="{{ route('event.show', $event->id) }}" class="btn btn-sm btn-outline-primary w-100">Saiba Mais</a>
                 </div>
             </div>
-
         </div>
         @empty
-        <div class="col-12">
-            <div class="text-center py-5 bg-white rounded-4 shadow-sm">
-                <div class="mb-3 text-muted opacity-50">
-                    <i class="far fa-calendar-times fa-4x"></i>
-                </div>
-                <h4 class="text-dark fw-bold">Nenhum evento programado</h4>
-                <p class="text-muted">Fique ligado em nossas redes sociais para novidades!</p>
-            </div>
-        </div>
+        <p class="text-center">Nenhum evento ativo.</p>
         @endforelse
     </div>
 </div>
-
-<style>
-    /* CSS Padrão para Cards (Reutilizável) */
-    .card-custom {
-        border-radius: 20px;
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
-        background: #fff;
-        overflow: hidden;
-    }
-
-    .img-container {
-        height: 240px;
-        background-color: #f8f9fa;
-    }
-
-    .card-img-top {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        transition: transform 0.5s ease;
-    }
-
-    .hover-lift:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 15px 30px rgba(0, 86, 179, 0.15) !important;
-    }
-
-    .hover-lift:hover .card-img-top {
-        transform: scale(1.05);
-    }
-    
-    .fw-800 { font-weight: 800; }
-</style>
 @endsection

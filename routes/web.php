@@ -4,8 +4,14 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PublicController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\AdminAnimalController;
-use App\Http\Controllers\Admin\ReportController;
 use App\Http\Controllers\AdoptionStoryController;
+use App\Http\Controllers\AccessibilityController;
+
+// Rotas de Acessibilidade (Modal com ações individuais)
+Route::post('/accessibility/font/increase', [AccessibilityController::class, 'increaseFont'])->name('accessibility.font.increase');
+Route::post('/accessibility/font/decrease', [AccessibilityController::class, 'decreaseFont'])->name('accessibility.font.decrease');
+Route::post('/accessibility/filter/set', [AccessibilityController::class, 'setFilter'])->name('accessibility.filter.set');
+Route::post('/accessibility/reset', [AccessibilityController::class, 'reset'])->name('accessibility.reset');
 
 // Rotas públicas
 Route::get('/', [PublicController::class, 'home'])->name('home');
@@ -15,7 +21,10 @@ Route::post('/animal/{id}/adotar', [PublicController::class, 'adoptionRequest'])
     ->middleware('auth')
     ->name('adoption.request');
 Route::get('/eventos', [PublicController::class, 'events'])->name('events');
+Route::get('/evento/{id}', [PublicController::class, 'eventShow'])->name('event.show');
 Route::get('/rifas', [PublicController::class, 'raffles'])->name('raffles');
+Route::get('/rifa/{raffle}', [PublicController::class, 'raffleShow'])->name('raffle.show');
+Route::post('/rifa/{raffle}/comprar', [PublicController::class, 'raffleBuy'])->middleware('auth')->name('raffle.buy');
 Route::get('/stories', [PublicController::class, 'stories'])->name('stories.index');
 Route::middleware('auth')->group(function () {
     Route::get('/stories/create', [PublicController::class, 'createStory'])->name('stories.create');
@@ -54,9 +63,9 @@ Route::middleware(['admin'])->prefix('admin')->name('admin.')->group(function ()
     Route::resource('adoption-requests', \App\Http\Controllers\Admin\AdoptionRequestController::class);
     Route::resource('events', \App\Http\Controllers\Admin\EventController::class);
     Route::resource('raffles', \App\Http\Controllers\Admin\RaffleController::class);
-    Route::resource('vaccines', \App\Http\Controllers\Admin\VaccineController::class);
-    Route::resource('donations', \App\Http\Controllers\Admin\DonationController::class);
-    Route::resource('users', \App\Http\Controllers\Admin\UserController::class);
+    Route::resource('vaccines', \App\Http\Controllers\Admin\VaccineController::class)->except(['show']);
+    Route::resource('donations', \App\Http\Controllers\Admin\DonationController::class)->except(['show']);
+    Route::resource('users', \App\Http\Controllers\Admin\UserController::class)->except(['show']);
     
     // Histórias de Adoção
     Route::get('/stories', [\App\Http\Controllers\Admin\StoryController::class, 'index'])->name('stories.index');
@@ -64,6 +73,7 @@ Route::middleware(['admin'])->prefix('admin')->name('admin.')->group(function ()
     Route::delete('/stories/{story}', [\App\Http\Controllers\Admin\StoryController::class, 'destroy'])->name('stories.destroy');
     
     // Relatórios
-    Route::get('/reports', [ReportController::class, 'index'])->name('reports.index');
-    Route::get('/reports/export', [ReportController::class, 'export'])->name('reports.export');
+    Route::get('/reports/animals', [\App\Http\Controllers\Admin\ReportController::class, 'animals'])->name('reports.animals');
+    Route::get('/reports/donations', [\App\Http\Controllers\Admin\ReportController::class, 'donations'])->name('reports.donations');
+    Route::get('/reports/vaccines', [\App\Http\Controllers\Admin\ReportController::class, 'vaccines'])->name('reports.vaccines');
 });

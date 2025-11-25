@@ -21,9 +21,12 @@ class PublicController extends Controller
             'raffles' => Raffle::where('status', 'ativa')->count(),
         ];
 
-        $stories = AdoptionStory::where('approved', true)->latest()->take(6)->get();
+        $animals = Animal::where('status', 'disponivel')->latest()->take(6)->get();
+        $events = Event::where('active', true)->latest()->take(3)->get();
+        $stories = AdoptionStory::where('approved', true)->latest()->take(3)->get(); // Adicionado
 
-        return view('public.home', compact('stats', 'stories'));
+        return view('public.home', compact('stats', 'animals', 'events', 'stories')); // Variável 'stories' adicionada
+
     }
 
     public function animals(Request $request)
@@ -91,10 +94,70 @@ class PublicController extends Controller
         return view('public.events', compact('events'));
     }
 
+    public function eventShow($id)
+    {
+        $event = Event::findOrFail($id);
+        return view('public.event-show', compact('event'));
+    }
+
     public function raffles()
     {
         $raffles = Raffle::where('status', 'ativa')->latest()->paginate(9);
-        return view('public.raffles', compact('raffles'));
+        $eventsWithImages = Event::where('active', true)
+            ->whereNotNull('image_url')
+            ->latest()
+            ->get();
+
+        return view('public.raffles', compact('raffles', 'eventsWithImages'));
+    }
+
+    public function raffleShow(Raffle $raffle)
+    {
+        $ticketsSold = $raffle->tickets()->count();
+        $userTickets = auth()->check() ? $raffle->tickets()->where('user_id', auth()->id())->pluck('number')->toArray() : [];
+
+        return view('public.raffle-show', compact('raffle', 'ticketsSold', 'userTickets'));
+    }
+
+    public function raffleBuy(Request $request, Raffle $raffle)
+    {
+        $request->validate([
+            'quantity' => 'required|integer|min:1',
+        ]);
+
+        $quantity = $request->input('quantity');
+        $ticketsSold = $raffle->tickets()->count();
+        $availableTickets = $raffle->total_tickets - $ticketsSold;
+
+        if ($quantity > $availableTickets) {
+            return redirect()->back()->with('error', 'Não há bilhetes suficientes disponíveis.');
+        }
+
+        // 1. Encontrar números disponíveis
+        $existingNumbers = $raffle->tickets()->pluck('number')->toArray();
+        $allNumbers = range(1, $raffle->total_tickets);
+        $availableNumbers = array_diff($allNumbers, $existingNumbers);
+
+        // 2. Selecionar números aleatórios
+        $randomNumbers = (array) array_rand($availableNumbers, $quantity);
+
+        // 3. Criar os bilhetes
+        $newTickets = [];
+        foreach ($randomNumbers as $key) {
+            $newTickets[] = [
+                'user_id' => auth()->id(),
+                'raffle_id' => $raffle->id,
+                'number' => $availableNumbers[$key],
+                'created_at' => now(),
+                'updated_at' => now(),
+            ];
+        }
+
+        \App\Models\RaffleTicket::insert($newTickets);
+
+        // 4. Redirecionar com sucesso
+        $purchasedNumbers = implode(', ', array_column($newTickets, 'number'));
+        return redirect()->route('raffle.show', $raffle)->with('success', "Parabéns! Você comprou os bilhetes: {$purchasedNumbers}");
     }
 
     public function stories()

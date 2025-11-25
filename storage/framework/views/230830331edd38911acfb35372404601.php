@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@yield('title', 'Painel Admin - SAAU')</title>
+    <title><?php echo $__env->yieldContent('title', 'Painel Admin - SAAU'); ?></title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -312,64 +312,64 @@
             }
         }
     </style>
-    @yield('styles')
+    <?php echo $__env->yieldContent('styles'); ?>
 </head>
 <body>
     <!-- Sidebar -->
     <aside class="admin-sidebar">
         <div class="sidebar-header">
-            <img src="{{ asset('images/logo-saau.png') }}" alt="SAAU" class="sidebar-logo">
-            <div class="sidebar-user">{{ auth('admin')->user()->name ?? 'Administrador' }}</div>
+            <img src="<?php echo e(asset('images/logo-saau.png')); ?>" alt="SAAU" class="sidebar-logo">
+            <div class="sidebar-user"><?php echo e(auth('admin')->user()->name ?? 'Administrador'); ?></div>
         </div>
         
         <nav class="sidebar-menu">
-            <a href="{{ route('admin.dashboard') }}" class="menu-item {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">
+            <a href="<?php echo e(route('admin.dashboard')); ?>" class="menu-item <?php echo e(request()->routeIs('admin.dashboard') ? 'active' : ''); ?>">
                 <i class="fas fa-home"></i>
                 <span>Dashboard</span>
             </a>
-            <a href="{{ route('admin.animals.index') }}" class="menu-item {{ request()->routeIs('admin.animals.*') ? 'active' : '' }}">
+            <a href="<?php echo e(route('admin.animals.index')); ?>" class="menu-item <?php echo e(request()->routeIs('admin.animals.*') ? 'active' : ''); ?>">
                 <i class="fas fa-paw"></i>
                 <span>Animais</span>
             </a>
-            <a href="{{ route('admin.vaccines.index') }}" class="menu-item {{ request()->routeIs('admin.vaccines.*') ? 'active' : '' }}">
+            <a href="<?php echo e(route('admin.vaccines.index')); ?>" class="menu-item <?php echo e(request()->routeIs('admin.vaccines.*') ? 'active' : ''); ?>">
                 <i class="fas fa-syringe"></i>
                 <span>Vacinas</span>
             </a>
-            <a href="{{ route('admin.raffles.index') }}" class="menu-item {{ request()->routeIs('admin.raffles.*') ? 'active' : '' }}">
+            <a href="<?php echo e(route('admin.raffles.index')); ?>" class="menu-item <?php echo e(request()->routeIs('admin.raffles.*') ? 'active' : ''); ?>">
                 <i class="fas fa-ticket-alt"></i>
                 <span>Rifas</span>
             </a>
-            <a href="{{ route('admin.events.index') }}" class="menu-item {{ request()->routeIs('admin.events.*') ? 'active' : '' }}">
+            <a href="<?php echo e(route('admin.events.index')); ?>" class="menu-item <?php echo e(request()->routeIs('admin.events.*') ? 'active' : ''); ?>">
                 <i class="fas fa-calendar"></i>
                 <span>Eventos</span>
             </a>
-            <a href="{{ route('admin.stories.index') }}" class="menu-item {{ request()->routeIs('admin.stories.*') ? 'active' : '' }}">
+            <a href="<?php echo e(route('admin.stories.index')); ?>" class="menu-item <?php echo e(request()->routeIs('admin.stories.*') ? 'active' : ''); ?>">
                 <i class="fas fa-heart"></i>
                 <span>Histórias</span>
             </a>
-            <a href="{{ route('admin.donations.index') }}" class="menu-item {{ request()->routeIs('admin.donations.*') ? 'active' : '' }}">
+            <a href="<?php echo e(route('admin.donations.index')); ?>" class="menu-item <?php echo e(request()->routeIs('admin.donations.*') ? 'active' : ''); ?>">
                 <i class="fas fa-dollar-sign"></i>
                 <span>Doações</span>
             </a>
-            <a href="{{ route('admin.adoption-requests.index') }}" class="menu-item {{ request()->routeIs('admin.adoption-requests.*') ? 'active' : '' }}">
+            <a href="<?php echo e(route('admin.adoption-requests.index')); ?>" class="menu-item <?php echo e(request()->routeIs('admin.adoption-requests.*') ? 'active' : ''); ?>">
                 <i class="fas fa-clipboard-list"></i>
                 <span>Pedidos de Adoção</span>
             </a>
-            <a href="{{ route('admin.reports.animals') }}" class="menu-item {{ request()->routeIs('admin.reports.*') ? 'active' : '' }}">
+            <a href="<?php echo e(route('admin.reports.animals')); ?>" class="menu-item <?php echo e(request()->routeIs('admin.reports.*') ? 'active' : ''); ?>">
                 <i class="fas fa-chart-bar"></i>
                 <span>Relatórios</span>
             </a>
-            @if(auth('admin')->user() && auth('admin')->user()->role === 'admin')
-            <a href="{{ route('admin.users.index') }}" class="menu-item {{ request()->routeIs('admin.users.*') ? 'active' : '' }}">
+            <?php if(auth('admin')->user() && auth('admin')->user()->role === 'admin'): ?>
+            <a href="<?php echo e(route('admin.users.index')); ?>" class="menu-item <?php echo e(request()->routeIs('admin.users.*') ? 'active' : ''); ?>">
                 <i class="fas fa-users"></i>
                 <span>Usuários</span>
             </a>
-            @endif
+            <?php endif; ?>
         </nav>
         
         <div class="sidebar-footer">
-            <form action="{{ route('admin.logout') }}" method="POST">
-                @csrf
+            <form action="<?php echo e(route('admin.logout')); ?>" method="POST">
+                <?php echo csrf_field(); ?>
                 <button type="submit" class="logout-btn">
                     <i class="fas fa-sign-out-alt"></i>
                     <span>Sair</span>
@@ -380,24 +380,27 @@
     
     <!-- Main Content -->
     <main class="admin-content">
-        @if(session('success'))
+        <?php if(session('success')): ?>
         <div class="alert alert-success alert-dismissible fade show" role="alert">
-            <i class="fas fa-check-circle me-2"></i>{{ session('success') }}
+            <i class="fas fa-check-circle me-2"></i><?php echo e(session('success')); ?>
+
             <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
         </div>
-        @endif
+        <?php endif; ?>
         
-        @if(session('error'))
+        <?php if(session('error')): ?>
         <div class="alert alert-danger alert-dismissible fade show" role="alert">
-            <i class="fas fa-exclamation-circle me-2"></i>{{ session('error') }}
+            <i class="fas fa-exclamation-circle me-2"></i><?php echo e(session('error')); ?>
+
             <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
         </div>
-        @endif
+        <?php endif; ?>
         
-        @yield('content')
+        <?php echo $__env->yieldContent('content'); ?>
     </main>
     
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    @yield('scripts')
+    <?php echo $__env->yieldContent('scripts'); ?>
 </body>
 </html>
+<?php /**PATH C:\TCC\TCC-SAAU\resources\views/layouts/admin.blade.php ENDPATH**/ ?>
