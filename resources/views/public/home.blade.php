@@ -26,9 +26,7 @@
             <i class="fas fa-image fa-4x mb-3 text-primary opacity-25"></i>
             <h3 class="fw-bold text-primary">Espaço para seu Banner</h3>
             <p class="text-muted">Recomendado: 1200x450px</p>
-            <a href="{{ route('animals') }}" class="btn btn-primary rounded-pill px-4 mt-3 shadow-sm">
-                Ver Animais
-            </a>
+        
         </div>
 
     </div>
