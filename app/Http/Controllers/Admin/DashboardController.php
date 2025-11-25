@@ -21,13 +21,15 @@ class DashboardController extends Controller
             'total_animals'     => Animal::count(),
             'new_animals_month' => Animal::whereMonth('created_at', now()->month)->count(),
 
-            // Adoções
+            // Adoções (pedidos aprovados)
             'adopted'          => AdoptionRequest::where('status', 'aprovado')->count(),
             'pending_requests' => AdoptionRequest::where('status', 'pendente')->count(),
 
-            // Usuários
-            'total_users'     => User::count(),
-            'new_users_month' => User::whereMonth('created_at', now()->month)->count(),
+            // Usuários -> conta só os 3 perfis que aparecem na tela de usuários
+            'total_users'     => User::whereIn('role', ['admin', 'veterinario', 'usuario'])->count(),
+            'new_users_month' => User::whereIn('role', ['admin', 'veterinario', 'usuario'])
+                                      ->whereMonth('created_at', now()->month)
+                                      ->count(),
 
             // Rifas
             'active_raffles' => Raffle::where('status', 'ativa')->count(),
@@ -42,12 +44,15 @@ class DashboardController extends Controller
         ];
 
         // ----- LISTAS RECENTES -----
-        $recent_requests  = AdoptionRequest::with(['animal', 'user'])->latest()->take(5)->get();
+        $recent_requests  = AdoptionRequest::with(['animal', 'user'])
+            ->latest()
+            ->take(5)
+            ->get();
+
         $recent_animals   = Animal::latest()->take(5)->get();
         $recent_donations = Donation::latest()->take(5)->get();
 
-        // ----- VARIÁVEIS ESPERADAS PELO BLADE -----
-        // cards do topo
+        // ----- VARIÁVEIS PARA OS CARDS DO TOPO -----
         $totalAnimals   = $stats['total_animals'];
         $totalAdoptions = $stats['adopted'];
         $totalUsers     = $stats['total_users'];
@@ -57,17 +62,17 @@ class DashboardController extends Controller
         $recentRequests = $recent_requests;
 
         return view('admin.dashboard', [
-            'stats'           => $stats,
-            'recent_requests' => $recent_requests,
-            'recent_animals'  => $recent_animals,
-            'recent_donations'=> $recent_donations,
+            'stats'            => $stats,
+            'recent_requests'  => $recent_requests,
+            'recent_animals'   => $recent_animals,
+            'recent_donations' => $recent_donations,
 
             // variáveis usadas diretamente no dashboard.blade.php
-            'totalAnimals'    => $totalAnimals,
-            'totalAdoptions'  => $totalAdoptions,
-            'totalUsers'      => $totalUsers,
-            'activeRaffles'   => $activeRaffles,
-            'recentRequests'  => $recentRequests,
+            'totalAnimals'     => $totalAnimals,
+            'totalAdoptions'   => $totalAdoptions,
+            'totalUsers'       => $totalUsers,
+            'activeRaffles'    => $activeRaffles,
+            'recentRequests'   => $recentRequests,
         ]);
     }
 }

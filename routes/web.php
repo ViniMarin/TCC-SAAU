@@ -43,16 +43,16 @@ Route::middleware('auth')->group(function () {
 });
 
 // Páginas estáticas
-Route::get('/faq', function () { return view('faq'); })->name('faq');
-Route::get('/como-funciona', function () { return view('how-it-works'); })->name('how-it-works');
-Route::get('/como-ajudar', function () { return view('how-to-help'); })->name('how-to-help');
+Route::get('/faq', fn () => view('faq'))->name('faq');
+Route::get('/como-funciona', fn () => view('how-it-works'))->name('how-it-works');
+Route::get('/como-ajudar', fn () => view('how-to-help'))->name('how-to-help');
 
-// Autenticação para adotantes
+// Autenticação para adotantes (guard padrão "web")
 Auth::routes();
 
 // Redirect /admin para /admin/dashboard ou /admin/login
 Route::get('/admin', function () {
-    if (auth()->check() && in_array(auth()->user()->role, ['admin', 'veterinario'])) {
+    if (auth()->check() && in_array(auth()->user()->role, ['admin', 'veterinario', 'usuario'])) {
         return redirect()->route('admin.dashboard');
     }
     return redirect()->route('admin.login');
@@ -63,24 +63,54 @@ Route::get('/admin/login', [\App\Http\Controllers\Admin\AdminAuthController::cla
 Route::post('/admin/login', [\App\Http\Controllers\Admin\AdminAuthController::class, 'login'])->name('admin.login.post');
 Route::post('/admin/logout', [\App\Http\Controllers\Admin\AdminAuthController::class, 'logout'])->name('admin.logout');
 
-// Rotas admin (protegidas - apenas admin e veterinário)
-Route::middleware(['admin'])->prefix('admin')->name('admin.')->group(function () {
-    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+// Rotas admin (protegidas - admin, veterinário e usuário comum já passam pelo CheckAdmin)
+Route::middleware(['admin'])
+    ->prefix('admin')
+    ->name('admin.')
+    ->group(function () {
 
-    Route::resource('animals', \App\Http\Controllers\Admin\AdminAnimalController::class);
-    Route::resource('adoption-requests', \App\Http\Controllers\Admin\AdoptionRequestController::class);
-    Route::resource('events', \App\Http\Controllers\Admin\EventController::class);
-    Route::resource('raffles', \App\Http\Controllers\Admin\RaffleController::class);
-    Route::resource('vaccines', \App\Http\Controllers\Admin\VaccineController::class);
-    Route::resource('donations', \App\Http\Controllers\Admin\DonationController::class);
-    Route::resource('users', \App\Http\Controllers\Admin\UserController::class);
-    
-    // Histórias de Adoção (painel admin)
-    Route::get('/stories', [\App\Http\Controllers\Admin\StoryController::class, 'index'])->name('stories.index');
-    Route::patch('/stories/{story}/approve', [\App\Http\Controllers\Admin\StoryController::class, 'approve'])->name('stories.approve');
-    Route::delete('/stories/{story}', [\App\Http\Controllers\Admin\StoryController::class, 'destroy'])->name('stories.destroy');
-    
-    // Relatórios
-    Route::get('/reports', [ReportController::class, 'index'])->name('reports.index');
-    Route::get('/reports/export', [ReportController::class, 'export'])->name('reports.export');
-});
+        // Dashboard visível para qualquer perfil que tenha acesso ao painel
+        Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+
+        /*
+         * ÁREA APENAS ADMIN
+         * - Pedidos de adoção
+         * - Doações
+         * - Usuários
+         * - Relatórios
+         */
+        Route::middleware('role:admin')->group(function () {
+            Route::resource('adoption-requests', \App\Http\Controllers\Admin\AdoptionRequestController::class);
+            Route::resource('donations', \App\Http\Controllers\Admin\DonationController::class);
+            Route::resource('users', \App\Http\Controllers\Admin\UserController::class);
+
+            Route::get('/reports', [ReportController::class, 'index'])->name('reports.index');
+            Route::get('/reports/export', [ReportController::class, 'export'])->name('reports.export');
+        });
+
+        /*
+         * ÁREA ADMIN + VETERINÁRIO
+         * - Vacinas
+         */
+        Route::middleware('role:admin,veterinario')->group(function () {
+            Route::resource('vaccines', \App\Http\Controllers\Admin\VaccineController::class);
+        });
+
+        /*
+         * ÁREA ADMIN + VETERINÁRIO + USUÁRIO COMUM
+         * - Animais
+         * - Eventos
+         * - Rifas
+         * - Histórias
+         */
+        Route::middleware('role:admin,veterinario,usuario')->group(function () {
+            Route::resource('animals', \App\Http\Controllers\Admin\AdminAnimalController::class);
+            Route::resource('events', \App\Http\Controllers\Admin\EventController::class);
+            Route::resource('raffles', \App\Http\Controllers\Admin\RaffleController::class);
+
+            // Histórias de Adoção (painel admin)
+            Route::get('/stories', [\App\Http\Controllers\Admin\StoryController::class, 'index'])->name('stories.index');
+            Route::patch('/stories/{story}/approve', [\App\Http\Controllers\Admin\StoryController::class, 'approve'])->name('stories.approve');
+            Route::delete('/stories/{story}', [\App\Http\Controllers\Admin\StoryController::class, 'destroy'])->name('stories.destroy');
+        });
+    });

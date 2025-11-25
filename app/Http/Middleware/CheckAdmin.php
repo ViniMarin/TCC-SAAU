@@ -10,22 +10,24 @@ class CheckAdmin
 {
     public function handle(Request $request, Closure $next)
     {
-
+        // Sempre usar o guard "admin" dentro do painel
         $adminGuard = Auth::guard('admin');
         Auth::shouldUse('admin');
 
-        $request->setUserResolver(fn () => $adminGuard->user());
-
+        // Se não estiver logado no guard admin, manda pro login
         if (!$adminGuard->check()) {
             return redirect()->route('admin.login');
         }
 
         $user = $adminGuard->user();
 
-        if ($user->role !== 'admin' && $user->role !== 'veterinario') {
+        // Agora aceitamos admin, veterinario e usuario
+        if (!in_array($user->role, ['admin', 'veterinario', 'usuario'])) {
             $adminGuard->logout();
-            return redirect()->route('admin.login')
-                ->with('error', 'Acesso negado. Apenas administradores e veterinários podem acessar esta área.');
+
+            return redirect()
+                ->route('admin.login')
+                ->with('error', 'Acesso negado. Apenas perfis autorizados podem acessar esta área.');
         }
 
         // Garante que o restante da requisição use o guard de admin

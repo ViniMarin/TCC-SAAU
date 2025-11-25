@@ -13,10 +13,13 @@ class User extends Authenticatable
     use HasApiTokens, HasFactory, Notifiable;
 
     /**
-     * The attributes that are mass assignable.
-     *
-     * @var array<int, string>
+     * Perfis possíveis:
+     * - admin
+     * - veterinario
+     * - usuario  (usuário comum do painel)
+     * - adotante (usuário do site público)
      */
+
     protected $fillable = [
         'name',
         'email',
@@ -24,23 +27,29 @@ class User extends Authenticatable
         'role',
     ];
 
-    /**
-     * The attributes that should be hidden for serialization.
-     *
-     * @var array<int, string>
-     */
     protected $hidden = [
         'password',
         'remember_token',
     ];
 
-    /**
-     * The attributes that should be cast.
-     *
-     * @var array<string, string>
-     */
     protected $casts = [
         'email_verified_at' => 'datetime',
-        'password' => 'hashed',
+        'password'          => 'hashed',
     ];
+
+    // Helpers de papel
+    public function isAdmin(): bool
+    {
+        return $this->role === 'admin';
+    }
+
+    public function isVet(): bool
+    {
+        return $this->role === 'veterinario';
+    }
+
+    public function isCommonUser(): bool
+    {
+        return $this->role === 'usuario';
+    }
 }

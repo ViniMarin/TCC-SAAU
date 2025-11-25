@@ -4,9 +4,14 @@
 @section('page-title', 'Visão Geral do Sistema')
 
 @section('content')
+@php
+    // Usa sempre o guard 'admin' do painel
+    $role = auth('admin')->user()->role ?? 'usuario';
+@endphp
+
 <div class="container-fluid">
     
-    <!-- Cards de Estatísticas -->
+    <!-- Cards de Estatísticas (iguais para todos os perfis) -->
     <div class="row g-4 mb-5">
         
         <!-- Card Animais -->
@@ -94,91 +99,209 @@
         </div>
     </div>
 
-    <!-- Seção de Ações Rápidas e Gráficos (Exemplo) -->
+    {{-- =====================  BLOCO INFERIOR POR PERFIL  ===================== --}}
     <div class="row g-4">
-        <div class="col-lg-8">
-            <div class="card border-0 shadow-sm" style="border-radius: 15px;">
-                <div class="card-header bg-white border-bottom-0 pt-4 px-4 d-flex justify-content-between align-items-center">
-                    <h5 class="fw-bold text-primary mb-0">Últimos Pedidos de Adoção</h5>
-                    <a href="{{ route('admin.adoption-requests.index') }}" class="btn btn-sm btn-outline-primary rounded-pill px-3">Ver Todos</a>
-                </div>
-                <div class="card-body px-4 pb-4">
-                    <div class="table-responsive">
-                        <table class="table table-hover align-middle">
-                            <thead class="bg-light text-muted small text-uppercase">
-                                <tr>
-                                    <th class="border-0 rounded-start">Solicitante</th>
-                                    <th class="border-0">Animal</th>
-                                    <th class="border-0">Data</th>
-                                    <th class="border-0 rounded-end text-end">Status</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {{-- Exemplo estático, substituir por @foreach real --}}
-                                @forelse($recentRequests ?? [] as $request)
-                                <tr>
-                                    <td class="fw-bold text-dark">{{ $request->user->name ?? 'Anônimo' }}</td>
-                                    <td class="text-primary">{{ $request->animal->name ?? 'Animal' }}</td>
-                                    <td class="text-muted small">{{ $request->created_at->format('d/m/Y') }}</td>
-                                    <td class="text-end">
-                                        <span class="badge bg-warning text-dark rounded-pill px-3">Pendente</span>
-                                    </td>
-                                </tr>
-                                @empty
-                                <tr>
-                                    <td colspan="4" class="text-center text-muted py-4">
-                                        <i class="far fa-folder-open fa-2x mb-2 d-block opacity-25"></i>
-                                        Nenhum pedido recente.
-                                    </td>
-                                </tr>
-                                @endforelse
-                            </tbody>
-                        </table>
+
+        {{-- ADMIN: vê pedidos + acesso rápido completo --}}
+        @if($role === 'admin')
+
+            <div class="col-lg-8">
+                <div class="card border-0 shadow-sm" style="border-radius: 15px;">
+                    <div class="card-header bg-white border-bottom-0 pt-4 px-4 d-flex justify-content-between align-items-center">
+                        <h5 class="fw-bold text-primary mb-0">Últimos Pedidos de Adoção</h5>
+                        <a href="{{ route('admin.adoption-requests.index') }}" class="btn btn-sm btn-outline-primary rounded-pill px-3">Ver Todos</a>
+                    </div>
+                    <div class="card-body px-4 pb-4">
+                        <div class="table-responsive">
+                            <table class="table table-hover align-middle">
+                                <thead class="bg-light text-muted small text-uppercase">
+                                    <tr>
+                                        <th class="border-0 rounded-start">Solicitante</th>
+                                        <th class="border-0">Animal</th>
+                                        <th class="border-0">Data</th>
+                                        <th class="border-0 rounded-end text-end">Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @forelse($recentRequests ?? [] as $request)
+                                        @php
+                                            // Prioriza o nome digitado no formulário (full_name),
+                                            // se não tiver, usa o usuário relacionado; se não, "Anônimo".
+                                            $nomeSolicitante = $request->full_name
+                                                ?? optional($request->user)->name
+                                                ?? 'Anônimo';
+                                        @endphp
+                                        <tr>
+                                            <td class="fw-bold text-dark">{{ $nomeSolicitante }}</td>
+                                            <td class="text-primary">{{ $request->animal->name ?? 'Animal' }}</td>
+                                            <td class="text-muted small">{{ $request->created_at->format('d/m/Y') }}</td>
+                                            <td class="text-end">
+                                                <span class="badge bg-warning text-dark rounded-pill px-3">
+                                                    {{ ucfirst($request->status ?? 'pendente') }}
+                                                </span>
+                                            </td>
+                                        </tr>
+                                    @empty
+                                        <tr>
+                                            <td colspan="4" class="text-center text-muted py-4">
+                                                <i class="far fa-folder-open fa-2x mb-2 d-block opacity-25"></i>
+                                                Nenhum pedido recente.
+                                            </td>
+                                        </tr>
+                                    @endforelse
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
 
-        <div class="col-lg-4">
-            <div class="card border-0 shadow-sm h-100" style="border-radius: 15px;">
-                <div class="card-header bg-white border-bottom-0 pt-4 px-4">
-                    <h5 class="fw-bold text-dark mb-0">Acesso Rápido</h5>
-                </div>
-                <div class="card-body px-4">
-                    <div class="d-grid gap-3">
-                        <a href="{{ route('admin.animals.create') }}" class="btn btn-outline-primary text-start p-3 rounded-3 d-flex align-items-center transition-hover">
-                            <div class="bg-blue-soft rounded-circle p-2 me-3 d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
-                                <i class="fas fa-plus"></i>
-                            </div>
-                            <div>
-                                <span class="d-block fw-bold">Novo Animal</span>
-                                <small class="text-muted">Cadastrar para adoção</small>
-                            </div>
-                        </a>
-                        
-                        <a href="{{ route('admin.events.create') }}" class="btn btn-outline-secondary text-start p-3 rounded-3 d-flex align-items-center transition-hover border-0 bg-light">
-                            <div class="bg-white rounded-circle p-2 me-3 d-flex align-items-center justify-content-center text-secondary shadow-sm" style="width: 40px; height: 40px;">
-                                <i class="fas fa-calendar-plus"></i>
-                            </div>
-                            <div>
-                                <span class="d-block fw-bold text-dark">Novo Evento</span>
-                                <small class="text-muted">Divulgar ação</small>
-                            </div>
-                        </a>
+            <div class="col-lg-4">
+                <div class="card border-0 shadow-sm h-100" style="border-radius: 15px;">
+                    <div class="card-header bg-white border-bottom-0 pt-4 px-4">
+                        <h5 class="fw-bold text-dark mb-0">Acesso Rápido</h5>
+                    </div>
+                    <div class="card-body px-4">
+                        <div class="d-grid gap-3">
+                            <a href="{{ route('admin.animals.create') }}" class="btn btn-outline-primary text-start p-3 rounded-3 d-flex align-items-center transition-hover">
+                                <div class="bg-blue-soft rounded-circle p-2 me-3 d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
+                                    <i class="fas fa-plus"></i>
+                                </div>
+                                <div>
+                                    <span class="d-block fw-bold">Novo Animal</span>
+                                    <small class="text-muted">Cadastrar para adoção</small>
+                                </div>
+                            </a>
+                            
+                            <a href="{{ route('admin.events.create') }}" class="btn btn-outline-secondary text-start p-3 rounded-3 d-flex align-items-center transition-hover border-0 bg-light">
+                                <div class="bg-white rounded-circle p-2 me-3 d-flex align-items-center justify-content-center text-secondary shadow-sm" style="width: 40px; height: 40px;">
+                                    <i class="fas fa-calendar-plus"></i>
+                                </div>
+                                <div>
+                                    <span class="d-block fw-bold text-dark">Novo Evento</span>
+                                    <small class="text-muted">Divulgar ação</small>
+                                </div>
+                            </a>
 
-                        <a href="{{ route('admin.raffles.create') }}" class="btn btn-outline-secondary text-start p-3 rounded-3 d-flex align-items-center transition-hover border-0 bg-light">
-                            <div class="bg-white rounded-circle p-2 me-3 d-flex align-items-center justify-content-center text-warning shadow-sm" style="width: 40px; height: 40px;">
-                                <i class="fas fa-ticket-alt"></i>
-                            </div>
-                            <div>
-                                <span class="d-block fw-bold text-dark">Nova Rifa</span>
-                                <small class="text-muted">Criar campanha</small>
-                            </div>
-                        </a>
+                            <a href="{{ route('admin.raffles.create') }}" class="btn btn-outline-secondary text-start p-3 rounded-3 d-flex align-items-center transition-hover border-0 bg-light">
+                                <div class="bg-white rounded-circle p-2 me-3 d-flex align-items-center justify-content-center text-warning shadow-sm" style="width: 40px; height: 40px;">
+                                    <i class="fas fa-ticket-alt"></i>
+                                </div>
+                                <div>
+                                    <span class="d-block fw-bold text-dark">Nova Rifa</span>
+                                    <small class="text-muted">Criar campanha</small>
+                                </div>
+                            </a>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
+
+        {{-- VETERINÁRIO: apenas atalhos para Animais/Vacinas, sem pedidos nem eventos/rifas --}}
+        @elseif($role === 'veterinario')
+
+            <div class="col-lg-4 col-md-6 mx-auto">
+                <div class="card border-0 shadow-sm h-100" style="border-radius: 15px;">
+                    <div class="card-header bg-white border-bottom-0 pt-4 px-4">
+                        <h5 class="fw-bold text-dark mb-0">Acesso Rápido (Veterinário)</h5>
+                    </div>
+                    <div class="card-body px-4">
+                        <p class="text-muted small mb-3">
+                            Aqui você pode manter o cadastro dos animais e o controle das vacinas.
+                        </p>
+                        <div class="d-grid gap-3">
+                            <a href="{{ route('admin.animals.index') }}" class="btn btn-outline-primary text-start p-3 rounded-3 d-flex align-items-center transition-hover">
+                                <div class="bg-blue-soft rounded-circle p-2 me-3 d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
+                                    <i class="fas fa-dog"></i>
+                                </div>
+                                <div>
+                                    <span class="d-block fw-bold">Gerenciar Animais</span>
+                                    <small class="text-muted">Listar e atualizar cadastro</small>
+                                </div>
+                            </a>
+
+                            <a href="{{ route('admin.vaccines.create') }}" class="btn btn-outline-secondary text-start p-3 rounded-3 d-flex align-items-center transition-hover border-0 bg-light">
+                                <div class="bg-white rounded-circle p-2 me-3 d-flex align-items-center justify-content-center text-success shadow-sm" style="width: 40px; height: 40px;">
+                                    <i class="fas fa-syringe"></i>
+                                </div>
+                                <div>
+                                    <span class="d-block fw-bold text-dark">Registrar Vacina</span>
+                                    <small class="text-muted">Adicionar nova aplicação</small>
+                                </div>
+                            </a>
+
+                            <a href="{{ route('admin.vaccines.index') }}" class="btn btn-outline-secondary text-start p-3 rounded-3 d-flex align-items-center transition-hover border-0 bg-light">
+                                <div class="bg-white rounded-circle p-2 me-3 d-flex align-items-center justify-content-center text-info shadow-sm" style="width: 40px; height: 40px;">
+                                    <i class="fas fa-notes-medical"></i>
+                                </div>
+                                <div>
+                                    <span class="d-block fw-bold text-dark">Histórico de Vacinas</span>
+                                    <small class="text-muted">Consultar aplicações registradas</small>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        {{-- USUÁRIO COMUM: acesso rápido para Animais, Eventos, Rifas e Histórias --}}
+        @else
+
+            <div class="col-lg-4 col-md-6 mx-auto">
+                <div class="card border-0 shadow-sm h-100" style="border-radius: 15px;">
+                    <div class="card-header bg-white border-bottom-0 pt-4 px-4">
+                        <h5 class="fw-bold text-dark mb-0">Acesso Rápido</h5>
+                    </div>
+                    <div class="card-body px-4">
+                        <p class="text-muted small mb-3">
+                            Utilize os atalhos abaixo para gerenciar o conteúdo público do site.
+                        </p>
+                        <div class="d-grid gap-3">
+                            <a href="{{ route('admin.animals.index') }}" class="btn btn-outline-primary text-start p-3 rounded-3 d-flex align-items-center transition-hover">
+                                <div class="bg-blue-soft rounded-circle p-2 me-3 d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
+                                    <i class="fas fa-dog"></i>
+                                </div>
+                                <div>
+                                    <span class="d-block fw-bold">Animais</span>
+                                    <small class="text-muted">Cadastrar e editar animais</small>
+                                </div>
+                            </a>
+
+                            <a href="{{ route('admin.events.index') }}" class="btn btn-outline-secondary text-start p-3 rounded-3 d-flex align-items-center transition-hover border-0 bg-light">
+                                <div class="bg-white rounded-circle p-2 me-3 d-flex align-items-center justify-content-center text-secondary shadow-sm" style="width: 40px; height: 40px;">
+                                    <i class="fas fa-calendar-alt"></i>
+                                </div>
+                                <div>
+                                    <span class="d-block fw-bold text-dark">Eventos</span>
+                                    <small class="text-muted">Gerenciar eventos da SAAU</small>
+                                </div>
+                            </a>
+
+                            <a href="{{ route('admin.raffles.index') }}" class="btn btn-outline-secondary text-start p-3 rounded-3 d-flex align-items-center transition-hover border-0 bg-light">
+                                <div class="bg-white rounded-circle p-2 me-3 d-flex align-items-center justify-content-center text-warning shadow-sm" style="width: 40px; height: 40px;">
+                                    <i class="fas fa-ticket-alt"></i>
+                                </div>
+                                <div>
+                                    <span class="d-block fw-bold text-dark">Rifas</span>
+                                    <small class="text-muted">Criar e acompanhar rifas</small>
+                                </div>
+                            </a>
+
+                            <a href="{{ route('admin.stories.index') }}" class="btn btn-outline-secondary text-start p-3 rounded-3 d-flex align-items-center transition-hover border-0 bg-light">
+                                <div class="bg-white rounded-circle p-2 me-3 d-flex align-items-center justify-content-center text-info shadow-sm" style="width: 40px; height: 40px;">
+                                    <i class="fas fa-book-open"></i>
+                                </div>
+                                <div>
+                                    <span class="d-block fw-bold text-dark">Histórias</span>
+                                    <small class="text-muted">Aprovar e gerenciar relatos</small>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        @endif
     </div>
 
 </div>

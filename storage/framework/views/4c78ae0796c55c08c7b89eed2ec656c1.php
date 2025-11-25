@@ -237,6 +237,16 @@
 </head>
 <body>
 
+    <?php
+        $role = auth()->user()->role ?? null;
+
+        $roleLabel = [
+            'admin'      => 'Administrador',
+            'veterinario'=> 'Veterinário',
+            'usuario'    => 'Usuário',
+        ][$role] ?? ucfirst((string) $role);
+    ?>
+
     <!-- Sidebar -->
     <nav class="sidebar" id="sidebar">
         <div class="sidebar-header">
@@ -245,36 +255,55 @@
             </a>
         </div>
         <ul class="sidebar-menu">
+            
             <li>
                 <a href="<?php echo e(route('admin.dashboard')); ?>" class="sidebar-link <?php echo e(request()->routeIs('admin.dashboard') ? 'active' : ''); ?>">
                     <i class="fas fa-tachometer-alt"></i> Dashboard
                 </a>
             </li>
             
+            
             <li class="text-uppercase small fw-bold text-white-50 px-4 mt-3 mb-2">Gerenciamento</li>
             
+            
+            <?php if(in_array($role, ['admin', 'veterinario', 'usuario'])): ?>
             <li>
                 <a href="<?php echo e(route('admin.animals.index')); ?>" class="sidebar-link <?php echo e(request()->routeIs('admin.animals.*') ? 'active' : ''); ?>">
                     <i class="fas fa-dog"></i> Animais
                 </a>
             </li>
+            <?php endif; ?>
+
+            
+            <?php if($role === 'admin'): ?>
             <li>
                 <a href="<?php echo e(route('admin.adoption-requests.index')); ?>" class="sidebar-link <?php echo e(request()->routeIs('admin.adoption-requests.*') ? 'active' : ''); ?>">
                     <i class="fas fa-file-contract"></i> Pedidos de Adoção
                 </a>
             </li>
+            <?php endif; ?>
+
+            
+            <?php if(in_array($role, ['admin', 'veterinario'])): ?>
             <li>
                 <a href="<?php echo e(route('admin.vaccines.index')); ?>" class="sidebar-link <?php echo e(request()->routeIs('admin.vaccines.*') ? 'active' : ''); ?>">
                     <i class="fas fa-syringe"></i> Vacinas
                 </a>
             </li>
+            <?php endif; ?>
+
+            
+            <?php if(in_array($role, ['admin', 'usuario'])): ?>
             <li>
                 <a href="<?php echo e(route('admin.stories.index')); ?>" class="sidebar-link <?php echo e(request()->routeIs('admin.stories.*') ? 'active' : ''); ?>">
                     <i class="fas fa-book-open"></i> Histórias
                 </a>
             </li>
+            <?php endif; ?>
 
-            <li class="text-uppercase small fw-bold text-white-50 px-4 mt-3 mb-2">Eventos & Financeiro</li>
+            
+            <?php if(in_array($role, ['admin', 'usuario'])): ?>
+            <li class="text-uppercase small fw-bold text-white-50 px-4 mt-3 mb-2">Eventos &amp; Financeiro</li>
 
             <li>
                 <a href="<?php echo e(route('admin.events.index')); ?>" class="sidebar-link <?php echo e(request()->routeIs('admin.events.*') ? 'active' : ''); ?>">
@@ -286,12 +315,18 @@
                     <i class="fas fa-ticket-alt"></i> Rifas
                 </a>
             </li>
+
+            <?php if($role === 'admin'): ?>
             <li>
                 <a href="<?php echo e(route('admin.donations.index')); ?>" class="sidebar-link <?php echo e(request()->routeIs('admin.donations.*') ? 'active' : ''); ?>">
                     <i class="fas fa-hand-holding-usd"></i> Doações
                 </a>
             </li>
+            <?php endif; ?>
+            <?php endif; ?> 
 
+            
+            <?php if($role === 'admin'): ?>
             <li class="text-uppercase small fw-bold text-white-50 px-4 mt-3 mb-2">Sistema</li>
 
             <li>
@@ -304,6 +339,7 @@
                     <i class="fas fa-chart-bar"></i> Relatórios
                 </a>
             </li>
+            <?php endif; ?>
         </ul>
     </nav>
 
@@ -324,7 +360,7 @@
             <div class="user-profile">
                 <div class="user-info text-end d-none d-md-block">
                     <span><?php echo e(auth()->user()->name); ?></span>
-                    <small><?php echo e(ucfirst(auth()->user()->role)); ?></small>
+                    <small><?php echo e($roleLabel); ?></small>
                 </div>
                 <div class="dropdown">
                     <a href="#" class="d-flex align-items-center text-decoration-none" id="userDropdown" data-bs-toggle="dropdown">
@@ -383,4 +419,5 @@
     </script>
     <?php echo $__env->yieldContent('scripts'); ?>
 </body>
-</html><?php /**PATH C:\Users\eutei\OneDrive\Área de Trabalho\alterações do antonio\TCC-SAAU\resources\views/layouts/admin.blade.php ENDPATH**/ ?>
+</html>
+<?php /**PATH C:\Users\eutei\OneDrive\Área de Trabalho\alterações do antonio\TCC-SAAU\resources\views/layouts/admin.blade.php ENDPATH**/ ?>

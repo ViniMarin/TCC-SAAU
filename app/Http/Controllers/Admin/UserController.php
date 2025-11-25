@@ -9,12 +9,13 @@ use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
-
     public function index()
     {
-        $users = User::whereIn('role', ['admin', 'veterinario'])
+        // lista todos os perfis internos do painel
+        $users = User::whereIn('role', ['admin', 'veterinario', 'usuario'])
             ->latest()
             ->paginate(15);
+
         return view('admin.users.index', compact('users'));
     }
 
@@ -31,10 +32,10 @@ class UserController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email',
+            'name'     => 'required|string|max:255',
+            'email'    => 'required|email|unique:users,email',
             'password' => 'required|string|min:6',
-            'role' => 'required|in:admin,veterinario'
+            'role'     => 'required|in:admin,veterinario,usuario',
         ]);
 
         $validated['password'] = Hash::make($validated['password']);
@@ -53,13 +54,12 @@ class UserController extends Controller
     public function update(Request $request, User $user)
     {
         $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email,' . $user->id,
+            'name'     => 'required|string|max:255',
+            'email'    => 'required|email|unique:users,email,' . $user->id,
             'password' => 'nullable|string|min:6',
-            'role' => 'required|in:admin,veterinario'
+            'role'     => 'required|in:admin,veterinario,usuario',
         ]);
 
-        // Atualizar senha apenas se fornecida
         if (!empty($validated['password'])) {
             $validated['password'] = Hash::make($validated['password']);
         } else {
@@ -74,13 +74,14 @@ class UserController extends Controller
 
     public function destroy(User $user)
     {
-        // Não permitir deletar o próprio usuário
+        // Não permitir deletar o próprio usuário logado no painel
         if ($user->id === auth('admin')->id()) {
             return redirect()->route('admin.users.index')
                 ->with('error', 'Você não pode deletar sua própria conta!');
         }
 
         $user->delete();
+
         return redirect()->route('admin.users.index')
             ->with('success', 'Usuário removido com sucesso!');
     }
